@@ -1,0 +1,85 @@
+name: TeaVM browser verification
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: read
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [development, production]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Check out the shared development parent
+        uses: actions/checkout@v4
+        with:
+          repository: instanto-io/instanto-poms
+          path: .build/instanto-poms
+      - name: Install the shared development parent
+        run: mvn -B -ntp -f .build/instanto-poms/pom.xml install
+      - name: Check out the development compatibility libraries
+        uses: actions/checkout@v4
+        with:
+          repository: instanto-io/teavm-compat
+          path: .build/teavm-compat
+      - name: Install the development compatibility libraries
+        run: mvn -B -ntp -f .build/teavm-compat/pom.xml -DskipTests install
+      - name: Configure compatibility package access
+        env:
+          PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          echo "PACKAGES_READ_TOKEN=$PACKAGES_READ_TOKEN" >> "$GITHUB_ENV"
+          cat > "$HOME/.m2/settings.xml" <<'XML'
+          <settings><servers><server><id>github-teavm-compat</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server><server><id>github-cucumber-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server><server><id>github-gherkin-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server><server><id>github-mockatcha</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server></servers></settings>
+          XML
+      - name: Build TeaVM and analyze bytecode
+        run: |
+          if [ '${{ matrix.mode }}' = production ]; then
+            mvn -B -ntp -Pproduction clean install
+          else
+            mvn -B -ntp clean install
+          fi
+      - name: Install browser engines through Java
+        run: mvn -B -ntp -f browser-tests/webkit/pom.xml org.codehaus.mojo:exec-maven-plugin:3.6.3:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.classpathScope=test -Dexec.args="install --with-deps chromium firefox webkit"
+      - name: Run Cucumber scenarios through TeaVM and Chrome
+        run: mvn -B -ntp -f browser-tests/teavm/pom.xml test
+      - name: Run Cucumber scenarios through TeaVM and Firefox
+        run: mvn -B -ntp -f browser-tests/teavm/pom.xml -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
+      - name: Run the same scenarios through Java Playwright WebKit
+        run: mvn -B -ntp -f browser-tests/webkit/pom.xml test
+      - name: Verify native scrolling with Playwright Java
+        run: mvn -B -ntp -f browser-tests/platform-checks/pom.xml test
+      - name: Index analyzer results
+        if: always()
+        run: mvn -B -ntp -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:analysis -Ddomino.analysis.indexOnly=true
+      - name: Record verification metadata
+        run: mvn -B -ntp -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:record-results -Ddomino.mode=${{ matrix.mode }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-${{ matrix.mode }}
+          path: |
+            **/target/spotbugs/**
+            **/target/surefire-reports*/**
+            browser-tests/platform-checks/target/screenshots/**
+            reports/**
+            target/intake/inventory.json
+            upstream/*lock.json
+      - name: Assemble verified production showcases
+        if: matrix.mode == 'production'
+        run: mvn -B -ntp -Ppages -pl build-verification resources:copy-resources@pages
+      - uses: actions/upload-artifact@v4
+        if: matrix.mode == 'production'
+        with:
+          name: showcase-pages
+          path: target/pages

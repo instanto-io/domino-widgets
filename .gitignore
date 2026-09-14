@@ -1,0 +1,7 @@
+**/target/
+node_modules/
+browser-tests/test-results/
+browser-tests/playwright-report/
+.DS_Store
+
+/.build/
