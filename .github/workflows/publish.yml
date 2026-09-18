@@ -38,8 +38,6 @@ jobs:
           XML
 
       - run: mvn -B -ntp -Pproduction,documentation clean install
-      - name: Install browser engines through Java
-        run: mvn -B -ntp -f browser-tests/webkit/pom.xml org.codehaus.mojo:exec-maven-plugin:3.6.3:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.classpathScope=test -Dexec.args="install chromium firefox webkit"
       - name: Run Cucumber scenarios through TeaVM and Chrome
         run: mvn -B -ntp -f browser-tests/teavm/pom.xml test
       - name: Run Cucumber scenarios through TeaVM and Firefox
