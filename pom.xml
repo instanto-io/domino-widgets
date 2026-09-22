@@ -26,12 +26,7 @@
     <developerConnection>scm:git:ssh://git@github.com/instanto-io/domino-widgets.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/instanto-io/domino-widgets</url>
-    </repository>
-  </distributionManagement>
+
   <properties>
     <spotbugs.skip>false</spotbugs.skip>
     <maven.compiler.release>17</maven.compiler.release>
@@ -333,14 +328,12 @@
   </profiles>
   <repositories>
     <repository>
-      <id>github-webapp-testkit</id>
-      <url>https://maven.pkg.github.com/instanto-io/webapp-testkit</url>
-      <releases><enabled>true</enabled></releases>
+      <id>forgejo</id>
+      <name>Instanto snapshots</name>
+      <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
+      <releases><enabled>false</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
     </repository>
-    <repository>
-      <id>github-teavm-compat</id>
-      <url>https://maven.pkg.github.com/instanto-io/teavm-compat</url>
-    </repository>
+
   </repositories>
 </project>
