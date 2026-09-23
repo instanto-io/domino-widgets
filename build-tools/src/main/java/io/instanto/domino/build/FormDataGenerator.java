@@ -21,15 +21,13 @@ final class FormDataGenerator {
     FormDataGenerator generator = new FormDataGenerator(root);
     Map<String, JsonElement> constants = new HashMap<>();
     Matcher fields =
-        Pattern.compile("private static final String (\\w+) = ([\\s\\S]*?);\\s*\\n")
+        Pattern.compile("(?m)^[ \\t]*private static final String (\\w+)[ \\t]*=[ \\t]*")
             .matcher(source);
     while (fields.find()) {
-      StringBuilder json = new StringBuilder();
-      Matcher literals = Pattern.compile("\"(?:\\\\.|[^\"\\\\])*\"").matcher(fields.group(2));
-      while (literals.find()) json.append(new Gson().fromJson(literals.group(), String.class));
+      String json = stringLiterals(source, fields.end(), declarationEnd(source, fields.end()));
       constants.put(
           fields.group(1),
-          JsonParser.parseString(json.toString().replace("countryIsoCode", "countryISOCode")));
+          JsonParser.parseString(json.replace("countryIsoCode", "countryISOCode")));
     }
     StringBuilder entry = new StringBuilder();
     for (String[] row :
@@ -58,6 +56,41 @@ final class FormDataGenerator {
         + entry
         + generator.methods
         + "}\n";
+  }
+
+  private static int declarationEnd(String source, int start) {
+    boolean quoted = false;
+    boolean escaped = false;
+    for (int i = start; i < source.length(); i++) {
+      char c = source.charAt(i);
+      if (quoted) {
+        if (escaped) escaped = false;
+        else if (c == '\\') escaped = true;
+        else if (c == '"') quoted = false;
+      } else if (c == '"') quoted = true;
+      else if (c == ';') return i;
+    }
+    throw new IllegalArgumentException("Unterminated sample JSON declaration");
+  }
+
+  private static String stringLiterals(String source, int start, int end) {
+    StringBuilder joined = new StringBuilder();
+    Gson gson = new Gson();
+    for (int i = start; i < end; i++) {
+      if (source.charAt(i) != '"') continue;
+      int opening = i++;
+      boolean escaped = false;
+      while (i < end) {
+        char c = source.charAt(i);
+        if (escaped) escaped = false;
+        else if (c == '\\') escaped = true;
+        else if (c == '"') break;
+        i++;
+      }
+      if (i == end) throw new IllegalArgumentException("Unterminated sample JSON string");
+      joined.append(gson.fromJson(source.substring(opening, i + 1), String.class));
+    }
+    return joined.toString();
   }
 
   private String value(String type, JsonElement data) throws Exception {
