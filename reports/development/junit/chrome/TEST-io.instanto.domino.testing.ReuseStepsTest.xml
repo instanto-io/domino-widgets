@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="io.instanto.domino.testing.ReuseStepsTest" time="1.819" tests="1" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="scenario_A_published_Elemental2_logger_works_without_widget_dependencies_line_3_0" classname="io.instanto.domino.testing.ReuseStepsTest" time="0.083">
+    <system-out><![CDATA[Running chrome with user data dir: /var/folders/96/mc34q07j3fd43kdczb2f5c2h0000gn/T/teavm15570249005630406021teavm
+browser stderr: Trying to load the allocator multiple times. This is *not* supported.
+browser stderr: [45237:868737:0923/155619.330309:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155619.330694:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155619.330758:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155619.330816:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155619.330871:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155619.330936:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+Cucumber: scenario_A_published_Elemental2_logger_works_without_widget_dependencies_line_3_0
+]]></system-out>
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+]]></system-err>
+  </testcase>
+</testsuite>

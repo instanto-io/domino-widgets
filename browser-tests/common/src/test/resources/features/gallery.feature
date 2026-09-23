@@ -68,3 +68,10 @@ Feature: Pinned original showcase examples
       | table-eager-tree-plugin |
       | table-lazy-tree-plugin |
       | table-mix-plugins |
+      | app-layout |
+      | flex-layout |
+      | grid-layout |
+      | form-samples |
+      | colors |
+      | mdiicons |
+      | themes |

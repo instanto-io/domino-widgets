@@ -21,17 +21,26 @@ are brought in as dependencies.
 
 ## Add the dependencies
 
-The current version is `0.1.0-SNAPSHOT`, published under `io.instanto` at
-`packages.instanto.io`. Add this repository inside your POM's `<repositories>` element:
+The current version is `0.1.0-SNAPSHOT`, published under `io.instanto` in GitHub
+Packages. Add this repository inside your POM's `<repositories>` element:
 
 ```xml
 <repository>
-  <id>forgejo</id>
-  <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
-  <releases><enabled>false</enabled></releases>
-  <snapshots><enabled>true</enabled></snapshots>
+  <id>github</id>
+  <url>https://maven.pkg.github.com/instanto-io/domino-widgets</url>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
+<repository>
+  <id>github-teavm-compat</id>
+  <url>https://maven.pkg.github.com/instanto-io/teavm-compat</url>
 </repository>
 ```
+
+Configure Maven credentials for the server IDs `github` and `github-teavm-compat`, using a token with package
+read access. GitHub Packages requires authentication for public Maven downloads too.
+Keep credentials in your Maven settings, outside the project POM.
 
 Import the BOM to keep the widget and asset versions together. This example selects
 the TeaVM widget artifact.
@@ -167,7 +176,7 @@ shows the same construction and event pattern in a compilable application.
 ## Explore the widgets
 
 The showcases are adapted from [DominoKit’s original demo](https://github.com/DominoKit/domino-ui-demo).
-They retain 62 original pages and 182 sample methods, presented through a shared
+They retain 69 original pages and 190 sample methods, presented through a shared
 TeaVM launcher. Use the grouped navigation or widget search to browse
 the gallery. Each page links to its Java example and upstream counterpart. Browse
 the [shared examples](showcase-shared/src/main/java/io/instanto/domino/client).

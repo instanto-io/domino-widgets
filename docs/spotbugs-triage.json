@@ -68,5 +68,19 @@
     "field": "window",
     "method": null,
     "reason": "Native browser global property mapped by the compiler; Java final initialization is not an equivalent binding."
+  },
+  {
+    "type": "NS_DANGEROUS_NON_SHORT_CIRCUIT",
+    "class": "org.dominokit.domino.formsamples.client.views.ui.AddLCImportComponent",
+    "field": null,
+    "method": "isFormValid",
+    "reason": "All sections must validate so every missing field is highlighted. The original boolean AND deliberately evaluates every validator; no null-dereference guard depends on short-circuiting."
+  },
+  {
+    "type": "NS_DANGEROUS_NON_SHORT_CIRCUIT",
+    "class": "org.dominokit.domino.formsamples.client.views.ui.section.DocumentsRequiredSection",
+    "field": null,
+    "method": "validate",
+    "reason": "All sections must validate so every missing field is highlighted. The original boolean AND deliberately evaluates every validator; no null-dereference guard depends on short-circuiting."
   }
 ]

@@ -27,21 +27,17 @@
   <repositories>
     <repository>
       <id>github-cucumber-tea</id>
-      <url>https://maven.pkg.github.com/cstainton/cucumber-tea</url>
+      <url>https://maven.pkg.github.com/instanto-io/cucumber-tea</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository>
-      <id>forgejo</id>
-      <name>Instanto snapshots</name>
-      <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
-      <releases><enabled>false</enabled></releases>
-      <snapshots><enabled>true</enabled></snapshots>
-    </repository>
-    <repository>
-      <id>github-gherkin-tea</id>
-      <url>https://maven.pkg.github.com/cstainton/gherkin-tea</url>
+      <id>github-mockatcha</id>
+      <url>https://maven.pkg.github.com/instanto-io/mockatcha</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
   </repositories>
   <dependencies>

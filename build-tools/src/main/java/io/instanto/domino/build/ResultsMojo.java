@@ -3,6 +3,7 @@ package io.instanto.domino.build;
 import static io.instanto.domino.build.BuildFiles.*;
 
 import com.google.gson.*;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import org.apache.maven.plugins.annotations.*;
@@ -18,7 +19,9 @@ public final class ResultsMojo extends BuildMojo {
   private static final Map<String, Integer> EXPECTED =
       Map.of(
           "GalleryStepsTest",
-          62,
+          69,
+          "LayoutStepsTest",
+          5,
           "TableStepsTest",
           14,
           "WidgetStepsTest",
@@ -26,7 +29,9 @@ public final class ResultsMojo extends BuildMojo {
           "NativeStepsTest",
           1,
           "ReuseStepsTest",
-          1);
+          1,
+          "VisualReferenceStepsTest",
+          3);
 
   @Override
   protected void run() throws Exception {
@@ -61,7 +66,7 @@ public final class ResultsMojo extends BuildMojo {
         }
         reports.put(
             out.resolve("junit/" + engine + "/" + report.getFileName()),
-            Files.readString(report).replace(root.toString(), "."));
+            portableReport(report, root));
       }
       if (first == null) first = names;
       else
@@ -106,9 +111,7 @@ public final class ResultsMojo extends BuildMojo {
       for (Path report : files(module.resolve("target/surefire-reports")))
         if (report.getFileName().toString().matches("TEST-.*\\.xml")) {
           unitTests.add(attributes(xml(report), "name", "tests", "failures", "errors", "skipped"));
-          reports.put(
-              out.resolve(report.getFileName()),
-              Files.readString(report).replace(root.toString(), "."));
+          reports.put(out.resolve(report.getFileName()), portableReport(report, root));
         }
     }
     Map<String, Object> summary = new LinkedHashMap<>();
@@ -137,6 +140,13 @@ public final class ResultsMojo extends BuildMojo {
     json(out.resolve("summary.json"), summary);
     json(out.resolve("generated-sha256.json"), manifest);
     getLog().info("Recorded " + mode + ": " + stats);
+  }
+
+  private static String portableReport(Path report, Path root) throws IOException {
+    return Files.readString(report)
+        .replaceAll("(?ms)^[ \\t]*<properties>.*?</properties>\\R?", "")
+        .replace(root.toString(), ".")
+        .replace(System.getProperty("user.home"), "~");
   }
 
   static void validateSuite(Element suite, int count, String report) throws Exception {

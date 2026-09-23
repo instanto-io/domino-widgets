@@ -47,7 +47,8 @@
         "initSelectExample"
       ],
       "nativeElement": false,
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "dialogs/src/main/java/org/dominokit/domino/dialogs/client/views/ui/DialogsViewImpl.java",
@@ -58,7 +59,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/DialogsExamples.java",
       "route": "dialogs",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -73,7 +76,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/AlertsExamples.java",
       "route": "alerts",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": true
     },
     {
@@ -87,7 +92,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/BadgesExamples.java",
       "route": "badges",
       "fields": "\n    private static class BadgeSample {\n        private final String desc;\n        private final String badgeText;\n        private final CssClass[] cssClasses;\n\n        public BadgeSample(String desc, String badgeText, CssClass... cssClasses) {\n            this.desc = desc;\n            this.badgeText = badgeText;\n            this.cssClasses = cssClasses;\n        }\n    }\n\n",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": true
     },
     {
@@ -102,7 +109,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/BreadcrumbExamples.java",
       "route": "breadcrumb",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -119,7 +128,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/CardsExamples.java",
       "route": "cards",
       "fields": "    private static final String SAMPLE_CONTENT = \"Quis pharetra a pharetra fames blandit. Risus faucibus velit Risus imperdiet mattis neque volutpat, etiam lacinia netus dictum magnis per facilisi sociosqu. Volutpat. Ridiculus nostra.\";",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false,
       "replacements": {
         "http://placehold.jp/3d4070/ffffff/36x36.png": "showcase-image.jpg",
@@ -142,7 +153,9 @@
       "fields": "    private Card simpleCard;\n    private Card removableCard;\n    private Card iconChipsCard;\n    private Card imagesChipsCard;\n    private Card lettersChipsCard;\n    private Card selectableChipsCard;",
       "before": "        simpleCard = Card.create(\"SIMPLE CHIPS\");\n        removableCard = Card.create(\"REMOVABLE CHIPS\");\n        iconChipsCard = Card.create(\"CHIPS WITH ICONS\");\n        imagesChipsCard = Card.create(\"CHIPS WITH IMAGES\");\n        lettersChipsCard = Card.create(\"CHIPS WITH LETTERS\");\n        selectableChipsCard = Card.create(\"SELECTABLE CHIPS\");",
       "after": "element.appendChild(simpleCard);\nelement.appendChild(removableCard);\nelement.appendChild(iconChipsCard);\nelement.appendChild(imagesChipsCard);\nelement.appendChild(lettersChipsCard);\nelement.appendChild(selectableChipsCard);",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false,
       "replacements": {
         "https://randomuser.me/api/portraits/med/men/0.jpg": "showcase-image.jpg",
@@ -168,7 +181,9 @@
       "replacements": {
         "CollapseDuration": "CollapsibleDuration"
       },
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -184,7 +199,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/GridsExamples.java",
       "route": "grids",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": true
     },
     {
@@ -199,7 +216,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/HelpersExamples.java",
       "route": "helpers",
       "fields": "    private static final String SAMPLE_TEXT = \"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\";",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -231,7 +250,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/InputFieldsExamples.java",
       "route": "inputfields",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -244,7 +265,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/LabelsExamples.java",
       "route": "labels",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -256,7 +279,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ListsExamples.java",
       "route": "lists",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false,
       "replacements": {
         "        Random random = new Random();\n        int i = random.nextInt(100 - 10);\n        DemoServiceFactory.INSTANCE\n                .list()\n                .onSuccess(items -> {\n                    singleSelectList.setItems(items.subList(i, i + 10));\n                    multiSelectList.setItems(items.subList(i, i + 10));\n                })\n                .onFailed(failedResponse -> {\n                })\n                .send();": "singleSelectList.setItems(SampleContacts.create());\nmultiSelectList.setItems(SampleContacts.create());",
@@ -316,7 +341,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/NotificationsExamples.java",
       "route": "notifications",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -333,7 +360,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/PaginationExamples.java",
       "route": "pagination",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -346,7 +375,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/PopoverExamples.java",
       "route": "popover",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -359,7 +390,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/PreloadersExamples.java",
       "route": "preloaders",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -415,7 +448,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/SpinSelectExamples.java",
       "route": "spin",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -431,7 +466,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/SplitPanelExamples.java",
       "route": "splitPanel",
       "fields": "    private final CssClass demo_split_div = () -> \"demo-split-div\";\n",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": true
     },
     {
@@ -446,7 +483,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/SteppersExamples.java",
       "route": "steppers",
       "fields": "    private static final String SAMPLE_CONTENT = \"Quis pharetra a pharetra fames blandit. Risus faucibus velit Risus imperdiet mattis neque volutpat, etiam lacinia netus dictum magnis per facilisi sociosqu. Volutpat. Ridiculus nostra.\";",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -490,7 +529,9 @@
         "new DateTimeFormatInfoImpl_es()": "new org.gwtproject.i18n.shared.cldr.impl.BrowserDateTimeFormatInfo(\"es\")"
       },
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -507,7 +548,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/TypographyExamples.java",
       "route": "typography",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -519,7 +562,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/WavesExamples.java",
       "route": "waves",
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -541,7 +586,9 @@
         "new DateTimeFormatInfoImpl_es()": "new org.gwtproject.i18n.shared.cldr.impl.BrowserDateTimeFormatInfo(\"es\")"
       },
       "fields": "",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false
     },
     {
@@ -557,7 +604,9 @@
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/FormsValidationsExamples.java",
       "route": "formsvalidations",
       "fields": "    private Card countsCard;\n    private Card validationsCard;\n    private Card readOnlyCard;",
-      "helpers": [],
+      "helpers": [
+
+      ],
       "nativeElement": false,
       "before": "        countsCard = Card.create(\"WORD COUNTER\");\n        validationsCard = Card.create(\"VALIDATIONS\");\n        readOnlyCard = Card.create(\"READ ONLY\");",
       "after": "element.appendChild(countsCard);\nelement.appendChild(validationsCard);\nelement.appendChild(readOnlyCard);"
@@ -571,7 +620,9 @@
         "nestedTree",
         "activeAndExpandIcons"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/TreeExamples.java",
@@ -590,7 +641,9 @@
         "initTagsInputExample",
         "initSuggestBoxExample"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "    private static final String IP_ADDRESS_REGEX = \"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$\";\n    public static class Person {\n\n        private int id;\n        private String name;\n\n        public Person(int id, String name) {\n            this.id = id;\n            this.name = name;\n        }\n\n        public Person(String name) {\n            this.id = 0;\n            this.name = name;\n        }\n\n        public int getId() {\n            return id;\n        }\n\n        public void setId(int id) {\n            this.id = id;\n        }\n\n        public String getName() {\n            return name;\n        }\n\n        public void setName(String name) {\n            this.name = name;\n        }\n\n        @Override\n        public String toString() {\n            return \"Person{\" +\n                    \"id=\" + id +\n                    \", name='\" + name + '\\'' +\n                    '}';\n        }\n    }\n",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/AdvancedFormsExamples.java",
@@ -603,7 +656,9 @@
       "path": "animation/src/main/java/org/dominokit/domino/animation/client/views/ui/AnimationViewImpl.java",
       "sha256": "943e922be8b7c8e063310341291cb77f382c824ce1e7585f3fe2f72ba52b71ff",
       "route": "animation",
-      "methods": [],
+      "methods": [
+
+      ],
       "helpers": [
         "createCard"
       ],
@@ -622,7 +677,9 @@
       "methods": [
         "basicSample"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/CarouselExamples.java",
@@ -638,7 +695,9 @@
         "defaultMedia",
         "mediaAlignment"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "    private static final String SAMPLE_TEXT = \"Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.\";",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/MediaExamples.java",
@@ -656,7 +715,9 @@
         "withTitle",
         "differentDirections"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "    private static final String SAMPLE_TEXT = \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s\";",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ThumbnailsExamples.java",
@@ -693,11 +754,14 @@
       "methods": [
         "dragAndDrop"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/DndExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/BasicDataTableViewImpl.java",
@@ -706,11 +770,14 @@
       "methods": [
         "basicTable"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/BasicDataTableExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/SelectionPluginViewImpl.java",
@@ -720,11 +787,14 @@
         "singleSelectionPlugin",
         "multiSelectionPlugin"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/SelectionPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/SortAndSearchPluginViewImpl.java",
@@ -733,11 +803,14 @@
       "methods": [
         "sortAndSearch"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/SortAndSearchPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/PaginationPluginViewImpl.java",
@@ -748,11 +821,14 @@
         "scrollingPagination",
         "advancedPagination"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/PaginationPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/HeaderBarPluginViewImpl.java",
@@ -761,11 +837,14 @@
       "methods": [
         "tableHeaderBarPlugin"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/HeaderBarPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/ColumnResizePluginViewImpl.java",
@@ -774,11 +853,14 @@
       "methods": [
         "resizableColumns"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ColumnResizePluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/PinColumnsPluginViewImpl.java",
@@ -787,11 +869,14 @@
       "methods": [
         "pinColumns"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/PinColumnsPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/EmptyStatePluginViewImpl.java",
@@ -800,11 +885,14 @@
       "methods": [
         "emptyState"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/EmptyStatePluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/FixedDataTableViewImpl.java",
@@ -813,11 +901,14 @@
       "methods": [
         "basicFixedTable"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/FixedDataTableExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/MarkerPluginViewImpl.java",
@@ -826,11 +917,14 @@
       "methods": [
         "markerPlugin"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/MarkerPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/ColumnsGroupsViewImpl.java",
@@ -840,11 +934,14 @@
         "groupColumns",
         "groupPinResizeColumns"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ColumnsGroupsExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/EditableDataTableViewImpl.java",
@@ -853,11 +950,14 @@
       "methods": [
         "editableTable"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/EditableDataTableExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/DragAndDropPluginViewImpl.java",
@@ -867,11 +967,14 @@
         "dragAndDrop",
         "dragAndDropDifferentSources"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/DragAndDropPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/GroupingPluginViewImpl.java",
@@ -880,7 +983,9 @@
       "methods": [
         "groupingTable"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/GroupingPluginExamples.java",
@@ -895,7 +1000,9 @@
       "methods": [
         "recordDetailsPlugin"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/RecordDetailsPluginExamples.java",
@@ -910,11 +1017,14 @@
       "methods": [
         "rowMenu"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/RowMenuExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/ScrollLoadingDatatableViewImpl.java",
@@ -923,11 +1033,14 @@
       "methods": [
         "scrollableTable"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ScrollLoadingDatatableExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/SummaryPluginViewImpl.java",
@@ -936,11 +1049,14 @@
       "methods": [
         "summaryPlugin"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/SummaryPluginExamples.java",
-      "replacements": {}
+      "replacements": {
+      }
     },
     {
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/ui/TopPanelPluginViewImpl.java",
@@ -949,7 +1065,9 @@
       "methods": [
         "topPanelPlugin"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/TopPanelPluginExamples.java",
@@ -965,7 +1083,9 @@
         "treeGridFullParentSpan",
         "treeGridParentColumns"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/TreeGridEagerPluginExamples.java",
@@ -983,7 +1103,9 @@
         "lazyTreeGridParentColumns",
         "largeLazyTreeGridParentColumns"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/TreeGridLazyPluginExamples.java",
@@ -999,7 +1121,9 @@
       "methods": [
         "allInOne"
       ],
-      "helpers": [],
+      "helpers": [
+
+      ],
       "fields": "",
       "nativeElement": false,
       "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/PluginsMixExamples.java",
@@ -1007,6 +1131,135 @@
         "cellInfo.getElement()": "cellInfo.element()",
         "handleEvent(TableEvent event)": "handleEvent(org.dominokit.domino.ui.utils.DominoEvent event)",
         "new RecordDetailsPlugin<>(cell -> new ContactDetails(cell).element())": "new RecordDetailsPlugin<>((org.dominokit.domino.ui.datatable.CellRenderer<Contact>) cell -> new ContactDetails(cell).element())"
+      }
+    },
+    {
+      "path": "appLayout/src/main/java/org/dominokit/domino/applayout/client/views/ui/AppLayoutViewImpl.java",
+      "sha256": "dd89cae7e9fe5d401b9c436a6eacbf0ba803b1c80c36cd1bae3604e7fa658818",
+      "methods": [
+        "initAppLayoutSample"
+      ],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/AppLayoutExamples.java",
+      "route": "app-layout",
+      "fields": "",
+      "helpers": [
+
+      ],
+      "nativeElement": true,
+      "replacements": {
+        "CodeCard.preBlock(": "pre().textContent(",
+        "        element.appendChild(LinkToSourceCode.createLink(\"appLayout\", this.getClass()).element());\n": "",
+        "GWT.getModuleBaseURL() + ": ""
+      },
+      "omitStatementsContaining": [
+        "Card.create(\"USAGE\")"
+      ]
+    },
+    {
+      "path": "flexlayout/src/main/java/org/dominokit/domino/flexlayout/client/views/ui/FlexLayoutViewImpl.java",
+      "sha256": "3d1e72cbe6d309ce4eaa5bfa2226cc5241dacf6eaf22169cf1df047e39ada3a2",
+      "methods": [
+        "initLayoutPlayground",
+        "initFlexItems"
+      ],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/FlexLayoutExamples.java",
+      "route": "flex-layout",
+      "fields": "private Card layoutPlaygroundCard = Card.create(\"LAYOUT PLAYGROUND\"); private Card flexItemsCard = Card.create(\"FLEX ITEMS\");",
+      "helpers": [
+        "background",
+        "order",
+        "grow",
+        "shrink"
+      ],
+      "nativeElement": false,
+      "replacements": {
+      },
+      "after": "element.appendChild(layoutPlaygroundCard); element.appendChild(flexItemsCard);"
+    },
+    {
+      "path": "gridLayout/src/main/java/org/dominokit/domino/gridLayout/client/views/ui/GridLayoutViewImpl.java",
+      "sha256": "5468eede8192ff51eb4eb885cd4bebb891f64a6da5348a2c595905035e9f5674",
+      "methods": [
+        "initLayoutSamples"
+      ],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/GridLayoutExamples.java",
+      "route": "grid-layout",
+      "fields": "",
+      "helpers": [
+
+      ],
+      "nativeElement": false,
+      "replacements": {
+        "CodeCard.preBlock(": "pre().textContent("
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/FormSamplesViewImpl.java",
+      "sha256": "30c7ad7a0c63667c6f9559a3aa5ea448321c84a2fe6dde53b92d05e2f5367e1e",
+      "methods": [
+        "init"
+      ],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/FormSamplesExamples.java",
+      "route": "form-samples",
+      "fields": "    private CorporateProfile corporateProfile;\n    private List<Country> countries;\n    private List<Beneficiary> beneficiaries;\n    private List<Bank> banks;\n    private List<CurrencyData> currencies;\n    private AddLCImportComponent addLCImportComponent;\n    private org.dominokit.domino.formsamples.client.views.FormSamplesView.FormSamplesUIHandlers uiHandlers;\n\n\nprivate static final class Scheduler { static Scheduler get(){return new Scheduler();} void scheduleDeferred(Runnable work){work.run();} }\n",
+      "helpers": [
+        "reBuildForm",
+        "onCreate"
+      ],
+      "nativeElement": true,
+      "before": "this.uiHandlers = this::onCreate;",
+      "imports": [
+        "org.dominokit.domino.formsamples.shared.model.*",
+        "org.dominokit.domino.formsamples.client.views.ui.AddLCImportComponent",
+        "org.dominokit.domino.formsamples.shared.model.Country"
+      ],
+      "replacements": {
+        "element = div().css(\"content-margin\").element();": "element.classList.add(\"content-margin\");",
+        "CorporateProfile.MAPPER.read(PROFILE_JSON)": "FormSampleData.profile()",
+        "Countries.MAPPER.read(COUNTRIES_JSON).getCountries()": "FormSampleData.countries()",
+        "Arrays.asList(Beneficiary.MAPPER.readArray(BENEFICIARIES_JSON.replace(\"countryIsoCode\", \"countryISOCode\"), Beneficiary[]::new))": "FormSampleData.beneficiaries()",
+        "Arrays.asList(Bank.MAPPER.readArray(BANKS_JSON, Bank[]::new))": "FormSampleData.banks()",
+        "Currencies.MAPPER.read(CURRENCIES_JSON).getCurrencies()": "FormSampleData.currencies()",
+        "        element.appendChild(LinkToSourceCode.create(\"formsamples\", this.getClass()).element());": "",
+        "MessageDialog.createMessage(": "MessageDialog.create(\"Letter of credit\", ",
+        ".success()": ".addCss(org.dominokit.domino.ui.style.DominoCss.dui_success)",
+        ".addCloseListener(() -> {": ".addCloseListener(dialog -> {"
+      }
+    },
+    {
+      "path": "colors/src/main/java/org/dominokit/domino/colors/client/views/ui/ColorsViewImpl.java",
+      "sha256": "d77ea94b0d95ba91fa047d3b88df399b282726c0a0d20a9279bf2c59329f54ec",
+      "methods": ["init"],
+      "helpers": ["makeColorBox"],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ColorsExamples.java",
+      "route": "colors",
+      "fields": "",
+      "nativeElement": false,
+      "omitStatementsContaining": ["LinkToSourceCode.createLink"]
+    },
+    {
+      "path": "mdiicons/src/main/java/org/dominokit/domino/mdiicons/client/views/ui/MdiIconsViewImpl.java",
+      "sha256": "32bb8ad1757aeacccbb2f7050eba82dd0b3286c182f4c510c4696bb99cfdb832",
+      "methods": ["mdiEffects"],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/MdiIconsExamples.java",
+      "route": "mdiicons",
+      "fields": "",
+      "before": "element.appendChild(IconBrowser.create());",
+      "nativeElement": false,
+      "omitStatementsContaining": ["CodeCard.createCodeCard"]
+    },
+    {
+      "path": "themes/src/main/java/org/dominokit/domino/themes/client/views/ui/ThemesViewImpl.java",
+      "sha256": "544683cfbdd7d362efc59e84ba86af6ac63ee5c69699668c49d6ea977f852bd8",
+      "methods": ["init"],
+      "helpers": ["themDiv"],
+      "adapter": "showcase-shared/src/main/java/io/instanto/domino/client/ThemesExamples.java",
+      "route": "themes",
+      "fields": "",
+      "nativeElement": false,
+      "replacements": {
+        "root = div()": "element",
+        "return root.element();": "return element.element();"
       }
     }
   ],
@@ -1106,6 +1359,665 @@
       "path": "datatable/src/main/java/org/dominokit/domino/datatable/client/views/model/ContactSummary.java",
       "sha256": "ecc2d9e5024ae2ce19f47ac1f3da1aa251d6c2af2ca4f0fd806c4a3757219ffd",
       "name": "ContactSummary"
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/BanksComponent.java",
+      "sha256": "e9654a2b7e2515722865c7b3ec87a2570c166d998afe89c3bff2c1ef2dd896ba",
+      "name": "BanksComponent",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/CorrespondentChargesInstructionsSection.java",
+      "sha256": "f340f3870a88a12e3f818eb9c092d03184d043a528d873ef10cc34afb130bc86",
+      "name": "CorrespondentChargesInstructionsSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino."
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/GeneralSection.java",
+      "sha256": "55b6a492b8cfcf5e1249cc075ffd29f65da8a9ef54b636a883fb70c8b0fc38f9",
+      "name": "GeneralSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.datepicker.DateBox": "org.dominokit.domino.ui.forms.DateBox"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/AuthorizationSection.java",
+      "sha256": "dbda76bcb89ccf27ba2f269359e16fb7e4ff7979aa1cb00f4c98c7d340d7f1d1",
+      "name": "AuthorizationSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "import org.dominokit.domino.ui.style.Styles;": "import static org.dominokit.domino.ui.style.DominoCss.*;",
+        "Styles.LEAD": "dui_lead"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/ImportSection.java",
+      "sha256": "65a93090ddd5670d469d3afe13207e0477a0db710e24e6446e3474823143679c",
+      "name": "ImportSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.IsElement": "org.dominokit.domino.ui.IsElement"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/ApplicantSection.java",
+      "sha256": "61164aa78feb1ee78bb6d9633fb48a63a957204ea5c8094bef8e1307b9bfc861",
+      "name": "ApplicantSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/IssuerBankSection.java",
+      "sha256": "4b67e4fa1b1f10e51e1b59d8c640c78b2280e942d93e44173176e51a6a23d9ce",
+      "name": "IssuerBankSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/CreditAmountAndToleranceSection.java",
+      "sha256": "01a06d5da3cafc9cc8289963c1519f0dba60e1446b3a72275a27d78f72c943fb",
+      "name": "CreditAmountAndToleranceSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "com.google.gwt.i18n.client.NumberFormat": "org.gwtproject.i18n.client.NumberFormat"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/AccountDetailsPopupPosition.java",
+      "sha256": "c582a684c4b941430e9d34b7fb4f945e4f23ce30f2260f9d9c9c8138b30f48d0",
+      "name": "AccountDetailsPopupPosition",
+      "preservePackage": true,
+      "replacements": {
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/CorporateAccountsSelect.java",
+      "sha256": "2463e4723b20c3f969aebffbe436ca0d5fa3bec4188dabccbc54fe0d13a7b1a7",
+      "name": "CorporateAccountsSelect",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.IsElement": "org.dominokit.domino.ui.IsElement",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/ConfirmationInstructionsSection.java",
+      "sha256": "b7c755a77519a66fcf6f53797e9a83f3c68f9e966a509184d85c4009c512d3c3",
+      "name": "ConfirmationInstructionsSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino."
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/GoodsDescriptionSection.java",
+      "sha256": "10d6aac45c3a23177505ead83e39ade9660edab504acf8044718105a8d196856",
+      "name": "GoodsDescriptionSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.forms.TextArea": "org.dominokit.domino.ui.forms.TextAreaBox",
+        "TextArea ": "TextAreaBox ",
+        "TextArea.create": "TextAreaBox.create"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/CertificateOfOriginPart.java",
+      "sha256": "0805636b63bf0230a6cd8d10de6b5abd862e6561b3cc4ef52ba9e55f5db7793f",
+      "name": "CertificateOfOriginPart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/ShippingDocumentsPart.java",
+      "sha256": "8a29924151f4e2e0f3705d94097828df7858ed254f7f3a0314a7d955847acec3",
+      "name": "ShippingDocumentsPart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/DraftsPart.java",
+      "sha256": "6bef6619b2d87184e4819379bb6c16f3092f6495ccb1ce74e7c371f7267e1ed8",
+      "name": "DraftsPart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;",
+        "import org.dominokit.domino.ui.style.Color;": "import static org.dominokit.domino.ui.style.ColorsCss.*;",
+        "import org.dominokit.domino.ui.style.Styles;": "import static org.dominokit.domino.ui.style.DominoCss.*;",
+        "import org.dominokit.domino.ui.utils.TextNode;": "import static org.dominokit.domino.ui.utils.Domino.text;",
+        "TextNode.of(": "text(",
+        "Color.RED.getStyle()": "dui_fg_red",
+        "Styles.padding_10": "dui_p_2"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/OtherDocumentsPart.java",
+      "sha256": "a323c5b6bf733eec80248668a2b2d0b83b46927dabe5ae19fe405f10efeb7361",
+      "name": "OtherDocumentsPart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "import org.dominokit.domino.ui.style.Color;": "import static org.dominokit.domino.ui.style.ColorsCss.*;",
+        "import org.dominokit.domino.ui.style.Styles;": "import static org.dominokit.domino.ui.style.DominoCss.*;",
+        "import org.dominokit.domino.ui.utils.TextNode;": "import static org.dominokit.domino.ui.utils.Domino.text;",
+        "TextNode.of(": "text(",
+        "Styles.padding_10": "dui_p_2",
+        "Styles.pull_right": "dui_float_right",
+        "setBackground(Color.GREEN)": "addCss(dui_bg_green)"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/InsurancePolicyPart.java",
+      "sha256": "74c69f4b7a9f96527bde0f8070e7665e3c2d5740ed002171d56494d7c165de93",
+      "name": "InsurancePolicyPart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino."
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/PackingListPart.java",
+      "sha256": "71e8345018e61f02f678bfd2dba17045b3ada077416d2d6e9d3726575f4afe3b",
+      "name": "PackingListPart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino."
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/documents/SignedCommercialInvoicePart.java",
+      "sha256": "edbe92ef14ab5864775be6b65f2a38ac5d512b4a3048ec0e4ef74ce833cc72d1",
+      "name": "SignedCommercialInvoicePart",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/PaymentScheduleSection.java",
+      "sha256": "78f0ad59ee92edcee5f874017a4c29281aaff4f2d6d82738d4ff9d0d4c012b8e",
+      "name": "PaymentScheduleSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "import org.dominokit.domino.ui.style.Color;": "import static org.dominokit.domino.ui.style.ColorsCss.*;",
+        "import org.dominokit.domino.ui.style.Styles;": "import static org.dominokit.domino.ui.style.DominoCss.*;",
+        "import org.dominokit.domino.ui.utils.TextNode;": "import static org.dominokit.domino.ui.utils.Domino.text;",
+        "TextNode.of(": "text(",
+        "Color.RED.getStyle()": "dui_fg_red",
+        "Styles.padding_10": "dui_p_2",
+        "setBackground(Color.GREEN)": "addCss(dui_bg_green)",
+        "import org.dominokit.domino.ui.forms.*;": "import org.dominokit.domino.ui.forms.*;\nimport org.dominokit.domino.ui.forms.suggest.Select;\nimport org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/ShipmentDetailsSection.java",
+      "sha256": "78e52bae09c819153330e994151fddecc18e2f9c5beb3acc01eae74ff02b7054",
+      "name": "ShipmentDetailsSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.datepicker.DateBox": "org.dominokit.domino.ui.forms.DateBox",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;",
+        "com.google.gwt.i18n.client.DateTimeFormat": "org.gwtproject.i18n.shared.DateTimeFormat"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/ValiditySection.java",
+      "sha256": "70da19979322fb4cac399a858333bc632ddd8a8d7e20b60677535af6f8590b43",
+      "name": "ValiditySection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.datepicker.DateBox": "org.dominokit.domino.ui.forms.DateBox",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "com.google.gwt.i18n.client.DateTimeFormat": "org.gwtproject.i18n.shared.DateTimeFormat"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/AccountDetails.java",
+      "sha256": "a53c3fb0c1752a944e32a71ab9a6875efecb1c751277766489359c852491a7a4",
+      "name": "AccountDetails",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.IsElement": "org.dominokit.domino.ui.IsElement"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/DocumentsRequiredSection.java",
+      "sha256": "97a1690dc4e440485a6aff63d49f9401d6499c14f4841ee01b28ae9753cc8f54",
+      "name": "DocumentsRequiredSection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/section/BeneficiarySection.java",
+      "sha256": "c5199d9335bfbdb0a88f78597b1a892341ef93975ca3f51c88fd55c8e01cf75e",
+      "name": "BeneficiarySection",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.header.BlockHeader": "org.dominokit.domino.ui.typography.BlockHeader",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/CurrenciesComponent.java",
+      "sha256": "0717068e83ad06ffabcdecb02fced699e664dbd0e97d18ee99a01af30f449101",
+      "name": "CurrenciesComponent",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;",
+        "com.google.gwt.i18n.client.NumberFormat": "org.gwtproject.i18n.client.NumberFormat"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/AddLCImportComponent.java",
+      "sha256": "419cd250a067e04144db9bcec5c614bd1ee1c6f825ee8587779f35bb524300c2",
+      "name": "AddLCImportComponent",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/CustomElements.java",
+      "sha256": "18686f46fdc560c5a6da8be7cecc92842c2322031c316ebfc4b57305503291b6",
+      "name": "CustomElements",
+      "preservePackage": true,
+      "replacements": {
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/CountriesComponent.java",
+      "sha256": "4f7cad387cd2a75eb2f132ddf4c271b1bbd9b62b94b7151d49ed8fe8a8ea8846",
+      "name": "CountriesComponent",
+      "preservePackage": true,
+      "replacements": {
+        "org.jboss.elemento.Elements.": "org.dominokit.domino.ui.utils.Domino.",
+        "org.dominokit.domino.ui.forms.Select;": "org.dominokit.domino.ui.forms.suggest.Select;",
+        "org.dominokit.domino.ui.forms.SelectOption;": "org.dominokit.domino.ui.forms.suggest.SelectOption;"
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/Constants.java",
+      "sha256": "aa2ba88b2330fcbd9ada871bb5621f208dea839196e4ee3e924bfac4c5d0f8b0",
+      "name": "Constants",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/ContactPerson.java",
+      "sha256": "438ecf5fcb9396f2e5e9dc751f70437cbb7b0d01d4dca2c3def62b181174bfb1",
+      "name": "ContactPerson",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/TruckConsignmentNote.java",
+      "sha256": "1149f16c04b7ab797be20c4966b479b9f1d0c957c86803c838df37a055534e80",
+      "name": "TruckConsignmentNote",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/FeesAndChargesSettlementAccount.java",
+      "sha256": "46f9fa59a160a5d925ab55c373c5145c14b860cfb90c97f5ac4a7595bb9320fb",
+      "name": "FeesAndChargesSettlementAccount",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/DocumentsRequired.java",
+      "sha256": "707fa6a082fc414793b0dafdec05b4d21c26c9e5a5f7d20ff34e3bc7ae34044a",
+      "name": "DocumentsRequired",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Country.java",
+      "sha256": "b43ec2babcebfec93b0deec1729cffe9fa98c1cec47619c07d32d56881d39e75",
+      "name": "Country",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/OtherDocumentsItem.java",
+      "sha256": "3ba764062739e58d2d58c1c1deb8dc8e56f3594c3265cacdf92c8e091ba8a844",
+      "name": "OtherDocumentsItem",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Applicant.java",
+      "sha256": "03a70c6047c09085740b7097c2cbf3ec13ed0ab1bcf3e75c1a05dcfb35298975",
+      "name": "Applicant",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/CreditAmount.java",
+      "sha256": "d6cd520db9ef8b95fc1d28fe8d67896fad4a212b8fe2323b84d430e2c7bb0ac0",
+      "name": "CreditAmount",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/CollateralSettlementAccount.java",
+      "sha256": "f1f85dcbc187f7c19ad83abb43da9bfc277670664c7a4cf4154ffc239098cc87",
+      "name": "CollateralSettlementAccount",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/LcSettlementAccount.java",
+      "sha256": "103a8f1729f524132ed7a9da6b1ffe58a60b87b47bcfcf80606f1f92572bcace",
+      "name": "LcSettlementAccount",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/CertificateOfOrigin.java",
+      "sha256": "6acc203a115c6196e981f3265c6f745ef2e906f371fa0322ef6ad36475d71669",
+      "name": "CertificateOfOrigin",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/SignedCommercialInvoice.java",
+      "sha256": "cc0bab4ebd3ef8a517fd8ef2626598f17dc1cd1ade23f4bff59f4ff50dfb6555",
+      "name": "SignedCommercialInvoice",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/PackingList.java",
+      "sha256": "ee8c41b1e35b7cf3ac0e7ea5ad5fcf30fae27b85fb2193f42eb47547ae5cae0b",
+      "name": "PackingList",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Currencies.java",
+      "sha256": "4d22faa588ca405118adab818eb18de4880ff6d1b7876ab4362226dc47197e99",
+      "name": "Currencies",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.jackson.annotation.JSONMapper;\n": "",
+        "@JSONMapper": "",
+        "    public static final Currencies_MapperImpl MAPPER = new Currencies_MapperImpl();\n": ""
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/ConfirmationInstructions.java",
+      "sha256": "67bd6472b5572a0bea621a38880e9a28deade669e40890913426c6eb50a3d998",
+      "name": "ConfirmationInstructions",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/OceanBillsOfLanding.java",
+      "sha256": "b9e6194b03fd09486ec9e40bb9d9cf3d1e32a2ca2230972f3db04a489f269d29",
+      "name": "OceanBillsOfLanding",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/LetterOfCredit.java",
+      "sha256": "e7133bdb93faf3692eebe6278b0b63102f9a2b328c1c6a5ad8787e7b89691c5e",
+      "name": "LetterOfCredit",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.jackson.annotation.JSONMapper;\n": "",
+        "@JSONMapper": "",
+        "    public static final LetterOfCredit_MapperImpl MAPPER = new LetterOfCredit_MapperImpl();\n": ""
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Issuer.java",
+      "sha256": "534dcebd0a0ff943bc06503fa9ab29ae64594e074d87741f8b5862908b9e5ec9",
+      "name": "Issuer",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/ChargesInstructions.java",
+      "sha256": "32aaf54cdc846e9ce8c4d43a05a2a573e6f8b625ef95c5f89ed940ebadc8600b",
+      "name": "ChargesInstructions",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/CurrencyData.java",
+      "sha256": "0a83949ffdd28e578ffc349c5eda1d0c6e1c67e99a77c5e9b1a28c731fb1ef2c",
+      "name": "CurrencyData",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Beneficiary.java",
+      "sha256": "24fc98bf37a497245249effb353c30194281bb3b48bb8a711dbee985c6674195",
+      "name": "Beneficiary",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.jackson.annotation.JSONMapper;\n": "",
+        "@JSONMapper": "",
+        "    public static final Beneficiary_MapperImpl MAPPER = new Beneficiary_MapperImpl();\n": ""
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Address.java",
+      "sha256": "a9369857ca58017fcab5570f14e44007cf49cdf84f97f6629bed97273a2fa170",
+      "name": "Address",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Account.java",
+      "sha256": "0a8d3fcafad9c5f88e03b8255934bd72c5d1589acd2d40149d078b35b6ba2211",
+      "name": "Account",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Validity.java",
+      "sha256": "a1f72f28997b968b14b688541af0101488a8292452fd6016b26a102cf038245f",
+      "name": "Validity",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Countries.java",
+      "sha256": "bf7856afcf0c8dc32b48640e0c5323609ac5aabe3eb641c4b96ee001d9f61270",
+      "name": "Countries",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.jackson.annotation.JSONMapper;\n": "",
+        "@JSONMapper": "",
+        "    public static final Countries_MapperImpl MAPPER = new Countries_MapperImpl();\n": ""
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/CorporateProfile.java",
+      "sha256": "b6529d5bef1d8db9322a4032537ffa979b61e73a56c501f9c41f98e4e649145a",
+      "name": "CorporateProfile",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.jackson.annotation.JSONMapper;\n": "",
+        "@JSONMapper": "",
+        "    public static final CorporateProfile_MapperImpl MAPPER = new CorporateProfile_MapperImpl();\n": ""
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Branch.java",
+      "sha256": "90d56c16996be9e69856f66010a18a90a00d23d5125a9efb0dc03d9312af4053",
+      "name": "Branch",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Insurance.java",
+      "sha256": "65ab61087593ad59ebe0f3fda0c7d338ea2d7c97deeafc3225fe4b39db7d5836",
+      "name": "Insurance",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/LcAmount.java",
+      "sha256": "f85e0434dc90199274bc5526257870f0cd644c331a6c8514fa3c06cfa28ceb38",
+      "name": "LcAmount",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/DraftsItem.java",
+      "sha256": "66a1c060b51df111e672f20a6396afd5f7fa3960197865b3238d19bbd29a0410",
+      "name": "DraftsItem",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/ShipmentDetails.java",
+      "sha256": "ace563ebbcf40106f84fc01a86b00e747037f9c68ad752d742de39f6a90c25d3",
+      "name": "ShipmentDetails",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Bank.java",
+      "sha256": "3404e0f01223ef1e6de7412d075e65b17dabdabd7f5a976f8ce997409e38e1e3",
+      "name": "Bank",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.jackson.annotation.JSONMapper;\n": "",
+        "@JSONMapper": "",
+        "    public static final Bank_MapperImpl MAPPER = new Bank_MapperImpl();\n": ""
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/SellerBeneficiary.java",
+      "sha256": "8acacc159956dcdf8f17e778844f7b8a2e6ca452ef55af22f65f2a58ad5717e2",
+      "name": "SellerBeneficiary",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/Agreement.java",
+      "sha256": "57c5ddecb6534e28ccf42818d06c18e2de57f183f3ec8ef96511cf64a973edf2",
+      "name": "Agreement",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/AirwayBill.java",
+      "sha256": "787cb8ca770809926715a2956405d89006791cbaf4784dc0e4396370e9cfa59a",
+      "name": "AirwayBill",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/PaymentScheduleItem.java",
+      "sha256": "41eed23f60e2c4c695d2373b98be41973fc74e104648a0619f50a42c4c283ba2",
+      "name": "PaymentScheduleItem",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/shared/model/CorporateAccount.java",
+      "sha256": "e86caf88a5ffc778d3bde82318d59471f39471d73feeb8fd8ac174b7f5cd74e0",
+      "name": "CorporateAccount",
+      "preservePackage": true,
+      "replacements": {
+      }
+    },
+    {
+      "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/FormSamplesView.java",
+      "sha256": "90535fbd6492492447b01a9c1dc2232711761a9cef191566f8c0994921e003de",
+      "name": "FormSamplesView",
+      "preservePackage": true,
+      "replacements": {
+        "import org.dominokit.domino.api.client.mvp.view.ContentView;\n": "",
+        "import org.dominokit.domino.api.client.mvp.view.HasUiHandlers;\n": "",
+        "import org.dominokit.domino.componentcase.client.presenters.DemoView;\n": "",
+        " extends ContentView , HasUiHandlers<FormSamplesView.FormSamplesUIHandlers>": "",
+        " extends DemoView.DemoViewUiHandlers": ""
+      }
     }
   ],
   "assets": [
@@ -1181,5 +2093,9 @@
       "path": "images/image-gallery/9.jpg",
       "sha256": "647a183994a12ef4cbb56905812645e7f41b42d90249a7e414f1242b74e322a0"
     }
-  ]
+  ],
+  "formSampleData": {
+    "path": "formsamples/src/main/java/org/dominokit/domino/formsamples/client/views/ui/FormSamplesViewImpl.java",
+    "sha256": "30c7ad7a0c63667c6f9559a3aa5ea448321c84a2fe6dde53b92d05e2f5367e1e"
+  }
 }

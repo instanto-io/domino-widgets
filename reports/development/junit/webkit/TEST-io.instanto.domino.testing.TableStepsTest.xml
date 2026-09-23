@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="io.instanto.domino.testing.TableStepsTest" time="23.46" tests="14" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="scenario_Activate_a_contact_using_its_row_menu_line_21_4" classname="io.instanto.domino.testing.TableStepsTest" time="1.377"/>
+  <testcase name="scenario_Reorder_contacts_within_a_table_line_53_12" classname="io.instanto.domino.testing.TableStepsTest" time="1.264"/>
+  <testcase name="scenario_Reject_a_balance_beyond_the_editor_limit_line_8_1" classname="io.instanto.domino.testing.TableStepsTest" time="1.416"/>
+  <testcase name="scenario_Collapse_and_restore_a_contact_group_line_13_2" classname="io.instanto.domino.testing.TableStepsTest" time="1.218"/>
+  <testcase name="scenario_Move_a_contact_between_tables_line_57_13" classname="io.instanto.domino.testing.TableStepsTest" time="1.247"/>
+  <testcase name="scenario_Rebuild_the_configurable_lazy_tree_line_45_10" classname="io.instanto.domino.testing.TableStepsTest" time="4.613"/>
+  <testcase name="scenario_Save_an_edited_contact_line_3_0" classname="io.instanto.domino.testing.TableStepsTest" time="1.468"/>
+  <testcase name="scenario_Read_table_summaries_line_25_5" classname="io.instanto.domino.testing.TableStepsTest" time="1.188"/>
+  <testcase name="scenario_Expand_and_collapse_a_tree_grid_line_42_8" classname="io.instanto.domino.testing.TableStepsTest" time="1.951"/>
+  <testcase name="scenario_Expand_and_collapse_a_tree_grid_line_43_9" classname="io.instanto.domino.testing.TableStepsTest" time="3.025"/>
+  <testcase name="scenario_Update_a_record_through_its_details_panel_line_17_3" classname="io.instanto.domino.testing.TableStepsTest" time="1.239"/>
+  <testcase name="scenario_Load_more_records_by_scrolling_line_34_6" classname="io.instanto.domino.testing.TableStepsTest" time="1.118"/>
+  <testcase name="scenario_Load_more_records_by_scrolling_line_35_7" classname="io.instanto.domino.testing.TableStepsTest" time="1.132"/>
+  <testcase name="scenario_Select_active_contacts_with_combined_plugins_line_49_11" classname="io.instanto.domino.testing.TableStepsTest" time="1.201"/>
+</testsuite>

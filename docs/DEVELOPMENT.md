@@ -8,7 +8,7 @@ Run these commands from the repository root. For application setup, start with t
 
 Prerequisites: JDK 21, Maven 3.9+, Chrome and Firefox. Maven authenticates
 GitHub Packages repositories for `teavm-compat`, `cucumber-tea`, `gherkin-tea` and
-`mockatcha` with a package-read token. No separately installed Node.js or npm is
+`webapp-testkit` with a package-read token. No separately installed Node.js or npm is
 required for these tests; Java Playwright manages its own internal driver runtime.
 
 ```sh
@@ -26,11 +26,11 @@ mvn -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:record-results -Ddom
 
 The [shared Gherkin features](../browser-tests/common/src/test/resources/features)
 run through Cucumber Tea's generated JUnit tests. Chrome and Firefox use
-TeaVMTestRunner and Mockatcha DOM against compiled applications in same-origin
+TeaVMTestRunner and webapp-testkit DOM against compiled applications in same-origin
 frames. WebKit runs the same feature assertions through Java Playwright. The
 [testing guide](TESTING.md) describes the drivers, coverage and native input limits.
 
-`mvn -Pproduction clean verify` enables advanced optimization and minification.
+`mvn -Pproduction clean verify` enables advanced optimisation and minification.
 Repeat the browser commands, recording results with `-Ddomino.mode=production`.
 CI checks both modes in all three engines. SpotBugs runs on normal builds;
 `-Dspotbugs.skip=true` is an explicit fast-development option. Analyzer errors fail

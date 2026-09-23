@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="io.instanto.domino.testing.ReuseStepsTest" time="16.269" tests="1" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="scenario_A_published_Elemental2_logger_works_without_widget_dependencies_line_3_0" classname="io.instanto.domino.testing.ReuseStepsTest" time="14.848">
+    <system-out><![CDATA[Open link to run tests: http://localhost:57423/index.html?logging=true
+Cucumber: scenario_A_published_Elemental2_logger_works_without_widget_dependencies_line_3_0
+]]></system-out>
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+]]></system-err>
+  </testcase>
+</testsuite>

@@ -15,46 +15,43 @@
     "note": "Corrected source commit is published on codex/domino-css-safe-ids; the complete immutable git archive is vendored."
   },
   "browser": {
-    "startTime": "2026-09-07T21:51:42.437Z",
-    "duration": 176007.634,
-    "expected": 441,
-    "skipped": 0,
+    "expected": 324,
     "unexpected": 0,
+    "skipped": 0,
     "flaky": 0
   },
   "compilers": {
-    "gwt": "2.13.1",
+    "javaRelease": 17,
     "teavm": "0.15.0",
-    "jdk": "21",
-    "javaRelease": 17
+    "jdk": "21"
   },
   "unitTests": [
     {
-      "name": "io.instanto.compat.GenerateBindingsTest",
-      "tests": "7",
+      "name": "io.instanto.domino.build.BuildChecksTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "io.instanto.domino.build.FormSourceAdapterTest",
+      "tests": "3",
       "failures": "0",
       "errors": "0",
       "skipped": "0"
     }
   ],
   "bundleBytes": {
-    "gwt": 12551946,
-    "teavm": 19500904
+    "teavm": 21124937
   },
   "showcase": {
-    "pages": 51,
-    "sampleMethods": 167
+    "pages": 66,
+    "sampleMethods": 187
   },
   "browserProjects": [
-    "gwt",
-    "teavm",
-    "reuse",
-    "gwt-firefox",
+    "teavm-chrome",
     "teavm-firefox",
-    "reuse-firefox",
-    "gwt-webkit",
-    "teavm-webkit",
-    "reuse-webkit"
+    "webkit-webkit"
   ],
   "spotbugs": [
     {
@@ -63,10 +60,23 @@
       "findings": 3,
       "high": 0,
       "errors": {
-        "missingClasses": "0",
-        "errors": "0"
+        "errors": "0",
+        "missingClasses": "0"
       },
-      "missingClasses": []
+      "missingClasses": [],
+      "report": "binding-generator/target/spotbugs/binding-generator-spotbugs.html"
+    },
+    {
+      "module": "build-tools",
+      "status": "analyzed",
+      "findings": 19,
+      "high": 0,
+      "errors": {
+        "errors": "0",
+        "missingClasses": "0"
+      },
+      "missingClasses": [],
+      "report": "build-tools/target/spotbugs/domino-build-maven-plugin-spotbugs.html"
     },
     {
       "module": "compat-reuse-smoke",
@@ -74,98 +84,35 @@
       "findings": 0,
       "high": 0,
       "errors": {
-        "missingClasses": "0",
-        "errors": "0"
+        "errors": "0",
+        "missingClasses": "0"
       },
-      "missingClasses": []
-    },
-    {
-      "module": "domino-widgets-gwt",
-      "status": "analyzed",
-      "findings": 1135,
-      "high": 10,
-      "errors": {
-        "missingClasses": "0",
-        "errors": "0"
-      },
-      "missingClasses": []
+      "missingClasses": [],
+      "report": "compat-reuse-smoke/target/spotbugs/compat-reuse-smoke-spotbugs.html"
     },
     {
       "module": "domino-widgets-teavm",
       "status": "analyzed",
-      "findings": 1137,
+      "findings": 1147,
       "high": 10,
       "errors": {
-        "missingClasses": "0",
-        "errors": "0"
+        "errors": "0",
+        "missingClasses": "0"
       },
-      "missingClasses": []
-    },
-    {
-      "module": "gwt-modular-services",
-      "status": "analyzed",
-      "findings": 28,
-      "high": 0,
-      "errors": {
-        "missingClasses": "0",
-        "errors": "0"
-      },
-      "missingClasses": []
-    },
-    {
-      "module": "showcase-gwt",
-      "status": "analyzed",
-      "findings": 47,
-      "high": 0,
-      "errors": {
-        "missingClasses": "0",
-        "errors": "0"
-      },
-      "missingClasses": []
+      "missingClasses": [],
+      "report": "domino-widgets-teavm/target/spotbugs/domino-widgets-teavm-spotbugs.html"
     },
     {
       "module": "showcase-teavm",
       "status": "analyzed",
-      "findings": 47,
-      "high": 0,
+      "findings": 194,
+      "high": 2,
       "errors": {
-        "missingClasses": "0",
-        "errors": "0"
+        "errors": "0",
+        "missingClasses": "0"
       },
-      "missingClasses": []
-    },
-    {
-      "module": "teavm-elemental2-compat",
-      "status": "analyzed",
-      "findings": 1715,
-      "high": 0,
-      "errors": {
-        "missingClasses": "0",
-        "errors": "0"
-      },
-      "missingClasses": []
-    },
-    {
-      "module": "teavm-gwt-modular-services",
-      "status": "analyzed",
-      "findings": 28,
-      "high": 0,
-      "errors": {
-        "missingClasses": "0",
-        "errors": "0"
-      },
-      "missingClasses": []
-    },
-    {
-      "module": "teavm-jsinterop-compat",
-      "status": "analyzed",
-      "findings": 0,
-      "high": 0,
-      "errors": {
-        "missingClasses": "0",
-        "errors": "0"
-      },
-      "missingClasses": []
+      "missingClasses": [],
+      "report": "showcase-teavm/target/spotbugs/showcase-teavm-spotbugs.html"
     }
   ]
 }

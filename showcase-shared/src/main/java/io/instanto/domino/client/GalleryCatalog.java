@@ -66,7 +66,14 @@ public final class GalleryCatalog {
           "table-top-panel-plugin",
           "table-eager-tree-plugin",
           "table-lazy-tree-plugin",
-          "table-mix-plugins");
+          "table-mix-plugins",
+          "app-layout",
+          "flex-layout",
+          "grid-layout",
+          "form-samples",
+          "colors",
+          "mdiicons",
+          "themes");
 
   public static HTMLElement render(String route) {
     if (route.equals("buttons")) return new ButtonsExamples().render();
@@ -134,6 +141,13 @@ public final class GalleryCatalog {
     if (route.equals("table-eager-tree-plugin")) return new TreeGridEagerPluginExamples().render();
     if (route.equals("table-lazy-tree-plugin")) return new TreeGridLazyPluginExamples().render();
     if (route.equals("table-mix-plugins")) return new PluginsMixExamples().render();
+    if (route.equals("app-layout")) return new AppLayoutExamples().render();
+    if (route.equals("flex-layout")) return new FlexLayoutExamples().render();
+    if (route.equals("grid-layout")) return new GridLayoutExamples().render();
+    if (route.equals("form-samples")) return new FormSamplesExamples().render();
+    if (route.equals("colors")) return new ColorsExamples().render();
+    if (route.equals("mdiicons")) return new MdiIconsExamples().render();
+    if (route.equals("themes")) return new ThemesExamples().render();
     return null;
   }
 }

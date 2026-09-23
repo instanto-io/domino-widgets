@@ -4,8 +4,7 @@ The original plan below records the initial dual-compiler baseline. The current
 maintained distribution is **TeaVM-only**: GWT users and comparison links go to
 DominoKit upstream. General compatibility code has been extracted to the standalone
 `teavm-compat` build, and widget repositories consume its independent BOM and runtime
-artifacts. See [the extraction record](docs/COMPAT-EXTRACTION.md) and
-[current design](docs/DESIGN.md) for the implemented scope.
+artifacts. See [current design](docs/DESIGN.md) for the implemented scope.
 
 ---
 
@@ -124,4 +123,30 @@ Background: [source and functionality comparison](docs/WIDGET-BACKEND-COMPARISON
 
 ## Implementation status — September 2026
 
-The standalone reactor and reusable binding layer are implemented. Coverage now includes 51 original gallery pages, 167 sample methods, targeted interactions and three browser engines on both compiler backends. See [README](README.md), [coverage](docs/COMPATIBILITY.md), [showcase inventory](docs/SHOWCASE.md), and [verification reports](reports/). Independent Maven-consumer applications and publication verification are provided under `examples/`. A representative Sarto migration is prepared, with unchanged-baseline framework blockers documented in [MIGRATION.md](docs/MIGRATION.md). Full application retirement and all-widget behavioral parity remain open.
+The standalone TeaVM reactor and reusable compatibility layer are implemented.
+The gallery contains 69 original pages and 190 sample methods, including the
+application, flex and grid layouts, the complete letter-of-credit form, and the
+colour, icon and theme reference pages.
+Shared Cucumber Tea scenarios cover rendering and selected interactions across
+Chrome, Firefox and WebKit. This repository maintains the TeaVM adaptation;
+GWT users use upstream directly.
+
+See [usage](README.md), [coverage](docs/COMPATIBILITY.md), the
+[showcase guide](docs/SHOWCASE.md) and [verification reports](reports/).
+Independent Maven applications and publication checks are under `examples/`.
+Broader application behaviour and complete widget parity remain open.
+
+## Verification and execution backlog (verify first, implement if missing)
+
+- [x] Verify the current showcase inventory count and page census in the published showcase against the pinned upstream manifest.
+- [x] Verify advanced table examples for editing, grouping, details, tree grids, summaries and drag-and-drop remain green in shared browser checks.
+- [x] Verify application, flex and grid layout examples are still covered and rendered after current source updates.
+- [x] Verify complete form examples include all expected sections and required validation behavior end-to-end.
+- [x] Verify dedicated colour, icon and theme reference galleries are rendered and linked.
+- [ ] Verify deeper keyboard accessibility checks across richer interactions and navigation paths.
+- [ ] Verify physical touch interaction coverage for relevant widgets, including tree and media controls.
+- [ ] Verify locale/time-zone edge cases and date behavior beyond the currently covered matrix.
+- [ ] Verify upload failure, cancellation and retry scenarios for multipart file workflows.
+- [ ] Verify rich-text toolbar actions, clipboard behavior and browser permission handling.
+- [ ] Verify known issues around rapid tree collapse and pinned stylesheet table-row filtering class behavior are addressed or intentionally scoped.
+- [ ] Verify first-release work includes dependency-chain publishing and standalone app verification from an empty Maven cache.

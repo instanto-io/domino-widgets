@@ -13,6 +13,34 @@ public final class ShowcasePages {
   };
   public static final Page[] ALL = {
     new Page(
+        "Navigation & layout",
+        "app-layout",
+        "Application layout",
+        "Open the original application layout with its header, drawers and content.",
+        "layout/app-layout",
+        "showcase-shared/src/main/java/io/instanto/domino/client/AppLayoutExamples.java"),
+    new Page(
+        "Navigation & layout",
+        "flex-layout",
+        "Flex layout",
+        "Add and arrange items in the original interactive flex playground.",
+        "layout/flex-layout",
+        "showcase-shared/src/main/java/io/instanto/domino/client/FlexLayoutExamples.java"),
+    new Page(
+        "Navigation & layout",
+        "grid-layout",
+        "Grid layout",
+        "Explore columns, nesting and responsive grid sizes.",
+        "layout/grid-layout",
+        "showcase-shared/src/main/java/io/instanto/domino/client/GridLayoutExamples.java"),
+    new Page(
+        "Forms",
+        "form-samples",
+        "Complete form",
+        "Complete and validate the original letter-of-credit form with sample accounts and currencies.",
+        "forms/form-samples",
+        "showcase-shared/src/main/java/io/instanto/domino/client/FormSamplesExamples.java"),
+    new Page(
         "Components",
         "buttons",
         "Buttons",
@@ -397,6 +425,27 @@ public final class ShowcasePages {
         "Compare loading spinners in different sizes and colours.",
         "components/preloaders",
         "showcase-shared/src/main/java/io/instanto/domino/client/PreloadersExamples.java"),
+    new Page(
+        "Style & media",
+        "colors",
+        "Colours",
+        "Compare the original Domino colour scales, roles and background utilities.",
+        "colors",
+        "showcase-shared/src/main/java/io/instanto/domino/client/ColorsExamples.java"),
+    new Page(
+        "Style & media",
+        "mdiicons",
+        "Icons",
+        "Search Material Design Icons by category and explore their sizes and effects.",
+        "mdiicons",
+        "showcase-shared/src/main/java/io/instanto/domino/client/MdiIconsExamples.java"),
+    new Page(
+        "Style & media",
+        "themes",
+        "Theme accents",
+        "Apply the original Domino accent themes to the live showcase.",
+        "themes",
+        "showcase-shared/src/main/java/io/instanto/domino/client/ThemesExamples.java"),
     new Page(
         "Style & media",
         "typography",

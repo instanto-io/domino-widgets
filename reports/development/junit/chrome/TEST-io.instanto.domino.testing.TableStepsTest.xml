@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="io.instanto.domino.testing.TableStepsTest" time="4.586" tests="14" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="scenario_Save_an_edited_contact_line_3_0" classname="io.instanto.domino.testing.TableStepsTest" time="0.517">
+    <system-out><![CDATA[browser stderr: [45237:868737:0923/155621.381506:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155621.449551:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155621.481229:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+Cucumber: scenario_Save_an_edited_contact_line_3_0
+browser stderr: [45231:868680:0923/155621.537191:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+browser stderr: [45237:868737:0923/155621.538529:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155621.591133:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155621.648238:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+browser stderr: [45237:868737:0923/155621.677007:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Read_table_summaries_line_25_5" classname="io.instanto.domino.testing.TableStepsTest" time="0.184">
+    <system-out><![CDATA[Cucumber: scenario_Read_table_summaries_line_25_5
+browser stderr: [45237:868737:0923/155622.068278:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Reject_a_balance_beyond_the_editor_limit_line_8_1" classname="io.instanto.domino.testing.TableStepsTest" time="0.224">
+    <system-out><![CDATA[Cucumber: scenario_Reject_a_balance_beyond_the_editor_limit_line_8_1
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Collapse_and_restore_a_contact_group_line_13_2" classname="io.instanto.domino.testing.TableStepsTest" time="0.175">
+    <system-out><![CDATA[Cucumber: scenario_Collapse_and_restore_a_contact_group_line_13_2
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Update_a_record_through_its_details_panel_line_17_3" classname="io.instanto.domino.testing.TableStepsTest" time="0.177">
+    <system-out><![CDATA[Cucumber: scenario_Update_a_record_through_its_details_panel_line_17_3
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Activate_a_contact_using_its_row_menu_line_21_4" classname="io.instanto.domino.testing.TableStepsTest" time="0.178">
+    <system-out><![CDATA[Cucumber: scenario_Activate_a_contact_using_its_row_menu_line_21_4
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Select_active_contacts_with_combined_plugins_line_49_11" classname="io.instanto.domino.testing.TableStepsTest" time="0.202">
+    <system-out><![CDATA[Cucumber: scenario_Select_active_contacts_with_combined_plugins_line_49_11
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Load_more_records_by_scrolling_line_34_6" classname="io.instanto.domino.testing.TableStepsTest" time="0.183">
+    <system-out><![CDATA[Cucumber: scenario_Load_more_records_by_scrolling_line_34_6
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Load_more_records_by_scrolling_line_35_7" classname="io.instanto.domino.testing.TableStepsTest" time="0.193">
+    <system-out><![CDATA[Cucumber: scenario_Load_more_records_by_scrolling_line_35_7
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Expand_and_collapse_a_tree_grid_line_42_8" classname="io.instanto.domino.testing.TableStepsTest" time="0.305">
+    <system-out><![CDATA[Cucumber: scenario_Expand_and_collapse_a_tree_grid_line_42_8
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Expand_and_collapse_a_tree_grid_line_43_9" classname="io.instanto.domino.testing.TableStepsTest" time="0.443">
+    <system-out><![CDATA[Cucumber: scenario_Expand_and_collapse_a_tree_grid_line_43_9
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Rebuild_the_configurable_lazy_tree_line_45_10" classname="io.instanto.domino.testing.TableStepsTest" time="0.39">
+    <system-out><![CDATA[Cucumber: scenario_Rebuild_the_configurable_lazy_tree_line_45_10
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Reorder_contacts_within_a_table_line_53_12" classname="io.instanto.domino.testing.TableStepsTest" time="0.216">
+    <system-out><![CDATA[Cucumber: scenario_Reorder_contacts_within_a_table_line_53_12
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Move_a_contact_between_tables_line_57_13" classname="io.instanto.domino.testing.TableStepsTest" time="0.212">
+    <system-out><![CDATA[Cucumber: scenario_Move_a_contact_between_tables_line_57_13
+]]></system-out>
+  </testcase>
+</testsuite>

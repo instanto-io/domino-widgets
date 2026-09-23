@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="io.instanto.domino.testing.LayoutStepsTest" time="8.129" tests="5" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="scenario_Layout_drawers_open_and_close_line_7_1" classname="io.instanto.domino.testing.LayoutStepsTest" time="1.626"/>
+  <testcase name="scenario_Optional_document_sections_remain_reachable_line_15_3" classname="io.instanto.domino.testing.LayoutStepsTest" time="1.973"/>
+  <testcase name="scenario_Complete_form_validates_required_sections_line_11_2" classname="io.instanto.domino.testing.LayoutStepsTest" time="1.79"/>
+  <testcase name="scenario_Additional_documents_can_be_added_and_removed_line_19_4" classname="io.instanto.domino.testing.LayoutStepsTest" time="1.408"/>
+  <testcase name="scenario_Flex_layout_adds_and_resets_blocks_line_3_0" classname="io.instanto.domino.testing.LayoutStepsTest" time="1.33"/>
+</testsuite>

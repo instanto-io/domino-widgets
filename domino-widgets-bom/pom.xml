@@ -35,14 +35,16 @@
   </properties>
   <repositories>
     <repository>
-      <id>forgejo</id>
-      <name>Instanto snapshots</name>
-      <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
-      <releases><enabled>false</enabled></releases>
-      <snapshots><enabled>true</enabled></snapshots>
+      <id>github-teavm-compat</id>
+      <url>https://maven.pkg.github.com/instanto-io/teavm-compat</url>
     </repository>
   </repositories>
   <groupId>io.instanto</groupId>
   <version>0.1.0-SNAPSHOT</version>
-
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/instanto-io/domino-widgets</url>
+    </repository>
+  </distributionManagement>
 </project>

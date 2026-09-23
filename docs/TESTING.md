@@ -1,80 +1,111 @@
 # Browser tests
 
-Write a scenario once in [Gherkin](../browser-tests/common/src/test/resources/features).
-Cucumber Tea generates JUnit tests from the feature files and Java step definitions.
-This follows the Bootstrap Widgets approach, including Mockatcha's framed-application
-support for exercising the actual compiled showcase.
+This document describes how we verify the port across the supported browsers.
 
-## Run a focused check
+## Purpose
+
+The browser checks confirm that the ported widget code can run with TeaVM and that key interactions remain available to users. They focus on browser behaviour and interaction paths.
+
+## How the browser checks are built
+
+All checks start as Gherkin scenarios in
+`../browser-tests/common/src/test/resources/features`.
+Cucumber Tea generates the JUnit tests from those scenarios.
+
+The generated tests run in three places:
+
+- Chrome and Firefox: `TeaVMTestRunner` with `webapp-testkit` DOM services.
+- WebKit: Java Playwright driving the WebKit browser.
+
+The generated JUnit tests are reused by both build profiles.
+
+## Running focused tests
 
 Build the sites as described in [development](DEVELOPMENT.md), then run:
 
 ```sh
 mvn -f browser-tests/teavm/pom.xml -Dtest=WidgetStepsTest test
 mvn -f browser-tests/webkit/pom.xml -Dtest=WidgetStepsTest test
+mvn -f browser-tests/teavm/pom.xml -Dtest=TableStepsTest test
 ```
 
-Use `-Dtest=TableStepsTest` for the advanced table interactions. Add
-`-Ddomino.capture=true` to a WebKit run to save screenshots after each scenario
-under `browser-tests/webkit/target/screenshots`.
+Use this when you want to iterate on a specific area.
 
-Chrome and Firefox execute the generated Java tests through TeaVMTestRunner.
-Mockatcha DOM owns each application's frame and supplies queries, input events,
-assertions and asynchronous waits. Java Playwright runs the same features in WebKit.
-Each scenario starts with a new application and checks startup errors, failed
-resource loads and unhandled rejections before closing it.
+To add browser screenshots for WebKit, pass:
 
-The JVM fixture host uses `mockatcha-browser-testkit` to stage and instrument the
-compiled application. It serves a real loopback upload endpoint and records the
-multipart request. The tests do not mock widget implementations, fetch responses or
-the server's upload result. The upload frame keeps the runner's origin and uses a
-base URL to reach the CORS-enabled fixture server.
+```sh
+-Ddomino.capture=true
+```
 
-## Preserved coverage
+for the WebKit run.
 
-| Feature | Scenarios per engine | Previous suite |
+## Running full browser suites
+
+```sh
+mvn -f browser-tests/teavm/pom.xml test
+mvn -f browser-tests/webkit/pom.xml test
+mvn -f browser-tests/platform-checks/pom.xml test
+```
+
+### Native touch and scrolling checks
+
+The platform checks run their own loopback server, perform native scrolling checks in all three engines, and execute touch gesture checks in Chromium.
+
+## Suites and scenario counts
+
+The `Legacy suite` column shows equivalent coverage in the historical JavaScript-driven suite used before this port, kept for parity tracking. The current checks now run as Cucumber Tea-generated JUnit tests; the JS suite itself is no longer the active driver.
+
+| Feature | Scenarios per engine | Legacy suite |
 |---|---:|---|
 | `contracts.feature` | 11 | `contracts.spec.js` |
 | `interactions.feature` | 10 | `interactions.spec.js` |
-| `gallery.feature` | 62 | `gallery.spec.js` |
+| `layouts.feature` | 5 | Original layout and complete-form interactions |
+| `gallery.feature` | 69 | `gallery.spec.js` |
+| `visual-references.feature` | 3 | Colour, icon and theme interactions |
 | `tables.feature` | 14 | Advanced table interactions |
 | `native.feature` | 1 | `native.spec.js` |
 | `reuse.feature` | 1 | `reuse.spec.js` |
 | `external.feature` | 1, during publication | `external.spec.js` |
 
-The normal suite has 99 scenarios per engine, or 297 across Chrome, Firefox and
-WebKit. The gallery outline names every route in the pinned showcase manifest.
-Recording verification results rejects missing routes, missing suites, failures,
-skips and differences in the scenario sets executed by the three engines.
+The normal suite has 114 scenarios per engine, or 342 across Chrome, Firefox and WebKit. The gallery outline names every route in the pinned showcase manifest.
 
-The feature tag `@skip-jvm` keeps TeaVMTestRunner from also attempting these browser
-scenarios as plain JVM tests. The WebKit module deliberately uses its own JUnit
-runner for the same generated methods: those tests execute on the JVM while driving
-a real WebKit browser. They are not skipped there.
+## What is verified by `external.feature`
 
-Mockatcha dispatches DOM events; those checks alone do not certify trusted native
-input or browser default keyboard actions. WebKit uses real Playwright input, and
-the separate Java `platform-checks` module retains native wheel checks in all three
-engines, touch scrolling in Chromium, and showcase presentation checks. Unsupported
-native touch injection in Firefox and WebKit remains explicitly skipped.
+The publication flow copies the examples into an independent directory and rebuilds with an empty Maven cache. It runs `ExternalStepsTest` in each browser using:
 
-The table drag scenarios dispatch drag events in Chrome and Firefox and use
-native pointer input in WebKit. Transfers between tables use visible drag handles.
-Scroll-loading scenarios change the table's scroll position and check that more
-records appear; they do not establish native touch-scrolling behaviour.
+```sh
+-Ddomino.external.root=/path/to/copied/examples
+```
 
-## Published consumers and reports
+This checks the published artifact path separately from the local source checkout.
 
-The publication workflow builds `examples/` outside the checkout with an empty Maven
-cache. It runs `ExternalStepsTest` in each browser against that independently built
-application, using `-Ddomino.external.root=/path/to/copied/examples`.
+## Results and evidence
 
 JUnit XML is written to each module's `target/surefire-reports-<engine>` directory.
-Set `-Dbrowser.engine=firefox` alongside `-Dteavm.junit.js.runner=browser-firefox`
-to retain the Chrome and Firefox reports separately. The Maven `record-results` goal assembles
-the verified reports and source metadata; CI uploads the raw XML as well.
+To keep Chrome and Firefox reports separate, pair the report command with:
 
-The Node Playwright test suite, npm package files and Python test server have been
-replaced. Java Playwright supplies its internal runtime; a separate Node/npm setup
-is not part of the test commands. Source intake, packaging and report assembly are
-also handled by Maven; see the [build stages](DEVELOPMENT.md#maven-build-stages).
+```sh
+-Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox
+```
+
+Use the Maven `record-results` goal to aggregate verified reports and source metadata:
+
+```sh
+mvn -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:record-results -Ddomino.mode=development
+```
+
+CI uploads the raw XML along with machine-readable result metadata.
+
+## Focused validation scope
+
+Current coverage is split by mechanism:
+
+- `webapp-testkit` drives DOM-level interaction checks in Chrome and Firefox.
+- Playwright drives WebKit interaction checks.
+- `platform-checks` adds native scrolling and gallery presentation checks.
+
+Additional validation targets:
+
+- Media playback and device permission behaviour.
+- Upload retry, error and cancellation flows.
+- Visual quality and accessibility review.

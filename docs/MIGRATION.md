@@ -22,9 +22,9 @@ The earlier baseline failures are retained in `reports/migration-baseline.json`.
 | `Button` | `org.dominokit.domino.ui.button.Button`; template attachment and framework listener contract |
 | Text/value inputs | Original forms plus framework value/validation adapter |
 | `Modal` | `dialogs.Dialog`; translate API and verify application focus assumptions |
-| `TableWidget` | `datatable.DataTable`, stores and plugins; migrate data/selection/filter/pagination behavior |
+| `TableWidget` | `datatable.DataTable`, stores and plugins; migrate data/selection/filter/pagination behaviour |
 | Calendar | Original datepicker APIs; representative migration prepared above |
-| Other wrappers | Assess each consumer's actual behaviors; they are not drop-in API equivalents |
+| Other wrappers | Assess each consumer's actual behaviours; they are not drop-in API equivalents |
 | Bootstrap wrappers | Separate migration to standalone `bootstrap-widgets` |
 
 Framework adapters belong in the consuming framework and must not recreate widget rendering or state. The standalone artifacts have no Verrai/Sarto/CDI dependencies.

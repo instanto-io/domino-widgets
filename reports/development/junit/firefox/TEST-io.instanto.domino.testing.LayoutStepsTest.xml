@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="io.instanto.domino.testing.LayoutStepsTest" time="18.679" tests="5" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="scenario_Flex_layout_adds_and_resets_blocks_line_3_0" classname="io.instanto.domino.testing.LayoutStepsTest" time="13.938">
+    <system-out><![CDATA[Open link to run tests: http://localhost:59435/index.html?logging=true
+Cucumber: scenario_Flex_layout_adds_and_resets_blocks_line_3_0
+]]></system-out>
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+]]></system-err>
+  </testcase>
+  <testcase name="scenario_Layout_drawers_open_and_close_line_7_1" classname="io.instanto.domino.testing.LayoutStepsTest" time="0.474">
+    <system-out><![CDATA[Cucumber: scenario_Layout_drawers_open_and_close_line_7_1
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Complete_form_validates_required_sections_line_11_2" classname="io.instanto.domino.testing.LayoutStepsTest" time="0.738">
+    <system-out><![CDATA[Cucumber: scenario_Complete_form_validates_required_sections_line_11_2
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Optional_document_sections_remain_reachable_line_15_3" classname="io.instanto.domino.testing.LayoutStepsTest" time="0.745">
+    <system-out><![CDATA[Cucumber: scenario_Optional_document_sections_remain_reachable_line_15_3
+]]></system-out>
+  </testcase>
+  <testcase name="scenario_Additional_documents_can_be_added_and_removed_line_19_4" classname="io.instanto.domino.testing.LayoutStepsTest" time="0.713">
+    <system-out><![CDATA[Cucumber: scenario_Additional_documents_can_be_added_and_removed_line_19_4
+]]></system-out>
+  </testcase>
+</testsuite>

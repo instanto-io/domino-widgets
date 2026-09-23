@@ -60,6 +60,9 @@ public final class ShowcaseMojo extends BuildMojo {
                                   .anyMatch(s::contains))
                   .toList());
       List<String> methods = new ArrayList<>();
+      if (item.has("imports"))
+        for (JsonElement extra : item.getAsJsonArray("imports"))
+          imports += "\nimport " + extra.getAsString() + ";";
       for (String key : List.of("methods", "helpers")) {
         if (item.has(key))
           for (JsonElement name : item.getAsJsonArray(key))
@@ -99,6 +102,18 @@ public final class ShowcaseMojo extends BuildMojo {
                     "private final DivElement element=div();",
                     "private final HTMLDivElement element=div().element();")
                 .replace("return element.element();", "return element;");
+      if (item.has("omitStatementsContaining")) {
+        var parsed = com.github.javaparser.StaticJavaParser.parse(code);
+        for (JsonElement marker : item.getAsJsonArray("omitStatementsContaining")) {
+          var statements =
+              parsed.findAll(com.github.javaparser.ast.stmt.ExpressionStmt.class).stream()
+                  .filter(s -> s.toString().contains(marker.getAsString()))
+                  .toList();
+          require(statements.size() == 1, "Changed omitted showcase guidance: " + marker);
+          statements.get(0).remove();
+        }
+        code = parsed.toString();
+      }
       generated.put(destination, format(code));
     }
     List<String> routes = new ArrayList<>();
@@ -126,21 +141,48 @@ public final class ShowcaseMojo extends BuildMojo {
     if (lock.has("supporting"))
       for (JsonElement row : lock.getAsJsonArray("supporting")) {
         JsonObject item = row.getAsJsonObject();
+        boolean preservePackage =
+            item.has("preservePackage") && item.get("preservePackage").getAsBoolean();
+        String original = sample(root, item);
         String code =
-            sample(root, item)
-                .replaceFirst("package [^;]+;", "package io.instanto.domino.client;")
-                .replaceAll(
-                    "(?m)^import (?:com.fasterxml.jackson|org.dominokit.domino.datatable)[^;]+;\\s*",
-                    "")
-                .replaceAll("@JsonIgnoreProperties\\([^)]*\\)|@JsonIgnore\\b", "");
+            preservePackage
+                ? original
+                : original
+                    .replaceFirst("package [^;]+;", "package io.instanto.domino.client;")
+                    .replaceAll(
+                        "(?m)^import (?:com.fasterxml.jackson|org.dominokit.domino.datatable)[^;]+;\\s*",
+                        "")
+                    .replaceAll("@JsonIgnoreProperties\\([^)]*\\)|@JsonIgnore\\b", "");
         generated.put(
-            within(
-                root.resolve("showcase-shared/src/main/java/io/instanto/domino/client"),
-                text(item, "name") + ".java"),
+            preservePackage
+                ? within(
+                    root.resolve("showcase-shared/src/main/java"),
+                    Pattern.compile("package ([^;]+);")
+                            .matcher(original)
+                            .results()
+                            .findFirst()
+                            .orElseThrow()
+                            .group(1)
+                            .replace('.', '/')
+                        + "/"
+                        + text(item, "name")
+                        + ".java")
+                : within(
+                    root.resolve("showcase-shared/src/main/java/io/instanto/domino/client"),
+                    text(item, "name") + ".java"),
             format(
                 "// Original showcase helper; see upstream/showcase-lock.json.\n"
-                    + replace(code, item)));
+                    + (preservePackage
+                        ? FormSourceAdapter.adapt(replace(code, item))
+                        : replace(code, item))));
       }
+    if (lock.has("formSampleData"))
+      generated.put(
+          root.resolve(
+              "showcase-shared/src/main/java/io/instanto/domino/client/FormSampleData.java"),
+          format(
+              FormDataGenerator.generate(
+                  root, sample(root, lock.getAsJsonObject("formSampleData")))));
     return generated;
   }
 
