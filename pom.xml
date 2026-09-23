@@ -3,7 +3,7 @@
 
   <parent>
     <groupId>io.instanto</groupId>
-    <artifactId>instanto-org-pom</artifactId>
+    <artifactId>instanto-teavm-pom</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <relativePath/>
   </parent>
@@ -33,7 +33,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputTimestamp>2026-09-07T16:00:00Z</project.build.outputTimestamp>
     <gwt.version>2.13.1</gwt.version>
-    <teavm.version>0.15.0</teavm.version>
     <teavm.optimization>SIMPLE</teavm.optimization>
     <teavm.minify>false</teavm.minify>
     <gwt.style>PRETTY</gwt.style>
