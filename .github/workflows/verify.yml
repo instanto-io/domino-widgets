@@ -9,8 +9,11 @@ permissions:
 jobs:
   contracts:
     runs-on: [self-hosted, instanto-container]
+    env:
+      MAVEN_OPTS: -Xmx4g
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         mode: [development, production]
     steps:
