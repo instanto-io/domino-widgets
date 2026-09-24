@@ -4,8 +4,7 @@ import static org.junit.Assert.*;
 
 import io.instanto.cucumber.tea.*;
 
-@CucumberSuite(value = "features/gallery.feature", runner = DominoRunner.class)
-public class GallerySteps extends BrowserSteps {
+public abstract class GallerySteps extends BrowserSteps {
   @Then("the original example renders with loaded images and no browser errors")
   public void renders() {
     assertFalse(el("#gallery-examples").text().isBlank());

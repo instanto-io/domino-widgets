@@ -68,7 +68,7 @@ jobs:
         run: mvn -B -ntp -f build-verification/pom.xml clean install
       - name: Check grouped columns alone in TeaVM and Chrome
         timeout-minutes: 3
-        run: mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryStepsTest#scenario_The_original_table_columns_groups_example_renders_line_59_50 test
+        run: mvn -B -ntp -f browser-tests/teavm/pom.xml '-Dtest=GalleryAdvancedStepsTest#scenario_The_original_table_columns_groups_example_renders*' test
       - name: Run Cucumber scenarios through TeaVM and Chrome
         timeout-minutes: 8
         run: |
@@ -98,7 +98,11 @@ jobs:
           ) &
           monitor_pid=$!
           trap 'kill "$monitor_pid" 2>/dev/null || true' EXIT
-          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
+          # A fresh browser process between groups bounds Firefox's retained
+          # memory from loading the complete showcase in repeated frames.
+          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryComponentsStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
+          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryAdvancedStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
+          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=LayoutStepsTest,NativeStepsTest,ReuseStepsTest,TableStepsTest,VisualReferenceStepsTest,WidgetStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
       - name: Run the same scenarios through Java Playwright WebKit
         timeout-minutes: 20
         run: mvn -B -ntp -f browser-tests/webkit/pom.xml test
