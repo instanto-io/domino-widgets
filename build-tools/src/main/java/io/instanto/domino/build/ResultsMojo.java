@@ -18,8 +18,10 @@ public final class ResultsMojo extends BuildMojo {
 
   private static final Map<String, Integer> EXPECTED =
       Map.of(
-          "GalleryStepsTest",
-          69,
+          "GalleryComponentsStepsTest",
+          34,
+          "GalleryAdvancedStepsTest",
+          35,
           "LayoutStepsTest",
           5,
           "TableStepsTest",
@@ -80,13 +82,17 @@ public final class ResultsMojo extends BuildMojo {
       routes.add(row.getAsJsonObject().get("route").getAsString());
       methods += row.getAsJsonObject().getAsJsonArray("methods").size();
     }
-    for (String line :
-        Files.readAllLines(
-            root.resolve("browser-tests/common/src/test/resources/features/gallery.feature"))) {
-      if (line.strip().startsWith("|"))
-        examples.add(line.strip().replaceAll("^\\||\\|$", "").strip());
+    for (String feature : List.of("gallery-components.feature", "gallery-advanced.feature")) {
+      for (String line :
+          Files.readAllLines(
+              root.resolve("browser-tests/common/src/test/resources/features/" + feature))) {
+        if (line.strip().startsWith("|")) {
+          String route = line.strip().replaceAll("^\\||\\|$", "").strip();
+          if (!route.equals("route"))
+            require(examples.add(route), "Duplicate gallery route in " + feature + ": " + route);
+        }
+      }
     }
-    examples.remove("route");
     require(routes.equals(examples), "Gallery feature routes differ from the pinned showcase");
     var stats =
         Map.of(
