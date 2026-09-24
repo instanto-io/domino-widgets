@@ -10,7 +10,7 @@ jobs:
   contracts:
     runs-on: [self-hosted, instanto-container]
     env:
-      MAVEN_OPTS: -Xmx4g
+      MAVEN_OPTS: ${{ matrix.mode == 'development' && '-Xmx3g' || '-Xmx4g' }}
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -50,8 +50,14 @@ jobs:
           if [ '${{ matrix.mode }}' = production ]; then
             mvn -B -ntp -Pproduction clean install
           else
-            mvn -B -ntp clean install
+            mvn -B -ntp -pl '!showcase-teavm,!build-verification' clean install
           fi
+      - name: Compile the showcase in a fresh Maven process
+        if: matrix.mode == 'development'
+        run: mvn -B -ntp -f showcase-teavm/pom.xml clean install
+      - name: Verify the assembled build
+        if: matrix.mode == 'development'
+        run: mvn -B -ntp -f build-verification/pom.xml clean install
       - name: Check grouped columns alone in TeaVM and Chrome
         timeout-minutes: 3
         run: mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryStepsTest#scenario_The_original_table_columns_groups_example_renders_line_59_50 test
