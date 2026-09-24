@@ -1,6 +1,6 @@
 # Coverage and limitations
 
-A compiled declaration is not evidence of browser behaviour. `browser-tested` below refers only to the named scenarios. The last complete development and optimised production run passed the shared 114-scenario suite in Chromium, Firefox and WebKit, including the three reference pages. Native scrolling checks passed on both builds; two platform-specific cases were skipped as expected. See the [verified CI run](https://github.com/instanto-io/domino-widgets/actions/runs/35975854010) and [reports](../reports) for the recorded outcomes and compiler/source metadata. A new Bold toolbar scenario passes focused local checks in all three engines; the expanded 115-scenario CI run remains pending.
+A compiled declaration is not evidence of browser behaviour. `browser-tested` below refers only to the named scenarios. The last complete development and optimised production run passed the shared 115-scenario suite in Chromium, Firefox and WebKit, including the three reference pages. Native scrolling checks passed on both builds; two platform-specific cases were skipped as expected. See the [verified CI run](https://github.com/instanto-io/domino-widgets/actions/runs/35999251003) and [reports](../reports) for the recorded outcomes and compiler/source metadata. Two further rich-text formatting scenarios pass focused local checks; the expanded 117-scenario CI run remains pending.
 
 | Area | Coverage |
 |---|---|
@@ -17,7 +17,7 @@ A compiled declaration is not evidence of browser behaviour. `browser-tested` be
 | Locale labels | Explicit Spanish and Arabic month labels through native Intl; full CLDR/week-start/time-zone parity remains unassessed |
 | Layouts and complete form | Application drawers, flex add/reset, populated form data, required validation, optional packing-list sections and adding/removing documents; shared Cucumber Tea scenarios |
 | Advanced forms | Original dynamic country suggestions fetch JSON and select a result; original file upload sends multipart bytes through XHR and handles a controlled successful response |
-| Rich text | Original editor renders, accepts content editing, returns HTML and resets its value; selecting content and applying the Bold toolbar command passes focused checks. Other toolbar commands, clipboard and browser permission cases remain unassessed. |
+| Rich text | Original editor renders, accepts content editing, returns HTML and resets its value; selecting content and applying Bold, Italic or Underline passes focused browser checks. Other toolbar commands, clipboard and browser permission cases remain unassessed. |
 | Browser APIs | Local/session storage roundtrip/deletion, SVG namespace, Blob URL/fetch/text, FileReader, promise fulfillment/rejection conversion, pushState/popstate |
 | Elemental2 and JsInterop foundations | Inherited fields, globals/native constructors, generic arrays/maps, native and Java identity, primitive conversion, missing values, null/undefined, custom events, union timer callbacks |
 | Independent reuse | Published Elemental2 console logger uses compatibility artifacts without Domino or Verrai |

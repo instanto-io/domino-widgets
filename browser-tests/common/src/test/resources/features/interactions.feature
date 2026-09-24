@@ -41,10 +41,16 @@ Feature: Original showcase interactions
     Then the returned HTML contains "Edited content"
     And resetting the editor restores Reset content
 
-  Scenario: Rich text toolbar bolds selected content
+  Scenario Outline: Rich text toolbar formats selected content with <format>
     Given the Domino showcase page "richtext" is open
-    When I select the editor content and apply bold
-    Then the editor returns bold HTML
+    When I select the editor content and apply "<format>"
+    Then the editor returns "<format>" HTML
+
+    Examples:
+      | format    |
+      | bold      |
+      | italic    |
+      | underline |
 
   Scenario: Upload widgets send real multipart data
     Given the Domino showcase page "advanced-forms" is open

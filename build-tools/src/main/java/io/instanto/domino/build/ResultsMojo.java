@@ -27,7 +27,7 @@ public final class ResultsMojo extends BuildMojo {
           "TableStepsTest",
           14,
           "WidgetStepsTest",
-          22,
+          24,
           "NativeStepsTest",
           1,
           "ReuseStepsTest",

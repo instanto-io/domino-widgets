@@ -63,7 +63,7 @@ The `Legacy suite` column shows equivalent coverage in the historical JavaScript
 | Feature | Scenarios per engine | Legacy suite |
 |---|---:|---|
 | `contracts.feature` | 11 | `contracts.spec.js` |
-| `interactions.feature` | 11 | `interactions.spec.js` |
+| `interactions.feature` | 13 | `interactions.spec.js` |
 | `layouts.feature` | 5 | Original layout and complete-form interactions |
 | `gallery-components.feature` | 34 | `gallery.spec.js` |
 | `gallery-advanced.feature` | 35 | `gallery.spec.js` |
@@ -73,7 +73,7 @@ The `Legacy suite` column shows equivalent coverage in the historical JavaScript
 | `reuse.feature` | 1 | `reuse.spec.js` |
 | `external.feature` | 1, during publication | `external.spec.js` |
 
-The normal suite has 115 scenarios per engine, or 345 across Chrome, Firefox and WebKit. The gallery outlines name every route in the pinned showcase manifest.
+The normal suite has 117 scenarios per engine, or 351 across Chrome, Firefox and WebKit. The gallery outlines name every route in the pinned showcase manifest.
 
 ## What is verified by `external.feature`
 

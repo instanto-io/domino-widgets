@@ -321,25 +321,37 @@ public class WidgetSteps extends BrowserSteps {
     contains(secondary, "Reset content");
   }
 
-  @When("I select the editor content and apply bold")
-  public void boldRichText() {
+  @When("I select the editor content and apply {string}")
+  public void formatRichText(String format) {
     selected = el("#richtext-example");
     secondary = selected.first("[contenteditable=true]");
     secondary.fill("Selected text");
     secondary.selectContents();
-    selected.first(".mdi-format-bold").closest("button").click();
+    String toolbarIcon =
+        switch (format) {
+          case "bold" -> ".mdi-format-bold";
+          case "italic" -> ".mdi-format-italic";
+          case "underline" -> ".mdi-format-underline";
+          default -> throw new IllegalArgumentException("Unknown rich text format: " + format);
+        };
+    selected.first(toolbarIcon).closest("button").click();
     el("#read-html").click();
   }
 
-  @Then("the editor returns bold HTML")
-  public void boldRichTextHtml() {
-    check(() -> assertEquals("Selected text", secondary.first("b,strong").text()));
+  @Then("the editor returns {string} HTML")
+  public void formattedRichTextHtml(String format) {
+    String tags =
+        switch (format) {
+          case "bold" -> "b,strong";
+          case "italic" -> "i,em";
+          case "underline" -> "u";
+          default -> throw new IllegalArgumentException("Unknown rich text format: " + format);
+        };
+    check(() -> assertEquals("Selected text", secondary.first(tags).text()));
     check(
         () -> {
           String html = selected.attr("data-html");
-          assertTrue(
-              html,
-              html.contains("Selected text</b>") || html.contains("Selected text</strong>"));
+          assertTrue(html, html.matches("(?s).*Selected text</(?:" + tags.replace(',', '|') + ")>.*"));
         });
   }
 

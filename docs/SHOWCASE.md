@@ -144,7 +144,7 @@ examples demonstrate layout and controls; playback and device permissions need
 further checks.
 
 The additional [rich text example on TeaVM](https://instanto-io.github.io/domino-widgets/teavm/?page=richtext) exercises the
-original editor widget, including selected-text Bold formatting, but is not extracted from an upstream showcase page.
+original editor widget, including selected-text Bold, Italic and Underline formatting, but is not extracted from an upstream showcase page.
 The **Development examples** section keeps it alongside the lifecycle and native
 browser fixtures, away from the public gallery's starting experience.
 
