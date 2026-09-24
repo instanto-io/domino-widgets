@@ -50,7 +50,7 @@ mvn -f browser-tests/platform-checks/pom.xml test
 CI runs the two gallery halves and the remaining Firefox scenarios in separate
 Maven processes. This restarts the browser between groups: in one long run, its
 showcase process grew past 8 GB and stopped responding after the gallery. All
-69 gallery examples and 45 focused scenarios still run.
+69 gallery examples and 46 focused scenarios still run.
 
 ### Native touch and scrolling checks
 
@@ -63,7 +63,7 @@ The `Legacy suite` column shows equivalent coverage in the historical JavaScript
 | Feature | Scenarios per engine | Legacy suite |
 |---|---:|---|
 | `contracts.feature` | 11 | `contracts.spec.js` |
-| `interactions.feature` | 10 | `interactions.spec.js` |
+| `interactions.feature` | 11 | `interactions.spec.js` |
 | `layouts.feature` | 5 | Original layout and complete-form interactions |
 | `gallery-components.feature` | 34 | `gallery.spec.js` |
 | `gallery-advanced.feature` | 35 | `gallery.spec.js` |
@@ -73,7 +73,7 @@ The `Legacy suite` column shows equivalent coverage in the historical JavaScript
 | `reuse.feature` | 1 | `reuse.spec.js` |
 | `external.feature` | 1, during publication | `external.spec.js` |
 
-The normal suite has 114 scenarios per engine, or 342 across Chrome, Firefox and WebKit. The gallery outlines name every route in the pinned showcase manifest.
+The normal suite has 115 scenarios per engine, or 345 across Chrome, Firefox and WebKit. The gallery outlines name every route in the pinned showcase manifest.
 
 ## What is verified by `external.feature`
 

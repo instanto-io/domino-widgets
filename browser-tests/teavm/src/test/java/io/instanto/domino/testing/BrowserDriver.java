@@ -157,6 +157,10 @@ public final class BrowserDriver implements Browser {
       else Dom.type((HTMLElement) node, text);
     }
 
+    public void selectContents() {
+      select(node);
+    }
+
     public void press(String key) {
       Dom.press((HTMLElement) node, key);
       if (key.equals("Tab")) Dom.blur((HTMLElement) node);
@@ -247,6 +251,12 @@ public final class BrowserDriver implements Browser {
       script =
           "el.focus(); el.textContent=text; el.dispatchEvent(new el.ownerDocument.defaultView.InputEvent('input',{bubbles:true,inputType:'insertText',data:text}));")
   private static native void edit(org.teavm.jso.dom.xml.Element el, String text);
+
+  @JSBody(
+      params = "el",
+      script =
+          "el.focus(); const range=el.ownerDocument.createRange(); range.selectNodeContents(el); const selection=el.ownerDocument.defaultView.getSelection(); selection.removeAllRanges(); selection.addRange(range);")
+  private static native void select(org.teavm.jso.dom.xml.Element el);
 
   @JSBody(
       params = {"el", "selector"},

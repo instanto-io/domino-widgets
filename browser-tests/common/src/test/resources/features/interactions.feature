@@ -41,6 +41,11 @@ Feature: Original showcase interactions
     Then the returned HTML contains "Edited content"
     And resetting the editor restores Reset content
 
+  Scenario: Rich text toolbar bolds selected content
+    Given the Domino showcase page "richtext" is open
+    When I select the editor content and apply bold
+    Then the editor returns bold HTML
+
   Scenario: Upload widgets send real multipart data
     Given the Domino showcase page "advanced-forms" is open
     When I upload a text file through the original upload widget

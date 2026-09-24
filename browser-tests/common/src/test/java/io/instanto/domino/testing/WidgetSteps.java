@@ -321,6 +321,28 @@ public class WidgetSteps extends BrowserSteps {
     contains(secondary, "Reset content");
   }
 
+  @When("I select the editor content and apply bold")
+  public void boldRichText() {
+    selected = el("#richtext-example");
+    secondary = selected.first("[contenteditable=true]");
+    secondary.fill("Selected text");
+    secondary.selectContents();
+    selected.first(".mdi-format-bold").closest("button").click();
+    el("#read-html").click();
+  }
+
+  @Then("the editor returns bold HTML")
+  public void boldRichTextHtml() {
+    check(() -> assertEquals("Selected text", secondary.first("b,strong").text()));
+    check(
+        () -> {
+          String html = selected.attr("data-html");
+          assertTrue(
+              html,
+              html.contains("Selected text</b>") || html.contains("Selected text</strong>"));
+        });
+  }
+
   @When("I upload a text file through the original upload widget")
   public void upload() {
     selected = root().all(".dui-file-upload").get(1);

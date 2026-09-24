@@ -177,6 +177,11 @@ public final class BrowserDriver implements Browser {
       node.fill(text);
     }
 
+    public void selectContents() {
+      node.evaluate(
+          "el=>{el.focus();const range=el.ownerDocument.createRange();range.selectNodeContents(el);const selection=el.ownerDocument.defaultView.getSelection();selection.removeAllRanges();selection.addRange(range);}");
+    }
+
     public void press(String key) {
       node.press(key);
     }

@@ -69,6 +69,8 @@ public interface Browser extends AutoCloseable {
 
     void fill(String text);
 
+    void selectContents();
+
     void press(String key);
 
     void focus();
