@@ -52,8 +52,24 @@ jobs:
           else
             mvn -B -ntp clean install
           fi
+      - name: Check grouped columns alone in TeaVM and Chrome
+        timeout-minutes: 3
+        run: mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryStepsTest#scenario_The_original_table_columns_groups_example_renders_line_59_50 test
       - name: Run Cucumber scenarios through TeaVM and Chrome
-        run: mvn -B -ntp -f browser-tests/teavm/pom.xml test
+        timeout-minutes: 8
+        run: |
+          (
+            while true; do
+              if [ -r /sys/fs/cgroup/memory.current ]; then
+                awk '{printf "Container memory: %.0f MiB\n", $1 / 1048576}' /sys/fs/cgroup/memory.current
+              fi
+              ps -eo pid,ppid,rss,comm --sort=-rss | head -12
+              sleep 20
+            done
+          ) &
+          monitor_pid=$!
+          trap 'kill "$monitor_pid" 2>/dev/null || true' EXIT
+          mvn -B -ntp -f browser-tests/teavm/pom.xml test
       - name: Run Cucumber scenarios through TeaVM and Firefox
         run: mvn -B -ntp -f browser-tests/teavm/pom.xml -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
       - name: Run the same scenarios through Java Playwright WebKit
