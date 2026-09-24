@@ -6,10 +6,12 @@ Run these commands from the repository root. For application setup, start with t
 ## Build and test
 
 
-Prerequisites: JDK 21, Maven 3.9+, Chrome and Firefox. Maven authenticates
-GitHub Packages repositories for `teavm-compat`, `cucumber-tea`, `gherkin-tea` and
-`webapp-testkit` with a package-read token. No separately installed Node.js or npm is
-required for these tests; Java Playwright manages its own internal driver runtime.
+Prerequisites: JDK 21, Maven 3.9+, Chrome and Firefox. Configure Maven to read
+the parent and compatibility snapshots from packages.instanto.io using the
+[Instanto parent instructions](https://github.com/instanto-io/instanto-poms#use-a-parent).
+The browser-test tools also need access to their GitHub Packages repositories.
+No separately installed Node.js or npm is required; Java Playwright manages its
+own internal driver runtime.
 
 ```sh
 mvn clean install

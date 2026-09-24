@@ -1,6 +1,6 @@
 # Coverage and limitations
 
-A compiled declaration is not evidence of browser behaviour. `browser-tested` below refers only to the named scenarios. The expanded development gallery has passed the shared TeaVM suite in Chromium and WebKit. The last complete three-browser run predates the three new reference pages; Firefox needs a fresh run on a host with the browser installed. An earlier optimised production build also needs to be rerun with the latest changes. Recorded outcomes and compiler/source metadata are under [reports](../reports).
+A compiled declaration is not evidence of browser behaviour. `browser-tested` below refers only to the named scenarios. The current development and optimised production showcases have passed the shared 114-scenario suite in Chromium, Firefox and WebKit, including the three new reference pages. Native scrolling checks passed on both builds; two platform-specific cases were skipped as expected. See the [verified CI run](https://github.com/instanto-io/domino-widgets/actions/runs/35964289081) and [reports](../reports) for the recorded outcomes and compiler/source metadata.
 
 | Area | Coverage |
 |---|---|

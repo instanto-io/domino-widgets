@@ -13,7 +13,7 @@ We changed the Maven groupId to `io.instanto` to distinguish this port from upst
 DominoKit releases and avoid confusion about its origin or ownership. This is an
 independently maintained distribution, not an official DominoKit release.
 
-**[Try the TeaVM showcase](https://cstainton.github.io/domino-widgets/teavm/)**
+**[Try the TeaVM showcase](https://instanto-io.github.io/domino-widgets/teavm/)**
 
 Use `domino-widgets-teavm` for the widgets and `domino-widgets-assets` for the matching
 styles, fonts and icons. The shared [TeaVM compatibility libraries](https://github.com/instanto-io/teavm-compat)
@@ -21,25 +21,22 @@ are brought in as dependencies.
 
 ## Add the dependencies
 
-The current version is `0.1.0-SNAPSHOT`, published under `io.instanto` in GitHub
-Packages. Add this repository inside your POM's `<repositories>` element:
+The current version is `0.1.0-SNAPSHOT`, published under `io.instanto` at
+packages.instanto.io. Add this repository inside your POM's `<repositories>` element:
 
 ```xml
 <repository>
-  <id>github</id>
-  <url>https://maven.pkg.github.com/instanto-io/domino-widgets</url>
+  <id>forgejo-instanto</id>
+  <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
+  <releases><enabled>false</enabled></releases>
   <snapshots>
     <enabled>true</enabled>
   </snapshots>
 </repository>
-<repository>
-  <id>github-teavm-compat</id>
-  <url>https://maven.pkg.github.com/instanto-io/teavm-compat</url>
-</repository>
 ```
 
-Configure Maven credentials for the server IDs `github` and `github-teavm-compat`, using a token with package
-read access. GitHub Packages requires authentication for public Maven downloads too.
+Configure Maven credentials for `forgejo-instanto` as shown in the
+[Instanto parent instructions](https://github.com/instanto-io/instanto-poms#use-a-parent).
 Keep credentials in your Maven settings, outside the project POM.
 
 Import the BOM to keep the widget and asset versions together. This example selects

@@ -11,6 +11,8 @@ jobs:
     runs-on: [self-hosted, instanto-container]
     env:
       MAVEN_OPTS: ${{ matrix.mode == 'development' && '-Xmx3g' || '-Xmx4g' }}
+      FORGEJO_PACKAGE_USER: ${{ secrets.FORGEJO_PACKAGE_USER }}
+      FORGEJO_PACKAGE_TOKEN: ${{ secrets.FORGEJO_PACKAGE_TOKEN }}
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -43,7 +45,13 @@ jobs:
         run: |
           echo "PACKAGES_READ_TOKEN=$PACKAGES_READ_TOKEN" >> "$GITHUB_ENV"
           cat > "$HOME/.m2/settings.xml" <<'XML'
-          <settings><servers><server><id>github-teavm-compat</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server><server><id>github-cucumber-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server><server><id>github-gherkin-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server><server><id>github-mockatcha</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server></servers></settings>
+          <settings><servers>
+            <server><id>forgejo-instanto</id><username>${env.FORGEJO_PACKAGE_USER}</username><password>${env.FORGEJO_PACKAGE_TOKEN}</password></server>
+            <server><id>github-cucumber-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
+            <server><id>github-gherkin-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
+            <server><id>github-mockatcha</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
+            <server><id>github-webapp-testkit</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
+          </servers></settings>
           XML
       - name: Build TeaVM and analyze bytecode
         run: |
@@ -77,8 +85,22 @@ jobs:
           trap 'kill "$monitor_pid" 2>/dev/null || true' EXIT
           mvn -B -ntp -f browser-tests/teavm/pom.xml test
       - name: Run Cucumber scenarios through TeaVM and Firefox
-        run: mvn -B -ntp -f browser-tests/teavm/pom.xml -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
+        timeout-minutes: 12
+        run: |
+          (
+            while true; do
+              if [ -r /sys/fs/cgroup/memory.current ]; then
+                awk '{printf "Container memory: %.0f MiB\n", $1 / 1048576}' /sys/fs/cgroup/memory.current
+              fi
+              ps -eo pid,ppid,rss,comm --sort=-rss | head -12
+              sleep 20
+            done
+          ) &
+          monitor_pid=$!
+          trap 'kill "$monitor_pid" 2>/dev/null || true' EXIT
+          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
       - name: Run the same scenarios through Java Playwright WebKit
+        timeout-minutes: 20
         run: mvn -B -ntp -f browser-tests/webkit/pom.xml test
       - name: Verify native scrolling with Playwright Java
         run: mvn -B -ntp -f browser-tests/platform-checks/pom.xml test

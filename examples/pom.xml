@@ -14,12 +14,10 @@
   </properties>
   <repositories>
     <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/instanto-io/domino-widgets</url>
-    </repository>
-    <repository>
-      <id>github-teavm-compat</id>
-      <url>https://maven.pkg.github.com/instanto-io/teavm-compat</url>
+      <id>forgejo-instanto</id>
+      <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
+      <releases><enabled>false</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>
     </repository>
   </repositories>
   <dependencyManagement>

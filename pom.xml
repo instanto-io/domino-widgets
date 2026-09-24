@@ -337,9 +337,5 @@
       <releases><enabled>true</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
     </repository>
-    <repository>
-      <id>github-teavm-compat</id>
-      <url>https://maven.pkg.github.com/instanto-io/teavm-compat</url>
-    </repository>
   </repositories>
 </project>
