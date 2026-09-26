@@ -1,124 +1,38 @@
-# Domino Widgets
+# Domino Widgets for TeaVM
 
-Domino Widgets adds TeaVM support to [DominoKit’s Domino UI](https://github.com/DominoKit/domino-ui).
-Use its Java API to build forms, calendars, tables and dialogs in the browser.
-This repository provides the TeaVM adaptation. For GWT, use DominoKit’s upstream distribution.
+Domino Widgets runs [DominoKit's Domino UI](https://github.com/DominoKit/domino-ui)
+Java widgets on TeaVM. It preserves the upstream
+`org.dominokit.domino.ui` API for forms, calendars, tables and dialogs.
+This repository provides the TeaVM adaptation; GWT users can use DominoKit's
+upstream distribution.
 
-> **Early stage.** This is an early port of Domino UI to TeaVM. Many widgets work, but
-> coverage is incomplete and the API and packaging may still change. Check the
-> [coverage guide](docs/COMPATIBILITY.md) before relying on a widget.
+The `io.instanto` Maven group distinguishes this independently maintained port
+from official DominoKit releases. See [widget coverage](docs/COMPATIBILITY.md)
+for its current support and limitations.
 
-The widgets are the work of **DominoKit and its contributors**. This distribution
-adds TeaVM build support while preserving
-the original `org.dominokit.domino.ui` packages. Attribution and source provenance
-are recorded in [NOTICE](NOTICE).
+**[Explore the TeaVM showcase](https://instanto-io.github.io/domino-widgets/teavm/).**
 
-We changed the Maven groupId to `io.instanto` to distinguish this port from upstream
-DominoKit releases and avoid confusion about its origin or ownership. This is an
-independently maintained distribution, not an official DominoKit release.
+## Start a page
 
-**[Try the TeaVM showcase](https://instanto-io.github.io/domino-widgets/teavm/)**
-
-Use `domino-widgets-teavm` for the widgets and `domino-widgets-assets` for the matching
-styles, fonts and icons. The shared [TeaVM compatibility libraries](https://github.com/instanto-io/teavm-compat)
-are brought in as dependencies.
-
-## Add the dependencies
-
-The current version is `0.1.0-SNAPSHOT`, published under `io.instanto` at
-packages.instanto.io. Add this repository inside your POM's `<repositories>` element:
-
-```xml
-<repository>
-  <id>forgejo-instanto</id>
-  <url>https://packages.instanto.io/api/packages/instanto-io/maven</url>
-  <releases><enabled>false</enabled></releases>
-  <snapshots>
-    <enabled>true</enabled>
-  </snapshots>
-</repository>
-```
-
-Configure Maven credentials for `forgejo-instanto` as shown in the
-[Instanto parent instructions](https://github.com/instanto-io/instanto-poms#use-a-parent).
-Keep credentials in your Maven settings, outside the project POM.
-
-Import the BOM to keep the widget and asset versions together. This example selects
-the TeaVM widget artifact.
-
-```xml
-<dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>io.instanto</groupId>
-      <artifactId>domino-widgets-bom</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
-  </dependencies>
-</dependencyManagement>
-<dependencies>
-  <dependency>
-    <groupId>io.instanto</groupId>
-    <artifactId>domino-widgets-teavm</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>io.instanto</groupId>
-    <artifactId>domino-widgets-assets</artifactId>
-  </dependency>
-</dependencies>
-```
-
-The [small example application](examples/README.md) includes complete compiler
-configuration. It builds with JDK 21 and Maven 3.9+, targeting
-Java 17.
-
-For TeaVM, follow the [example POM](examples/teavm/pom.xml), including its SLF4J
-runtime configuration. Its dependencies supply the Elemental2 and JsInterop
-compatibility layers; adding the original Elemental2 or `com.google.jsinterop:base`
-artifacts alongside them creates duplicate packages.
-
-## Load the styles
-
-The assets JAR contains `META-INF/resources/domino-widgets/`. Copy or serve that
-folder as `domino-widgets/` beside your application's HTML, then add:
+The [small example application](examples/README.md) contains a complete TeaVM
+host page. Serve the widget asset directory as `domino-widgets/` beside that
+page and load its stylesheet:
 
 ```html
 <link rel="stylesheet" href="domino-widgets/css/domino-ui/domino-ui.css">
 ```
 
-Keep the folder structure intact so the stylesheet can find its fonts and icons.
-The examples [unpack the assets directly into the site during Maven packaging](examples/pom.xml).
-
-## Start the TeaVM application
-
-Use JDK 21, Maven 3.9+ and a browser. Copy the [example application](examples)
-to get the complete Maven harness: dependency versions, TeaVM 0.15.0 compiler,
-SLF4J runtime, asset extraction and host page. Build it with `mvn clean verify`;
-the resulting application is in `teavm/target/site`.
-
-The host page loads the stylesheet and starts the Java entry point after its
-body exists. `app.js` is the filename configured in the example POM:
+Keep the directory intact so the stylesheet can find its fonts and icons.
+Start the Java entry point after the page body exists:
 
 ```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hello Domino</title>
-  <link rel="stylesheet" href="domino-widgets/css/domino-ui/domino-ui.css">
-</head>
-<body>
-  <script src="app.js"></script>
-  <script>main();</script>
-</body>
-</html>
+<script src="app.js"></script>
+<script>main();</script>
 ```
 
-The entry point is ordinary Java; use its fully qualified name as TeaVM's
-`mainClass`:
+## Create a widget
+
+The TeaVM entry point can call a screen class:
 
 ```java
 package example.client;
@@ -130,13 +44,10 @@ public final class Launcher {
 }
 ```
 
-## Create your first widget
-
-Create widgets in Java and attach their elements to the page. For example:
+Create widgets in Java and attach their elements to the page:
 
 ```java
 import elemental2.dom.DomGlobal;
-import org.dominokit.domino.ui.datepicker.Calendar;
 import org.dominokit.domino.ui.forms.TextBox;
 
 public final class Screen {
@@ -147,11 +58,10 @@ public final class Screen {
 }
 ```
 
-## Add an interaction
+## Respond to an event
 
-Keep the text box above and add a button inside `mount()`. Import
-`org.dominokit.domino.ui.button.Button`; its listener reads the text box and
-updates the button:
+Inside `mount()`, add a button after the text box. Import
+`org.dominokit.domino.ui.button.Button`:
 
 ```java
 Button greet = Button.create("Greet");
@@ -159,39 +69,26 @@ greet.addClickListener(event -> greet.setText("Hello " + name.getValue()));
 DomGlobal.document.body.appendChild(greet.element());
 ```
 
-## Add a richer widget
-
-Add a calendar to the same screen, using the existing
-`org.dominokit.domino.ui.datepicker.Calendar` import:
+To add a calendar, import `org.dominokit.domino.ui.datepicker.Calendar`:
 
 ```java
 Calendar calendar = Calendar.create();
 DomGlobal.document.body.appendChild(calendar.element());
 ```
 
-Run `jwebserver -b 127.0.0.1 -p 8080 -d teavm/target/site` from the example root,
-then open [your application](http://127.0.0.1:8080/). Rebuild after changing Java.
 The [complete example screen](examples/teavm/src/main/java/example/client/Screen.java)
-shows the same construction and event pattern in a compilable application.
+shows these patterns in a working application.
 
 ## Explore the widgets
 
-The showcases are adapted from [DominoKit’s original demo](https://github.com/DominoKit/domino-ui-demo).
-They retain 69 original pages and 190 sample methods, presented through a shared
-TeaVM launcher. Use the grouped navigation or widget search to browse
-the gallery. Each page links to its Java example and upstream counterpart. Browse
-the [shared examples](showcase-shared/src/main/java/io/instanto/domino/client).
+The showcase adapts [DominoKit's demo](https://github.com/DominoKit/domino-ui-demo)
+and includes its example methods and descriptions. Browse by widget or search
+the gallery; each page links to its Java example. The
+[showcase guide](docs/SHOWCASE.md) describes the pages and the
+[coverage guide](docs/COMPATIBILITY.md) records verified interactions.
 
-Check the
-[coverage guide](docs/COMPATIBILITY.md) when choosing a feature: it describes the
-interactions tested across browsers and the remaining limitations.
-
-## Go further
-
-- [Run the example applications](examples/README.md).
-- [Browse the included showcase pages](docs/SHOWCASE.md).
-- [Understand the port design](docs/DESIGN.md).
-- [Build and test the library](docs/DEVELOPMENT.md).
+For the adaptation's architecture see [port design](docs/DESIGN.md). Maintainer
+build instructions are in [development](docs/DEVELOPMENT.md).
 
 ## Upstream credits
 
@@ -214,9 +111,3 @@ Like DominoKit? Please [support the upstream project](https://www.patreon.com/Do
 Using the TeaVM build? Please [support TeaVM](https://github.com/sponsors/konsoletyper).
 
 Want to see this port and more TeaVM libraries maintained? Please [sponsor this port](https://github.com/sponsors/instanto-io).
-
-## Shared build parent
-
-For local builds, install the shared parent from a sibling `instanto-poms`
-checkout with `mvn -f ../instanto-poms/pom.xml install`. Release instructions
-are in `instanto-poms/RELEASING.md`.

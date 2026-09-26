@@ -1,11 +1,10 @@
-# A TeaVM application consuming published Domino Widgets
+# Hello Domino on TeaVM
 
-This example builds independently of the widget checkout. Configure Maven credentials
-for `github` and `github-teavm-compat`, then run `mvn clean verify` here with JDK 21.
-The Maven build assembles `teavm/target/site/`, including the launcher and assets.
-Serve it with `jwebserver -b 127.0.0.1 -p 8080 -d teavm/target/site` and open
-`http://127.0.0.1:8080/`.
+This application constructs a text box, button and calendar with the original
+Domino UI Java API. The [TeaVM launcher](teavm/src/main/java/example/client/Launcher.java)
+starts the [screen](teavm/src/main/java/example/client/Screen.java);
+the [host page](teavm/src/site/index.html) loads the widget styles and
+JavaScript entry point.
 
-The POM imports the published widget BOM and obtains all compatibility dependencies
-from the independent `instanto-io/teavm-compat` package repository. No sibling sources
-or reactor modules are required. For GWT applications, use DominoKit upstream.
+Keep the `domino-widgets/` CSS, fonts and icons folder next to the host page.
+The [widget guide](../README.md) walks through the screen in small steps.
