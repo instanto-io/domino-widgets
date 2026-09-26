@@ -27,7 +27,6 @@ A compiled declaration is not evidence of browser behaviour. `browser-tested` be
 | Arbitrary JsInterop reflection/base surface | Outside the implemented subset |
 | Optional Domino history/REST packages | Not included; native API contracts above do not certify those optional libraries |
 | WebAssembly GC | Outside the supported browser-JavaScript targets |
-| Verrai/Sarto application retirement | In progress; [consumer inventory and concrete blocker](MIGRATION.md) |
 
 Baseline: TeaVM 0.15.0, JDK 21, Java release 17, Elemental2 1.2.3, native JsInterop base 1.0.1 and annotations 2.0.2. Current builds use upstream links for comparison.
 

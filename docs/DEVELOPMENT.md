@@ -51,8 +51,7 @@ jwebserver -b 127.0.0.1 -p 8080 -d showcase-teavm/target/site
 
 Open `http://127.0.0.1:8080/`. The screen and gallery live once in `showcase-shared/`; launchers only invoke them. The grouped navigation and widget search open the included gallery on TeaVM. The default route is the public gallery home; lifecycle fixtures use `?page=contracts` and native API fixtures use `?page=browser-apis`. See [showcase provenance and included pages](../docs/SHOWCASE.md). CSS and fonts come from the same pinned archive as the Java sources.
 
-See the [port design](DESIGN.md) for compatibility layers and source generation,
-and the [upstream update assessment](UPSTREAM.md) for outstanding source changes.
+See the [port design](DESIGN.md) for compatibility layers and source generation.
 
 ## Format Java sources
 
