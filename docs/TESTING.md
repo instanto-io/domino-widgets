@@ -100,7 +100,8 @@ Use the Maven `record-results` goal to aggregate verified reports and source met
 mvn -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:record-results -Ddomino.mode=development
 ```
 
-CI uploads the raw XML along with machine-readable result metadata.
+It writes them under `reports/`, which is not committed. CI uploads the raw XML
+along with machine-readable result metadata.
 
 ## Focused validation scope
 

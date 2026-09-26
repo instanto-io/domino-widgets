@@ -1,6 +1,6 @@
 # Coverage and limitations
 
-A compiled declaration is not evidence of browser behaviour. `browser-tested` below refers only to the named scenarios. The last complete development and optimised production run passed the shared 115-scenario suite in Chromium, Firefox and WebKit, including the three reference pages. Native scrolling checks passed on both builds; two platform-specific cases were skipped as expected. See the [verified CI run](https://github.com/instanto-io/domino-widgets/actions/runs/35999251003) and [reports](../reports) for the recorded outcomes and compiler/source metadata. Two further rich-text formatting scenarios pass focused local checks; the expanded 117-scenario CI run remains pending.
+A compiled declaration is not evidence of browser behaviour. `browser-tested` below refers only to the named scenarios. The last complete development and optimised production run passed the shared 115-scenario suite in Chromium, Firefox and WebKit, including the three reference pages. Native scrolling checks passed on both builds; two platform-specific cases were skipped as expected. See the [verified CI run](https://github.com/instanto-io/domino-widgets/actions/runs/35999251003) for the recorded outcomes; its artifacts hold the compiler and source metadata. Two further rich-text formatting scenarios pass focused local checks; the expanded 117-scenario CI run remains pending.
 
 | Area | Coverage |
 |---|---|
@@ -29,7 +29,7 @@ A compiled declaration is not evidence of browser behaviour. `browser-tested` be
 | WebAssembly GC | Outside the supported browser-JavaScript targets |
 | Verrai/Sarto application retirement | In progress; [consumer inventory and concrete blocker](MIGRATION.md) |
 
-Baseline: TeaVM 0.15.0, JDK 21, Java release 17, Elemental2 1.2.3, native JsInterop base 1.0.1 and annotations 2.0.2. Historical reports retain the former GWT baseline; current builds use upstream links for comparison.
+Baseline: TeaVM 0.15.0, JDK 21, Java release 17, Elemental2 1.2.3, native JsInterop base 1.0.1 and annotations 2.0.2. Current builds use upstream links for comparison.
 
 The complete widget archive is retained. Original widget implementations are shared;
 the [details-renderer correction](DESIGN.md#record-details-and-parent-rows) is applied

@@ -130,8 +130,8 @@ The colour, icon and theme reference pages are now included. The icon browser
 renders one category at a time to keep the page responsive; its search filters
 that category. Advanced icon transformations remain in the original examples.
 
-The [complete source inventory](../reports/showcase-intake.json) lists included
-and remaining upstream view files. Remaining files also include the upstream
+The build writes a complete source inventory to `target/intake/inventory.json`,
+listing included and remaining upstream view files. Remaining files also include the upstream
 demo's navigation, source viewer and login screens; they are not all widget examples.
 
 These additions describe the current checkout; the published showcase changes after deployment.

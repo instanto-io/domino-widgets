@@ -192,7 +192,6 @@ interactions tested across browsers and the remaining limitations.
 - [Browse the included showcase pages](docs/SHOWCASE.md).
 - [Understand the port design](docs/DESIGN.md).
 - [Build and test the library](docs/DEVELOPMENT.md).
-- [Read the verification reports](reports/README.md).
 
 ## Upstream credits
 

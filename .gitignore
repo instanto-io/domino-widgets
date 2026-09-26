@@ -5,3 +5,6 @@ browser-tests/playwright-report/
 .DS_Store
 
 /.build/
+
+# Written by the build and uploaded by CI; not committed.
+/reports/

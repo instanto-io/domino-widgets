@@ -131,8 +131,8 @@ Shared Cucumber Tea scenarios cover rendering and selected interactions across
 Chrome, Firefox and WebKit. This repository maintains the TeaVM adaptation;
 GWT users use upstream directly.
 
-See [usage](README.md), [coverage](docs/COMPATIBILITY.md), the
-[showcase guide](docs/SHOWCASE.md) and [verification reports](reports/).
+See [usage](README.md), [coverage](docs/COMPATIBILITY.md) and the
+[showcase guide](docs/SHOWCASE.md).
 Independent Maven applications and publication checks are under `examples/`.
 Broader application behaviour and complete widget parity remain open.
 

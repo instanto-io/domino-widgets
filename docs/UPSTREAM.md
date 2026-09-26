@@ -1,8 +1,7 @@
 # Upstream update assessment
 
 Checked on 8 September 2026. This is an assessment; the source and binding locks
-have not been changed. Exact revisions and commit subjects are retained in the
-[machine-readable report](../reports/upstream-status.json).
+have not been changed.
 
 ## Widget sources
 
