@@ -4,6 +4,10 @@ Domino Widgets adds TeaVM support to [DominoKit’s Domino UI](https://github.co
 Use its Java API to build forms, calendars, tables and dialogs in the browser.
 This repository provides the TeaVM adaptation. For GWT, use DominoKit’s upstream distribution.
 
+> **Early stage.** This is an early port of Domino UI to TeaVM. Many widgets work, but
+> coverage is incomplete and the API and packaging may still change. Check the
+> [coverage guide](docs/COMPATIBILITY.md) before relying on a widget.
+
 The widgets are the work of **DominoKit and its contributors**. This distribution
 adds TeaVM build support while preserving
 the original `org.dominokit.domino.ui` packages. Attribution and source provenance
@@ -210,7 +214,7 @@ Like DominoKit? Please [support the upstream project](https://www.patreon.com/Do
 
 Using the TeaVM build? Please [support TeaVM](https://github.com/sponsors/konsoletyper).
 
-Want to see more TeaVM libraries maintained and supported? Please support us—our support link is coming soon.
+Want to see this port and more TeaVM libraries maintained? Please [sponsor this port](https://github.com/sponsors/cstainton).
 
 ## Shared build parent
 

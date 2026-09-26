@@ -7,7 +7,7 @@ search for a widget, or start with the component, form, table and design section
 The landing page follows DominoKit’s showcase headline and section structure, with
 links and descriptions adapted to the examples available in this port.
 
-Use **Compare with upstream** on an example page to open the corresponding
+Each example page links to its version in the
 [DominoKit showcase](https://dominokit.com/domino-ui/demo/v2/home).
 Our examples come from the pinned `version-2` demo; the live upstream showcase
 has evolved since that snapshot and includes newer and optional Pro components.

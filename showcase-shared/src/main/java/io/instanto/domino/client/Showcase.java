@@ -6,7 +6,7 @@ import java.util.List;
 
 /** Shared public gallery; diagnostic fixtures have explicit, separate routes. */
 public final class Showcase {
-  private static final String REPO = "https://github.com/cstainton/domino-widgets";
+  private static final String REPO = "https://github.com/instanto-io/domino-widgets";
 
   public static void mount() {
     String query = DomGlobal.location.search;
@@ -56,7 +56,10 @@ public final class Showcase {
     }
     HTMLElement footer = element("footer", "showcase-footer");
     footer.appendChild(
-        text("p", "Widgets by DominoKit and its contributors. Independent TeaVM port.", ""));
+        text(
+            "p",
+            "Widgets by DominoKit and its contributors. Independent, early-stage TeaVM port.",
+            ""));
     footer.appendChild(link("About this port", REPO, ""));
     footer.appendChild(
         link("Coverage & limitations", REPO + "/blob/main/docs/COMPATIBILITY.md", ""));
@@ -172,16 +175,14 @@ public final class Showcase {
     heading.appendChild(text("h1", page.title, ""));
     heading.appendChild(text("p", page.description, "showcase-lead"));
     HTMLElement actions = element("div", "showcase-page-actions");
-    actions.appendChild(link("Compare with upstream ↗", page.upstream, "showcase-action"));
     actions.appendChild(
         link("Java example ↗", REPO + "/blob/main/" + page.source, "showcase-secondary"));
     heading.appendChild(actions);
-    heading.appendChild(
-        text(
-            "p",
-            "Adapted from DominoKit’s version-2 examples. The live upstream demo may use a newer"
-                + " release.",
-            "showcase-note"));
+    HTMLElement note =
+        text("p", "Adapted from DominoKit’s version-2 examples. See the ", "showcase-note");
+    note.appendChild(link("upstream version ↗", page.upstream, ""));
+    note.appendChild(DomGlobal.document.createTextNode("; the live demo may use a newer release."));
+    heading.appendChild(note);
     if (page.route.equals("advanced-forms")) {
       heading.appendChild(
           text(
@@ -203,12 +204,7 @@ public final class Showcase {
     copy.appendChild(
         text(
             "p",
-            "Explore Domino UI’s components, layouts, forms and tables for Java applications. These examples run through our TeaVM port.",
-            "showcase-lead"));
-    copy.appendChild(
-        text(
-            "p",
-            "Try the widgets in context, then follow each example’s upstream link to compare it with DominoKit’s current demo.",
+            "Explore Domino UI’s components, layouts, forms and tables for Java applications. These examples run through our early-stage TeaVM port.",
             "showcase-lead"));
     HTMLElement actions = element("div", "showcase-hero-actions");
     actions.appendChild(link("Open Buttons", "?page=buttons", "showcase-action"));
@@ -224,7 +220,7 @@ public final class Showcase {
         "Buttons, cards, trees and the pieces that make up an application screen.");
     area(areas, "Forms", "Fields, validation, date pickers and steps for collecting information.");
     area(areas, "Data", "Contact tables with selection, sorting, search and column controls.");
-    area(areas, "Resources", "Java examples, upstream comparisons and guidance on the port.");
+    area(areas, "Resources", "Java examples and guidance on the port.");
     hero.appendChild(areas);
     root.appendChild(hero);
     root.appendChild(text("h2", "Featured areas", "showcase-section-title"));
@@ -305,10 +301,11 @@ public final class Showcase {
             "Use DominoKit’s site for the library’s documentation and full showcase. Our guide explains the examples and behaviour covered by this port.",
             ""));
     resources.appendChild(
-        link("Upstream showcase ↗", ShowcasePages.UPSTREAM + "home", "showcase-feature-primary"));
+        link(
+            "Domino UI docs ↗",
+            "https://dominokit.com/solutions/domino-ui/v2/docs/",
+            "showcase-feature-primary"));
     HTMLElement links = element("div", "showcase-feature-more");
-    links.appendChild(
-        link("Domino UI docs ↗", "https://dominokit.com/solutions/domino-ui/v2/docs/", ""));
     links.appendChild(link("Port guide ↗", REPO + "/blob/main/docs/SHOWCASE.md", ""));
     resources.appendChild(links);
     guidance.appendChild(resources);
