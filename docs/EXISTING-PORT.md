@@ -1,6 +1,6 @@
 # Prior TeaVM work and what is reused
 
-Inspected the local corrected `cstainton/domino-ui` fork and GitHub branches `claude/port-to-teavm-fYebf`, `claude/teavm-phase-2`, `claude/teavm-demo-and-history-port`, and `teavm-timer-poc-7561862648147766461`.
+Reviewed the earlier TeaVM work on the corrected domino-ui fork.
 
 * The merged fork contains `domino-history-teavm` and `domino-rest-teavm`. Their mappings identify reusable browser boundaries: history state property objects, pushState/popstate, custom events, XMLHttpRequest, FormData/Blob, timers and regular expressions.
 * The working Geo Todo demo uses TeaVM DOM APIs directly. It does not demonstrate that original Domino widget implementations execute through Elemental2.
@@ -10,5 +10,3 @@ Inspected the local corrected `cstainton/domino-ui` fork and GitHub branches `cl
 * TeaVM's SLF4J substitution needs its runtime classes on the application classpath as well as compiler discovery. Using only the plugin dependency from the old port caused a compiler substitution failure in the real fixture.
 
 The compatibility work therefore follows the existing port's browser/service boundaries while retaining the original widget rendering, state, event and lifecycle code. General fixes remain in the separate source-fork branch: integral epoch milliseconds in `DominoId` prevent invalid CSS selectors, and an optional explicit locale in `BrowserDateTimeFormatInfo` enables tested native Intl month labels. Expanded browser contracts now exercise the old port's storage, promise, file, SVG and history boundary clues without copying its widget implementations.
-
-References: [original TeaVM branch](https://github.com/cstainton/domino-ui/tree/claude/port-to-teavm-fYebf), [timer/i18n prototype](https://github.com/cstainton/domino-ui/tree/teavm-timer-poc-7561862648147766461), [merged demo work](https://github.com/cstainton/domino-ui/pull/6).

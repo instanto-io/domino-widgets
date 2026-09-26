@@ -10,8 +10,7 @@ The pinned fork is `31404a554cda9a7118c5419b4690e980f67d7d7f`. Upstream
 whose POM declares version 2.1.1. The common ancestor is
 `21adff68d9ebefd183feef6e1ce706b7b4f7bd33`.
 
-The [GitHub comparison](https://github.com/cstainton/domino-ui/compare/31404a554cda9a7118c5419b4690e980f67d7d7f...DominoKit:4f2a86662796089bb28bcfb2208dbb310cc0da52)
-contains 31 upstream commits missing from the pinned fork, and 24 fork-side commits
+Upstream has 31 commits missing from the pinned fork, and the fork has 24 commits
 absent from upstream. Those counts include merges and version updates; they are not
 counts of independent widget fixes.
 
@@ -35,16 +34,15 @@ when bringing the widget and asset sources forward together.
 
 ## Changes retained in our fork
 
-The reverse [fork comparison](https://github.com/cstainton/domino-ui/compare/DominoKit:4f2a86662796089bb28bcfb2208dbb310cc0da52...31404a554cda9a7118c5419b4690e980f67d7d7f)
-contains 24 commits including merges, build changes and earlier port experiments.
+The pinned source, vendored in [`upstream/`](../upstream/), carries 24 commits beyond upstream, including merges, build changes and earlier port experiments.
 The concrete fixes and additions include:
 
 | Change | Purpose | Scope |
 |---|---|---|
-| `DominoId` integral timestamp ([commit](https://github.com/cstainton/domino-ui/commit/e7ed739e75b2bbd3d7cb9c1d9d1eba3d11d98e8c)) | Prevent scientific notation from producing invalid CSS selectors | Shared widget source; current upstream master still concatenates the double timestamp |
-| `DynamicStyleSheet.getStyleSheet()` ([commit](https://github.com/cstainton/domino-ui/commit/08c1bab)) | Return `styleElement.sheet` instead of an uninitialised field | Shared widget source; current upstream master still returns the unused field |
-| Explicit `BrowserDateTimeFormatInfo` locale ([commit](https://github.com/cstainton/domino-ui/commit/31404a554cda9a7118c5419b4690e980f67d7d7f)) | Allow an explicit locale for browser-generated calendar labels | Addition to the fork's compatibility service, with Spanish and Arabic browser contracts |
-| `StateHistory.removeListener()` ([commit](https://github.com/cstainton/domino-ui/commit/08c1bab)) | Remove the wrapper whose listener matches the requested listener | Separate earlier TeaVM history port; excluded from this widget distribution |
+| `DominoId` integral timestamp (`e7ed739`) | Prevent scientific notation from producing invalid CSS selectors | Shared widget source; current upstream master still concatenates the double timestamp |
+| `DynamicStyleSheet.getStyleSheet()` (`08c1bab`) | Return `styleElement.sheet` instead of an uninitialised field | Shared widget source; current upstream master still returns the unused field |
+| Explicit `BrowserDateTimeFormatInfo` locale (`31404a5`) | Allow an explicit locale for browser-generated calendar labels | Addition to the fork's compatibility service, with Spanish and Arabic browser contracts |
+| `StateHistory.removeListener()` (`08c1bab`) | Remove the wrapper whose listener matches the requested listener | Separate earlier TeaVM history port; excluded from this widget distribution |
 
 Other fork work introduces timer/scheduler abstractions, modular editor, SafeHtml
 and browser i18n services, earlier TeaVM build configuration and experimental

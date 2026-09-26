@@ -16,7 +16,7 @@ Status: implementation in progress, 7 September 2026. Current evidence and remai
 
 Create `domino-widgets` as a standalone Maven library project, following Bootstrap Widgets' shared-source approach. Applications select a GWT or TeaVM backend while using the original Domino widget packages and behaviour. Neither backend depends on Verrai, Sarto, CDI or a particular application framework.
 
-Use the corrected [cstainton/domino-ui fork](https://github.com/cstainton/domino-ui) as the source of truth for widget code. Keep general correctness fixes there; keep compiler compatibility machinery in independently reusable artifacts. The current local fork includes commit `08c1bab` (Address SpotBugs findings); verify its remote availability and record the full commit before establishing the first reproducible build.
+Use the corrected domino-ui source, vendored in [`upstream/`](upstream/), as the source of truth for widget code. Keep general correctness fixes there; keep compiler compatibility machinery in independently reusable artifacts. The current local fork includes commit `08c1bab` (Address SpotBugs findings); verify its remote availability and record the full commit before establishing the first reproducible build.
 
 Retire the separate `verrai-widgets-domino` and `verrai-widgets-bootstrap` implementations after migrating their consumers. Framework integration, where necessary, belongs in optional thin adapters owned by the consuming framework. Those adapters must not recreate widget rendering, state or interaction logic.
 
