@@ -330,12 +330,4 @@
       </build>
     </profile>
   </profiles>
-  <repositories>
-    <repository>
-      <id>github-webapp-testkit</id>
-      <url>https://maven.pkg.github.com/instanto-io/webapp-testkit</url>
-      <releases><enabled>true</enabled></releases>
-      <snapshots><enabled>true</enabled></snapshots>
-    </repository>
-  </repositories>
 </project>

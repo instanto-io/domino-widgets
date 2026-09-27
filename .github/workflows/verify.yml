@@ -25,40 +25,28 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Check out the shared development parent
-        uses: actions/checkout@v4
-        with:
-          repository: instanto-io/instanto-poms
-          path: .build/instanto-poms
-      - name: Install the shared development parent
-        run: mvn -B -ntp -f .build/instanto-poms/pom.xml install
-      - name: Check out the development compatibility libraries
-        uses: actions/checkout@v4
-        with:
-          repository: instanto-io/teavm-compat
-          path: .build/teavm-compat
-      - name: Install the development compatibility libraries
-        run: mvn -B -ntp -f .build/teavm-compat/pom.xml -DskipTests -Dspotbugs.skip=true install
-      - name: Configure compatibility package access
-        env:
-          PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+      # The parent POM and every Instanto snapshot, including teavm-compat, come from
+      # packages.instanto.io. The profile lets Maven find the parent before reading it.
+      - name: Configure package access
         run: |
-          echo "PACKAGES_READ_TOKEN=$PACKAGES_READ_TOKEN" >> "$GITHUB_ENV"
           cat > "$HOME/.m2/settings.xml" <<'XML'
-          <settings><servers>
-            <server><id>forgejo-instanto</id><username>${env.FORGEJO_PACKAGE_USER}</username><password>${env.FORGEJO_PACKAGE_TOKEN}</password></server>
-            <server><id>github-cucumber-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
-            <server><id>github-gherkin-tea</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
-            <server><id>github-mockatcha</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
-            <server><id>github-webapp-testkit</id><username>${env.GITHUB_ACTOR}</username><password>${env.PACKAGES_READ_TOKEN}</password></server>
-          </servers></settings>
+          <settings>
+            <servers>
+              <server><id>forgejo-instanto</id><username>${env.FORGEJO_PACKAGE_USER}</username><password>${env.FORGEJO_PACKAGE_TOKEN}</password></server>
+            </servers>
+            <profiles><profile><id>instanto-snapshots</id>
+              <repositories><repository><id>forgejo-instanto</id><url>https://packages.instanto.io/api/packages/instanto-io/maven</url><releases><enabled>false</enabled></releases><snapshots><enabled>true</enabled></snapshots></repository></repositories>
+              <pluginRepositories><pluginRepository><id>forgejo-instanto</id><url>https://packages.instanto.io/api/packages/instanto-io/maven</url><releases><enabled>false</enabled></releases><snapshots><enabled>true</enabled></snapshots></pluginRepository></pluginRepositories>
+            </profile></profiles>
+            <activeProfiles><activeProfile>instanto-snapshots</activeProfile></activeProfiles>
+          </settings>
           XML
       - name: Build TeaVM and analyze bytecode
         run: |
           if [ '${{ matrix.mode }}' = production ]; then
-            mvn -B -ntp -Pproduction clean install
+            mvn -B -ntp -U -Pproduction clean install
           else
-            mvn -B -ntp -pl '!showcase-teavm,!build-verification' clean install
+            mvn -B -ntp -U -pl '!showcase-teavm,!build-verification' clean install
           fi
       - name: Compile the showcase in a fresh Maven process
         if: matrix.mode == 'development'

@@ -16,7 +16,6 @@
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <cucumber-tea.version>0.1.0-SNAPSHOT</cucumber-tea.version>
-    <mockatcha.version>0.1.0-SNAPSHOT</mockatcha.version>
     <webapp-testkit.version>0.1.0-SNAPSHOT</webapp-testkit.version>
     <teavm.junit.js.runner>browser-chrome</teavm.junit.js.runner>
     <browser.engine>chrome</browser.engine>
@@ -24,22 +23,6 @@
     <domino.external.root>${domino.build.root}/examples</domino.external.root>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
-  <repositories>
-    <repository>
-      <id>github-cucumber-tea</id>
-      <url>https://maven.pkg.github.com/instanto-io/cucumber-tea</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>github-mockatcha</id>
-      <url>https://maven.pkg.github.com/instanto-io/mockatcha</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>io.instanto</groupId>
