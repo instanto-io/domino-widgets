@@ -7,9 +7,9 @@ Run these commands from the repository root. For application setup, start with t
 
 
 Prerequisites: JDK 21, Maven 3.9+, Chrome and Firefox. Configure Maven to read
-the parent and compatibility snapshots from packages.instanto.io using the
+snapshots from packages.instanto.io using the
 [Instanto parent instructions](https://github.com/instanto-io/instanto-poms#use-a-parent).
-The browser-test tools also need access to their GitHub Packages repositories.
+The parent, compatibility libraries and browser-test tools all come from there.
 No separately installed Node.js or npm is required; Java Playwright manages its
 own internal driver runtime.
 
