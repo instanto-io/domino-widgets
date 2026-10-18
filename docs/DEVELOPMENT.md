@@ -39,6 +39,9 @@ CI checks both modes in all three engines. SpotBugs runs on normal builds;
 the build; findings and missing-class diagnostics are reported separately in
 `target/spotbugs/index.html`.
 
+CI installs the browser revisions required by the pinned Java Playwright dependency
+in a job-local directory, independently of the runner image's preinstalled browsers.
+
 Both `mvn clean verify` and `mvn clean install` assemble the sites and run source,
 packaging and analysis checks. `install` also makes the repository’s build plugin
 available for the standalone reporting and maintenance goals below.

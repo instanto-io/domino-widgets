@@ -13,6 +13,7 @@ jobs:
       MAVEN_OPTS: ${{ matrix.mode == 'development' && '-Xmx3g' || '-Xmx4g' }}
       FORGEJO_PACKAGE_USER: ${{ secrets.FORGEJO_PACKAGE_USER }}
       FORGEJO_PACKAGE_TOKEN: ${{ secrets.FORGEJO_PACKAGE_TOKEN }}
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/domino-playwright
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -54,6 +55,14 @@ jobs:
       - name: Verify the assembled build
         if: matrix.mode == 'development'
         run: mvn -B -ntp -f build-verification/pom.xml clean install
+      # The runner's preinstalled browsers can belong to a different Playwright
+      # release. Install the revisions selected by this project's Java dependency.
+      - name: Install matching Playwright browsers
+        run: >-
+          mvn -B -ntp -f browser-tests/webkit/pom.xml
+          org.codehaus.mojo:exec-maven-plugin:3.6.3:java
+          -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.classpathScope=test
+          '-Dexec.args=install chromium firefox webkit'
       - name: Check grouped columns alone in TeaVM and Chrome
         timeout-minutes: 3
         run: mvn -B -ntp -f browser-tests/teavm/pom.xml '-Dtest=GalleryAdvancedStepsTest#scenario_The_original_table_columns_groups_example_renders*' test
