@@ -9,9 +9,14 @@
   <artifactId>showcase-teavm</artifactId>
   <dependencies>
     <dependency>
-      <groupId>org.teavm</groupId>
-      <artifactId>teavm-extras-slf4j</artifactId>
-      <version>${teavm.version}</version>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-md-teavm</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-slf4j-teavm</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.teavm</groupId>
@@ -124,9 +129,9 @@
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>org.teavm</groupId>
-            <artifactId>teavm-extras-slf4j</artifactId>
-            <version>${teavm.version}</version>
+            <groupId>io.instanto</groupId>
+            <artifactId>domino-slf4j-teavm</artifactId>
+            <version>${project.version}</version>
           </dependency>
         </dependencies>
       </plugin>

@@ -7,7 +7,36 @@ import java.util.*;
 public final class GenerateDomino {
   private static void write(Path path, String source) throws Exception {
     Files.createDirectories(path.getParent());
-    Files.writeString(path, GenerateBindings.transform(adaptDetailsRenderer(path, source)));
+    Files.writeString(
+        path,
+        GenerateBindings.transform(adaptBrowserRuntime(path, adaptDetailsRenderer(path, source))));
+  }
+
+  /** Adapt the GWT runtime hooks added in Domino UI 2.1.3. */
+  private static String adaptBrowserRuntime(Path path, String source) {
+    return switch (path.getFileName().toString()) {
+      case "Tooltip.java" ->
+          source
+              .replace(
+                  "import org.gwtproject.timer.client.Timer;",
+                  "import org.dominokit.domino.ui.utils.DominoTimer;")
+              .replaceAll("\\bTimer\\b", "DominoTimer");
+      // TeaVM is ahead-of-time compiled; GWT's development-mode preloading does not apply.
+      case "DynamicCss.java" ->
+          source
+              .replace("import com.google.gwt.core.client.GWT;", "")
+              .replace(
+                  "shouldPreloadStaticUtilities(GWT.isScript(), GWT.isProdMode())",
+                  "shouldPreloadStaticUtilities(true, true)");
+      // Avoid allocating a split array for every unrelated rule on utility-heavy pages.
+      // A matching comma-separated selector must contain the complete requested selector.
+      case "CssomDynamicCssStyleSheet.java" ->
+          source.replace(
+              "for (String candidate : selectorText.split(\",\")) {",
+              "if (!selectorText.contains(selector)) { return false; }\n"
+                  + "    for (String candidate : selectorText.split(\",\")) {");
+      default -> source;
+    };
   }
 
   /** Keep the legacy details renderer attached to the record's actual table row. */
@@ -60,6 +89,97 @@ public final class GenerateDomino {
                         : "domino")
                 .resolve(sourceRoot.relativize(p)),
             Files.readString(p));
+    }
+    for (String library : List.of("history", "md", "jackson", "logger")) {
+      Path input = root.resolve("target/intake/" + library + "/java");
+      try (var files = Files.walk(input)) {
+        for (Path p : files.filter(p -> p.toString().endsWith(".java")).sorted().toList()) {
+          String source = Files.readString(p);
+          if (library.equals("jackson")) {
+            String name = p.getFileName().toString();
+            if (name.equals("DefaultDateFormat.java")) {
+              source =
+                  source
+                      .replace(
+                          "new Date(date.getTime()).toInstant()",
+                          "java.time.Instant.ofEpochMilli(date.getTime())")
+                      .replace("date.toInstant()", "java.time.Instant.ofEpochMilli(date.getTime())")
+                      .replace(
+                          "Date.from(Instant.from(format.parse(date)))",
+                          "new Date(Instant.from(format.parse(date)).toEpochMilli())");
+            }
+            if (name.equals("DefaultDateKeyParser.java")) {
+              source =
+                  source.replace(
+                      "Date.from(Instant.from(ISO_8601_FORMAT.parse(keyValue)))",
+                      "new Date(Instant.from(ISO_8601_FORMAT.parse(keyValue)).toEpochMilli())");
+            }
+            if (Set.of(
+                    "JsDateFormat.java",
+                    "JsDateKeyParser.java",
+                    "GwtJacksonJsonSerializerParameters.java")
+                .contains(name)) continue;
+            if (name.equals("JsJacksonContext.java")) {
+              // TeaVM supports the upstream Java runtime; GWT-only timezone APIs are unnecessary.
+              source =
+                  source
+                      .replace("JsDateFormat", "DefaultDateFormat")
+                      .replace("JsDoubleArrayReader", "DefaultDoubleArrayReader")
+                      .replace("JsIntegerArrayReader", "DefaultIntegerArrayReader")
+                      .replace("JsShortArrayReader", "DefaultShortArrayReader")
+                      .replace("JsStringArrayReader", "DefaultStringArrayReader")
+                      .replace("JsMapLike", "DefaultMapLike")
+                      .replace("JsIntegerStack", "DefaultIntegerStack")
+                      .replace("JSON::stringify", "new ServerValueStringifier()")
+                      .replace(
+                          "GwtJacksonJsonSerializerParameters",
+                          "ServerJacksonJsonSerializerParameters")
+                      .replace(
+                          "GwtJacksonJsonDeserializerParameters",
+                          "ServerJacksonJsonDeserializerParameters");
+            }
+          }
+          if (library.equals("logger")
+              && p.getFileName().toString().equals("DominoLoggingAdapter.java")) {
+            // GWT's string identity assumptions are invalid for ordinary Java/TeaVM strings.
+            for (String level : List.of("TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF")) {
+              source =
+                  source
+                      .replace("level != \"" + level + "\"", "!level.equals(\"" + level + "\")")
+                      .replace("level == \"" + level + "\"", "level.equals(\"" + level + "\")");
+            }
+            source =
+                source
+                    .replace(
+                        "INFO_ENABLED = level.equals(\"TRACE\") || level.equals(\"INFO\");",
+                        "INFO_ENABLED = level.equals(\"TRACE\") || level.equals(\"DEBUG\") || level.equals(\"INFO\");")
+                    .replace(
+                        "DEBUG_ENABLED = level.equals(\"TRACE\") || level.equals(\"INFO\") || level.equals(\"DEBUG\");",
+                        "DEBUG_ENABLED = level.equals(\"TRACE\") || level.equals(\"DEBUG\");");
+            var markerMethods =
+                java.util.regex.Pattern.compile(
+                    "public void (trace|debug|info|warn|error)\\(Marker marker, ([^)]*)\\) \\{");
+            source =
+                markerMethods
+                    .matcher(source)
+                    .replaceAll(
+                        match ->
+                            match.group()
+                                + " if (!isEnabledForLevel(Level."
+                                + match.group(1).toUpperCase(Locale.ROOT)
+                                + ")) return;");
+            source =
+                source.replace(
+                    "implements Logger {",
+                    "implements Logger, org.slf4j.spi.LoggingEventAware {\n"
+                        + "  @Override public void log(org.slf4j.event.LoggingEvent event) {\n"
+                        + "    io.instanto.domino.logging.TeaVmLogEvents.log(this, event);\n  }\n");
+          }
+          Path destination = out.resolve(library).resolve(input.relativize(p));
+          Files.createDirectories(destination.getParent());
+          Files.writeString(destination, GenerateBindings.transform(source));
+        }
+      }
     }
     StringBuilder manifest = new StringBuilder();
     var digest = java.security.MessageDigest.getInstance("SHA-256");

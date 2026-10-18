@@ -1,14 +1,13 @@
 {
   "repository": "https://github.com/DominoKit/domino-ui",
-  "commit": "31404a554cda9a7118c5419b4690e980f67d7d7f",
-  "remote_baseline": "2a8d44cc8550cce24f277e9036925f8e34a6a78c",
+  "version": "2.1.3",
+  "commit": "086379cf654a02e7f4adfd4c32af6e57eb0ec6fa",
+  "remote_baseline": "086379cf654a02e7f4adfd4c32af6e57eb0ec6fa",
   "remote_commit_available": true,
   "archive": "domino-ui.tar.gz",
-  "sha256": "27adb6a57e5b6b7ef10b0f0998e9bdc25893bd233dce982cb4332e1b17326361",
+  "sha256": "c99c98517350cd1e882449ce9ffff47abd9c97a925094fc7a3d15023f39f3a3c",
   "patches": [
-    "08c1bab Address SpotBugs findings",
-    "e7ed739e75b2bbd3d7cb9c1d9d1eba3d11d98e8c Use integral epoch milliseconds for CSS-safe IDs",
-    "31404a554cda9a7118c5419b4690e980f67d7d7f Allow explicit browser calendar label locales"
+    "teavm-2.1.3.patch"
   ],
-  "note": "Corrected source based on the DominoKit repository at remote_baseline, with the listed patches; the complete archive is vendored here."
+  "note": "Domino UI 2.1.3 with the retained TeaVM timer/scheduler and CSS-safe ID adaptations in teavm-2.1.3.patch. commit identifies the upstream release before applying this patch. Shared GWT service adaptations are supplied by teavm-compat."
 }

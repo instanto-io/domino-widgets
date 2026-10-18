@@ -1,0 +1,523 @@
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/animations/Animation.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/animations/Animation.java
+@@ -23,7 +23,7 @@
+ import java.util.Arrays;
+ import org.dominokit.domino.ui.IsElement;
+ import org.dominokit.domino.ui.utils.DominoElement;
+-import org.gwtproject.timer.client.Timer;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ 
+ /**
+  * Animates components and elements.
+@@ -220,7 +220,7 @@
+   public Animation animate() {
+     this.completed = false;
+     if (delay > 0) {
+-      new Timer() {
++      new DominoTimer() {
+         @Override
+         public void run() {
+           animateElement();
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/carousel/Carousel.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/carousel/Carousel.java
+@@ -41,9 +41,9 @@
+ import org.dominokit.domino.ui.style.GenericCss;
+ import org.dominokit.domino.ui.utils.BaseDominoElement;
+ import org.dominokit.domino.ui.utils.ChildHandler;
++import org.dominokit.domino.ui.utils.DominoScheduler;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ import org.dominokit.domino.ui.utils.SwipeUtil;
+-import org.gwtproject.core.client.Scheduler;
+-import org.gwtproject.timer.client.Timer;
+ 
+ /**
+  * A slideshow component for cycling through elements.
+@@ -69,7 +69,7 @@
+   private final DivElement element;
+ 
+   private final List<Slide> slides = new ArrayList<>();
+-  private final Timer timer;
++  private final DominoTimer timer;
+   private Slide activeSlide;
+   private Slide targetSlide;
+   private int autoSlideDuration = 3000;
+@@ -120,7 +120,7 @@
+                             keyEvents -> keyEvents.onEnter(evt -> next()).onSpace(evt -> next())))
+             .addCss(carousel);
+     timer =
+-        new Timer() {
++        new DominoTimer() {
+           @Override
+           public void run() {
+             nextSlide();
+@@ -303,7 +303,7 @@
+       slide.getIndicatorElement().addCss(dui_active);
+       activeSlide.getIndicatorElement().removeCss(dui_active);
+       slide.addCss(getPositionStyle(slide, source));
+-      Scheduler.get()
++      DominoScheduler.get()
+           .scheduleFixedDelay(
+               () -> {
+                 activeSlide.getIndicatorElement().removeCss(dui_active);
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/counter/Counter.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/counter/Counter.java
+@@ -17,7 +17,7 @@
+ 
+ import static java.util.Objects.isNull;
+ 
+-import org.gwtproject.timer.client.Timer;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ 
+ /**
+  * A component for counting from min to max value with interval and increment
+@@ -40,7 +40,7 @@
+ public class Counter {
+ 
+   private final int dir;
+-  private Timer timer;
++  private DominoTimer timer;
+   private final int countFrom;
+   private final int countTo;
+   private final int interval;
+@@ -87,7 +87,7 @@
+ 
+   private void initTimer() {
+     timer =
+-        new Timer() {
++        new DominoTimer() {
+           @Override
+           public void run() {
+             if (currentValue == countTo) {
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/loaders/Loader.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/loaders/Loader.java
+@@ -28,7 +28,7 @@
+ import org.dominokit.domino.ui.style.CssClass;
+ import org.dominokit.domino.ui.style.SwapCssClass;
+ import org.dominokit.domino.ui.utils.DominoElement;
+-import org.gwtproject.timer.client.Timer;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ 
+ /**
+  * The Loader class is responsible for displaying loading animations on a target DOM element.
+@@ -51,7 +51,7 @@
+   private String height;
+   private boolean removeLoadingText = false;
+ 
+-  private Timer timeOutTimer;
++  private DominoTimer timeOutTimer;
+ 
+   private SwapCssClass loadingPosition = SwapCssClass.of(LoadingTextPosition.MIDDLE.style);
+ 
+@@ -120,7 +120,7 @@
+ 
+     if (timeout > 0) {
+       timeOutTimer =
+-          new Timer() {
++          new DominoTimer() {
+             @Override
+             public void run() {
+               stop();
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/search/Search.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/search/Search.java
+@@ -30,8 +30,8 @@
+ import org.dominokit.domino.ui.icons.Icon;
+ import org.dominokit.domino.ui.icons.lib.Icons;
+ import org.dominokit.domino.ui.utils.BaseDominoElement;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ import org.dominokit.domino.ui.utils.ElementUtil;
+-import org.gwtproject.timer.client.Timer;
+ 
+ /**
+  * The `Search` class provides a search bar component with various functionality options.
+@@ -73,7 +73,7 @@
+   private SearchHandler searchHandler;
+   private SearchCloseHandler closeHandler;
+   private final boolean autoSearch;
+-  private Timer autoSearchTimer;
++  private DominoTimer autoSearchTimer;
+ 
+   /**
+    * Constructs a new `Search` instance with the given autoSearch setting.
+@@ -108,7 +108,7 @@
+     this.searchHandler = searchToken -> {};
+     this.closeHandler = () -> {};
+     autoSearchTimer =
+-        new Timer() {
++        new DominoTimer() {
+           @Override
+           public void run() {
+             searchHandler.onSearch(searchInput.element().value);
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/search/SearchBox.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/search/SearchBox.java
+@@ -36,9 +36,9 @@
+ import org.dominokit.domino.ui.menu.direction.DropDirection;
+ import org.dominokit.domino.ui.utils.BaseDominoElement;
+ import org.dominokit.domino.ui.utils.ChildHandler;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ import org.dominokit.domino.ui.utils.PostfixAddOn;
+ import org.dominokit.domino.ui.utils.PrefixAddOn;
+-import org.gwtproject.timer.client.Timer;
+ 
+ /**
+  * The `SearchBox` class provides a quick search input box with various customization options.
+@@ -75,7 +75,7 @@
+   private DivElement root;
+   private final TextBox textBox;
+   private boolean autoSearch = true;
+-  private Timer autoSearchTimer;
++  private DominoTimer autoSearchTimer;
+   private EventListener autoSearchEventListener;
+   private final Icon<?> searchIcon;
+   private final Icon<?> clearIcon;
+@@ -143,7 +143,7 @@
+     root.appendChild(textBox.element());
+ 
+     autoSearchTimer =
+-        new Timer() {
++        new DominoTimer() {
+           @Override
+           public void run() {
+             doSearch();
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/tabs/ScrollTabsHandler.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/tabs/ScrollTabsHandler.java
+@@ -24,13 +24,13 @@
+ import org.dominokit.domino.ui.icons.MdiIcon;
+ import org.dominokit.domino.ui.icons.lib.Icons;
+ import org.dominokit.domino.ui.utils.BaseDominoElement;
+-import org.gwtproject.timer.client.Timer;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ 
+ public class ScrollTabsHandler implements TabsOverflowHandler {
+ 
+   private MdiIcon scrollLeftIcon;
+   private MdiIcon scrollRightIcon;
+-  private Timer timer;
++  private DominoTimer timer;
+   private Consumer<Tab> closeHandler;
+   private final BaseDominoElement.HandlerRecord resizeRecord =
+       new BaseDominoElement.HandlerRecord();
+@@ -75,7 +75,7 @@
+               () -> {
+                 updateTabs(tabsPanel, nav);
+                 timer =
+-                    new Timer() {
++                    new DominoTimer() {
+                       @Override
+                       public void run() {
+                         updateTabs(panel, nav);
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/tabs/TabsDropDownHandler.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/tabs/TabsDropDownHandler.java
+@@ -29,14 +29,14 @@
+ import org.dominokit.domino.ui.menu.direction.DropDirection;
+ import org.dominokit.domino.ui.popover.Popover;
+ import org.dominokit.domino.ui.utils.BaseDominoElement;
+-import org.gwtproject.timer.client.Timer;
++import org.dominokit.domino.ui.utils.DominoTimer;
+ 
+ public class TabsDropDownHandler implements TabsOverflowHandler {
+ 
+   private final MdiIcon dropDownIcon;
+   private final Popover popover;
+   private final List<Tab> invisibleTabs = new ArrayList<>();
+-  private Timer timer;
++  private DominoTimer timer;
+   private Consumer<Tab> closeHandler;
+   private Tab.ActivationHandler activationHandler;
+   private Tab lastVisible;
+@@ -70,7 +70,7 @@
+                   });
+ 
+           timer =
+-              new Timer() {
++              new DominoTimer() {
+                 @Override
+                 public void run() {
+                   updateTabs(panel, nav);
+--- /dev/null
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/teavm/TeaVMEntryPoint.java
+@@ -0,0 +1,32 @@
++/*
++ * Copyright © 2019 Dominokit
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++package org.dominokit.domino.ui.teavm;
++
++/**
++ * Minimal TeaVM entry point for library compilation verification.
++ *
++ * <p>Real applications supply their own entry point that instantiates whichever domino-ui
++ * components they need. This class exists so that {@code mvn -Pteavm package} can run
++ * {@code teavm:build} against the library and confirm that no TeaVM-incompatible bytecode is
++ * reachable.
++ */
++public class TeaVMEntryPoint {
++
++  public static void main(String[] args) {
++    // Intentionally empty — tree-shaking means only reachable classes are compiled.
++    // Downstream apps replace this with real UI bootstrapping code.
++  }
++}
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DelayedExecution.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DelayedExecution.java
+@@ -16,11 +16,10 @@
+ package org.dominokit.domino.ui.utils;
+ 
+ import org.dominokit.domino.ui.config.DelayedActionConfig;
+-import org.gwtproject.timer.client.Timer;
+ 
+ /**
+  * The {@code DelayedExecution} class provides a simple utility for executing actions with a
+- * specified delay using GWT Timer.
++ * specified delay using {@link DominoTimer}.
+  *
+  * <p>Example Usage:
+  *
+@@ -34,12 +33,12 @@
+  */
+ public class DelayedExecution {
+ 
+-  private final Timer timer;
++  private final DominoTimer timer;
+   private final int delay;
+ 
+   private DelayedExecution(DelayedAction delayedAction, int delay) {
+     this.timer =
+-        new Timer() {
++        new DominoTimer() {
+           @Override
+           public void run() {
+             delayedAction.doAction();
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DelayedTextInput.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DelayedTextInput.java
+@@ -24,7 +24,6 @@
+ import org.dominokit.domino.ui.elements.InputElement;
+ import org.dominokit.domino.ui.elements.TextAreaElement;
+ import org.dominokit.domino.ui.events.EventType;
+-import org.gwtproject.timer.client.Timer;
+ 
+ /**
+  * The {@code DelayedTextInput} class provides a utility for capturing text input events in an HTML
+@@ -45,7 +44,7 @@
+ 
+   private int delay;
+   private final HTMLElement inputElement;
+-  private Timer autoActionTimer;
++  private DominoTimer autoActionTimer;
+   private DelayedAction delayedAction = () -> {};
+   private DelayedAction onEnterAction = () -> delayedAction.doAction();
+ 
+@@ -289,7 +288,7 @@
+ 
+   protected void prepare() {
+     autoActionTimer =
+-        new Timer() {
++        new DominoTimer() {
+           @Override
+           public void run() {
+             DelayedTextInput.this.delayedAction.doAction();
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DominoId.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DominoId.java
+@@ -26,7 +26,8 @@
+   private static LazyInitializer seedInit =
+       new LazyInitializer(
+           () -> {
+-            SEED = new JsDate().getTime() + "-";
++            // Integral epoch milliseconds avoid scientific notation in generated CSS identifiers.
++            SEED = (long) new JsDate().getTime() + "-";
+           });
+ 
+   /**
+--- /dev/null
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DominoScheduler.java
+@@ -0,0 +1,79 @@
++/*
++ * Copyright © 2019 Dominokit
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++package org.dominokit.domino.ui.utils;
++
++import elemental2.dom.DomGlobal;
++
++/**
++ * A Scheduler abstraction that uses Elemental2 setTimeout instead of the GWT specific Scheduler.
++ * Provides the most commonly used Scheduler operations without depending on the GWT runtime so the
++ * library can be compiled with TeaVM.
++ */
++public final class DominoScheduler {
++
++  private static final DominoScheduler INSTANCE = new DominoScheduler();
++
++  private DominoScheduler() {}
++
++  public static DominoScheduler get() {
++    return INSTANCE;
++  }
++
++  /** Schedule a one-shot command to run after the current event loop turn. */
++  public void scheduleDeferred(ScheduledCommand command) {
++    DomGlobal.setTimeout((p0) -> command.execute(), 0);
++  }
++
++  /**
++   * Schedule a repeating command after a fixed delay. The command is rescheduled with the same
++   * delay as long as {@link RepeatingCommand#execute()} returns {@code true}.
++   */
++  public void scheduleFixedDelay(RepeatingCommand command, int delayMs) {
++    DomGlobal.setTimeout(
++        (p0) -> {
++          if (command.execute()) {
++            scheduleFixedDelay(command, delayMs);
++          }
++        },
++        delayMs);
++  }
++
++  /**
++   * Schedule a repeating command at a fixed period. The command continues to be invoked at the
++   * given period as long as {@link RepeatingCommand#execute()} returns {@code true}.
++   */
++  public void scheduleFixedPeriod(RepeatingCommand command, int periodMs) {
++    final double[] handle = new double[1];
++    handle[0] =
++        DomGlobal.setInterval(
++            (p0) -> {
++              if (!command.execute()) {
++                DomGlobal.clearInterval(handle[0]);
++              }
++            },
++            periodMs);
++  }
++
++  @FunctionalInterface
++  public interface ScheduledCommand {
++    void execute();
++  }
++
++  @FunctionalInterface
++  public interface RepeatingCommand {
++    boolean execute();
++  }
++}
+--- /dev/null
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DominoTimer.java
+@@ -0,0 +1,79 @@
++/*
++ * Copyright © 2019 Dominokit
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++package org.dominokit.domino.ui.utils;
++
++import elemental2.dom.DomGlobal;
++
++/**
++ * A Timer abstraction that uses Elemental2 setTimeout / setInterval instead of the GWT specific
++ * timer.
++ */
++public abstract class DominoTimer {
++
++  private double timerId = -1;
++  private boolean isRunning = false;
++  private boolean isRepeating = false;
++
++  public DominoTimer() {}
++
++  public abstract void run();
++
++  public void schedule(int delayMillis) {
++    if (delayMillis < 0) {
++      throw new IllegalArgumentException("must be non-negative");
++    }
++    if (isRunning) {
++      cancel();
++    }
++    isRepeating = false;
++    isRunning = true;
++    timerId =
++        DomGlobal.setTimeout(
++            (p0) -> {
++              isRunning = false;
++              run();
++            },
++            delayMillis);
++  }
++
++  public void scheduleRepeating(int periodMillis) {
++    if (periodMillis <= 0) {
++      throw new IllegalArgumentException("must be strictly positive");
++    }
++    if (isRunning) {
++      cancel();
++    }
++    isRepeating = true;
++    isRunning = true;
++    timerId = DomGlobal.setInterval((p0) -> run(), periodMillis);
++  }
++
++  public void cancel() {
++    if (!isRunning) {
++      return;
++    }
++    if (isRepeating) {
++      DomGlobal.clearInterval(timerId);
++    } else {
++      DomGlobal.clearTimeout(timerId);
++    }
++    isRunning = false;
++  }
++
++  public boolean isRunning() {
++    return isRunning;
++  }
++}
+--- a/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DynamicStyleSheet.java
++++ b/domino-ui/src/main/java/org/dominokit/domino/ui/utils/DynamicStyleSheet.java
+@@ -35,7 +35,6 @@
+   private final String cssPrefix;
+   private final D target;
+   private final HTMLStyleElement styleElement;
+-  private CSSStyleSheet styleSheet;
+   private DominoStyleSheet dominoStyleSheet = new DominoStyleSheet();
+ 
+   /**
+@@ -100,7 +99,7 @@
+    * @return The {@code CSSStyleSheet} instance.
+    */
+   public CSSStyleSheet getStyleSheet() {
+-    return styleSheet;
++    return (CSSStyleSheet) styleElement.sheet;
+   }
+ 
+   /**

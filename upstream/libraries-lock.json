@@ -1,0 +1,75 @@
+[
+  {
+    "name": "history",
+    "version": "1.0.6",
+    "repository": "https://github.com/DominoKit/domino-history",
+    "commit": "1b7b1d841f4067665c1ec69b89ca8db765852fef",
+    "archive": "domino-history.tar.gz",
+    "sha256": "622e41e72b5c862098dc3bad3513ed7ccb1f0d2567b7004f87cf3cbf54390ce7",
+    "sourcePrefixes": [
+      "domino-history-client/src/main/java/"
+    ],
+    "testPrefix": "domino-history-shared/src/test/java/",
+    "testResourcesPrefix": "src/test/resources/"
+  },
+  {
+    "name": "md",
+    "version": "1.0.0",
+    "repository": "https://github.com/DominoKit/domino-md",
+    "commit": "e58805db804c55f403dfbdf9a8b6710773a74a12",
+    "archive": "domino-md.tar.gz",
+    "sha256": "3195001aa57b554ea12b88ebc0434d95cb84da80d876085a5aae102072e1d90d",
+    "sourcePrefixes": [
+      "src/main/java/"
+    ],
+    "testPrefix": "src/test/java/",
+    "testResourcesPrefix": "src/test/resources/"
+  },
+  {
+    "name": "jackson",
+    "version": "1.0.6",
+    "repository": "https://github.com/DominoKit/domino-jackson",
+    "commit": "e0f67f0903881a7ffee558e4ca96c84ad272d669",
+    "archive": "domino-jackson.tar.gz",
+    "sha256": "f564497eaff9d1ba67f09ce09c2b36b5aa496b15ef721ba92220b41d53c20bf5",
+    "sourcePrefixes": [
+      "domino-jackson/src/main/java/"
+    ],
+    "testPrefix": "domino-jackson/src/test/java/",
+    "testResourcesPrefix": "src/test/resources/"
+  },
+  {
+    "name": "rest",
+    "version": "2.0.2",
+    "repository": "https://github.com/DominoKit/domino-rest",
+    "commit": "79a1d671a8ac42429af9debe35dcd127a506002d",
+    "archive": "domino-rest.tar.gz",
+    "sha256": "edd6bd899d4373967f21959225d539902028e0ff9d7a700273ed4f1ffa19b5e9",
+    "sourcePrefixes": [
+      "domino-rest-client/src/main/java/"
+    ],
+    "testPrefix": "domino-rest-shared/src/test/java/",
+    "testResourcesPrefix": "src/test/resources/",
+    "adapterOrigin": {
+      "repository": "https://github.com/instanto-io/domino-widgets",
+      "commit": "2a0679df1b919d57621951ba6fef307dbea452ee",
+      "archive": "upstream/domino-ui.tar.gz",
+      "sha256": "27adb6a57e5b6b7ef10b0f0998e9bdc25893bd233dce982cb4332e1b17326361",
+      "directory": "domino-rest-teavm/src/main/java",
+      "note": "Retained TeaVM adapters, now compiled against REST 2.0.2 and with matcher initialization and zero-length replacement fixes."
+    }
+  },
+  {
+    "name": "logger",
+    "version": "2.0.1",
+    "repository": "https://github.com/DominoKit/domino-slf4j-logger",
+    "commit": "0b28105f991227d0e47b2c3ddfb488a31445d1dc",
+    "archive": "domino-slf4j-logger.tar.gz",
+    "sha256": "bbf6d0961ff8f4b19a3a9b8fabb031e4ec77773ba7982616ef51da3a25d33dcc",
+    "sourcePrefixes": [
+      "src/main/java/"
+    ],
+    "testPrefix": "src/test/java/",
+    "testResourcesPrefix": "src/test/resources/"
+  }
+]

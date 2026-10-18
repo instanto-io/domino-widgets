@@ -31,6 +31,22 @@ public final class Showcase {
       examples.id = "gallery-examples";
       main.appendChild(examples);
       examples.setAttribute("data-ready", "true");
+    } else if (route.equals("markdown")) {
+      libraryHeading(
+          main,
+          "Markdown playground",
+          "Write, preview and compare four output formats from the same document.",
+          "MarkdownExamples");
+      main.appendChild(MarkdownExamples.render());
+    } else if (route.equals("logging")) {
+      libraryHeading(
+          main,
+          "Logging playground",
+          "Follow an event from a standard SLF4J call to its adapter, with context attached.",
+          "LoggingExamples");
+      main.appendChild(LoggingExamples.render());
+    } else if (route.equals("release-213")) {
+      main.appendChild(Release213Contracts.render());
     } else if (route.equals("contracts")) {
       main.appendChild(text("h1", "Widget behaviour checks", ""));
       main.appendChild(
@@ -66,7 +82,12 @@ public final class Showcase {
     main.appendChild(footer);
     String title =
         page == null
-            ? (route.isEmpty() ? "Explore the widgets" : "Development examples")
+            ? switch (route) {
+              case "" -> "Explore the widgets";
+              case "markdown" -> "Markdown playground";
+              case "logging" -> "Logging playground";
+              default -> "Development examples";
+            }
             : page.title;
     DomGlobal.document.title = title + " · Domino Widgets · " + compiler;
   }
@@ -131,6 +152,25 @@ public final class Showcase {
       groups.add(details);
       nav.appendChild(details);
     }
+    HTMLElement libraries = element("details", "showcase-nav-group");
+    libraries.setAttribute("open", "");
+    libraries.appendChild(text("summary", "DominoKit libraries", ""));
+    for (String name : new String[] {"markdown", "logging"}) {
+      HTMLAnchorElement item =
+          link(
+              name.equals("markdown") ? "Markdown playground" : "Logging playground",
+              "?page=" + name,
+              "showcase-nav-item");
+      item.setAttribute(
+          "data-search",
+          name.equals("markdown")
+              ? "markdown editor preview tables tasks html plain text"
+              : "logging logger slf4j markers mdc events");
+      if (name.equals(route)) item.setAttribute("aria-current", "page");
+      libraries.appendChild(item);
+    }
+    groups.add(libraries);
+    nav.appendChild(libraries);
     HTMLElement empty =
         text("p", "No matching widgets. Try another name.", "showcase-search-empty");
     empty.setAttribute("hidden", "");
@@ -193,6 +233,27 @@ public final class Showcase {
     main.appendChild(heading);
   }
 
+  private static void libraryHeading(
+      HTMLElement main, String title, String description, String source) {
+    HTMLElement heading = element("section", "showcase-page-heading");
+    heading.appendChild(text("p", "DOMINOKIT LIBRARIES", "showcase-eyebrow"));
+    heading.appendChild(text("h1", title, ""));
+    heading.appendChild(text("p", description, "showcase-lead"));
+    HTMLElement actions = element("div", "showcase-page-actions");
+    actions.appendChild(
+        link(
+            "View Java example ↗",
+            REPO
+                + "/blob/main/showcase-shared/src/main/java/io/instanto/domino/client/"
+                + source
+                + ".java",
+            "showcase-secondary"));
+    actions.appendChild(
+        link("Library setup ↗", REPO + "/blob/main/docs/ECOSYSTEM.md", "showcase-secondary"));
+    heading.appendChild(actions);
+    main.appendChild(heading);
+  }
+
   /** Landing structure and section names follow DominoKit's current showcase home. */
   private static void home(HTMLElement main) {
     HTMLElement root = element("div", "showcase-home");
@@ -223,6 +284,29 @@ public final class Showcase {
     area(areas, "Resources", "Java examples and guidance on the port.");
     hero.appendChild(areas);
     root.appendChild(hero);
+    root.appendChild(text("h2", "New: Markdown & logging", "showcase-section-title"));
+    HTMLElement newLibraries = element("div", "showcase-feature-grid");
+    HTMLElement markdown = element("article", "showcase-feature");
+    markdown.appendChild(text("h3", "From text to interface", ""));
+    markdown.appendChild(
+        text(
+            "p",
+            "Edit Markdown with live preview, explore tables and task lists, and compare DOM, HTML, plain text and Markdown output.",
+            ""));
+    markdown.appendChild(
+        link("Open Markdown playground →", "?page=markdown", "showcase-feature-primary"));
+    newLibraries.appendChild(markdown);
+    HTMLElement logging = element("article", "showcase-feature");
+    logging.appendChild(text("h3", "See your logs in context", ""));
+    logging.appendChild(
+        text(
+            "p",
+            "Send SLF4J events, route them with markers, and watch nested MDC scopes preserve the right request ID.",
+            ""));
+    logging.appendChild(
+        link("Open logging playground →", "?page=logging", "showcase-feature-primary"));
+    newLibraries.appendChild(logging);
+    root.appendChild(newLibraries);
     root.appendChild(text("h2", "Featured areas", "showcase-section-title"));
     root.appendChild(
         text(

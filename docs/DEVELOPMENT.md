@@ -83,6 +83,10 @@ After building the TeaVM site, run the Java browser checks:
 mvn -f browser-tests/platform-checks/pom.xml test
 ```
 
+To check only installed browser engines, pass
+`-Ddomino.browser.engines=chromium,webkit`. Omitting this property still runs all
+three engines; a partial run does not validate the omitted engine.
+
 These checks start their own loopback server. They exercise native wheel scrolling
 in Chromium, Firefox and WebKit, and native touch gestures in Chromium. The touch
 checks scroll from the top to the footer and back on the home, buttons and forms

@@ -11,7 +11,10 @@ public class VisualReferenceSteps extends BrowserSteps {
   public void colours() {
     contains(el("#gallery-examples"), "dui_bg_red");
     contains(el("#gallery-examples"), "dui_bg_primary");
-    assertTrue(el("#gallery-examples").all(".dui-card .dui-border").size() >= 200);
+    // 2.1.3 resolves the legacy dui_border utility to a dynamic width class.
+    var swatches = el("#gallery-examples").all(".dui-card .dui-border-solid");
+    assertTrue("Expected the complete colour scale", swatches.size() >= 200);
+    assertEquals("1px", swatches.get(0).css("border-top-width"));
   }
 
   @Then("I can search and select an icon")

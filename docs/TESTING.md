@@ -70,10 +70,14 @@ The `Legacy suite` column shows equivalent coverage in the historical JavaScript
 | `visual-references.feature` | 3 | Colour, icon and theme interactions |
 | `tables.feature` | 14 | Advanced table interactions |
 | `native.feature` | 1 | `native.spec.js` |
-| `reuse.feature` | 1 | `reuse.spec.js` |
+| `reuse.feature` | 10 | Independent logger: SLF4J 2, routing, MDC and level thresholds |
+| `release-213.feature` | 2 | UI 2.1.3 additions and keyboard entry |
+| `ecosystem.feature` | 3 | Independent Markdown and History ports |
+| `data.feature` | 2 | Generated Jackson mapper and REST client |
+| `showcase-libraries.feature` | 6 | Public Markdown and logging playgrounds |
 | `external.feature` | 1, during publication | `external.spec.js` |
 
-The normal suite has 117 scenarios per engine, or 351 across Chrome, Firefox and WebKit. The gallery outlines name every route in the pinned showcase manifest.
+The normal suite has 139 scenarios per engine, or 417 across Chrome, Firefox and WebKit. The gallery outlines name every route in the pinned showcase manifest.
 
 ## What is verified by `external.feature`
 

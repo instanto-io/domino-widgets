@@ -82,5 +82,26 @@
     "field": null,
     "method": "validate",
     "reason": "All sections must validate so every missing field is highlighted. The original boolean AND deliberately evaluates every validator; no null-dereference guard depends on short-circuiting."
+  },
+  {
+    "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+    "class": "org.dominokit.rest.DominoRestConfig",
+    "field": "dateParamFormatter",
+    "method": "setDateParamFormatter",
+    "reason": "Preserves upstream process-wide REST configuration: getInstance() returns fluent wrappers over shared static settings. Converting these fields to per-wrapper state would change the public configuration contract."
+  },
+  {
+    "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+    "class": "org.dominokit.rest.DominoRestConfig",
+    "field": "defaultServiceRoot",
+    "method": "setDefaultServiceRoot",
+    "reason": "Preserves upstream process-wide REST configuration: getInstance() returns fluent wrappers over shared static settings. Converting these fields to per-wrapper state would change the public configuration contract."
+  },
+  {
+    "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+    "class": "org.dominokit.rest.DominoRestConfig",
+    "field": "serverRouter",
+    "method": "setServerRouter",
+    "reason": "Preserves upstream process-wide REST configuration: getInstance() returns fluent wrappers over shared static settings. Converting these fields to per-wrapper state would change the public configuration contract."
   }
 ]

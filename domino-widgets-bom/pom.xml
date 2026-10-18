@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>io.instanto</groupId>
     <artifactId>instanto-org-pom</artifactId>
@@ -11,6 +10,16 @@
   <packaging>pom</packaging>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.instanto</groupId>
+        <artifactId>domino-slf4j-teavm</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>2.0.16</version>
+      </dependency>
       <dependency>
         <groupId>io.instanto</groupId>
         <artifactId>teavm-compat-bom</artifactId>
@@ -26,6 +35,26 @@
       <dependency>
         <groupId>io.instanto</groupId>
         <artifactId>domino-widgets-teavm</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.instanto</groupId>
+        <artifactId>domino-history-teavm</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.instanto</groupId>
+        <artifactId>domino-md-teavm</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.instanto</groupId>
+        <artifactId>domino-jackson-teavm</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.instanto</groupId>
+        <artifactId>domino-rest-teavm</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

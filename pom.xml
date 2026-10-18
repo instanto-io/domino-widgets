@@ -54,12 +54,24 @@
     <module>teavm-elemental2-compat</module>
     <module>teavm-gwt-modular-services</module>
     <module>domino-widgets-teavm</module>
+    <module>domino-history-teavm</module>
+    <module>domino-md-teavm</module>
+    <module>domino-jackson-teavm</module>
+    <module>domino-rest-teavm</module>
+    <module>domino-slf4j-teavm</module>
     <module>showcase-teavm</module>
     <module>compat-reuse-smoke</module>
+    <module>ecosystem-smoke</module>
+    <module>data-smoke</module>
     <module>build-verification</module>
   </modules>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>2.0.16</version>
+      </dependency>
       <dependency>
         <groupId>io.instanto</groupId>
         <artifactId>teavm-compat-bom</artifactId>

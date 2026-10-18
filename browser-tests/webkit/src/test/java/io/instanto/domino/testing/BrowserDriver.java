@@ -30,7 +30,14 @@ public final class BrowserDriver implements Browser {
     page.onPageError(failures::add);
     page.onResponse(
         response -> {
-          if (response.status() >= 400)
+          // This deliberate failure is asserted by the typed REST client scenario.
+          boolean expectedMissing =
+              application.equals("data")
+                  && response.status() == 404
+                  && response
+                      .url()
+                      .equals(FixtureServer.start().base() + "data/service/contracts/missing");
+          if (response.status() >= 400 && !expectedMissing)
             failures.add("HTTP " + response.status() + " " + response.url());
         });
     page.navigate(

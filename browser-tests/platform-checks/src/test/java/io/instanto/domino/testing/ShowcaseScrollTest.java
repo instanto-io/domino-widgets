@@ -11,7 +11,6 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.junit.*;
@@ -23,12 +22,17 @@ import org.junit.runners.Parameterized;
 public class ShowcaseScrollTest {
   @Parameterized.Parameters(name = "{0}/{1}")
   public static Collection<Object[]> browsers() {
-    return Arrays.asList(
-        new Object[][] {
-          {"teavm", "chromium"},
-          {"teavm", "firefox"},
-          {"teavm", "webkit"}
-        });
+    List<Object[]> browsers = new ArrayList<>();
+    for (String engine :
+        System.getProperty("domino.browser.engines", "chromium,firefox,webkit").split(",")) {
+      engine = engine.trim();
+      if (!List.of("chromium", "firefox", "webkit").contains(engine)) {
+        throw new IllegalArgumentException("Unknown browser engine: " + engine);
+      }
+      browsers.add(new Object[] {"teavm", engine});
+    }
+    if (browsers.isEmpty()) throw new IllegalArgumentException("No browser engines selected");
+    return browsers;
   }
 
   private static HttpServer server;

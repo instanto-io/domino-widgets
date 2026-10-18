@@ -13,6 +13,13 @@
   <dependencies>
     <dependency>
       <groupId>io.instanto</groupId>
+      <artifactId>domino-slf4j-teavm</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
       <artifactId>domino-build-inputs</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
@@ -77,6 +84,48 @@
     <dependency>
       <groupId>io.instanto</groupId>
       <artifactId>compat-reuse-smoke</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-history-teavm</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-md-teavm</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>ecosystem-smoke</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-jackson-teavm</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-rest-teavm</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.instanto</groupId>
+      <artifactId>data-smoke</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
       <scope>test</scope>

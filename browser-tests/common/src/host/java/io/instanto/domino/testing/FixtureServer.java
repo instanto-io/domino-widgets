@@ -48,6 +48,8 @@ public final class FixtureServer {
     Map<String, Path> inputs = new LinkedHashMap<>();
     inputs.put("teavm", root.resolve("showcase-teavm/target/site"));
     inputs.put("reuse", root.resolve("compat-reuse-smoke/target/site"));
+    inputs.put("ecosystem", root.resolve("ecosystem-smoke/target/site"));
+    inputs.put("data", root.resolve("data-smoke/target/site"));
     Path external =
         Path.of(System.getProperty("domino.external.root", root.resolve("examples").toString()));
     for (String backend : new String[] {"teavm"}) {
@@ -70,6 +72,9 @@ public final class FixtureServer {
       ApplicationFiles.stage(source, destination);
       Path index = resources.resolve(entry.getKey()).resolve("index.html");
       String html = Files.readString(index);
+      if (entry.getKey().equals("data")) {
+        html = html.replace("<body>", "<body data-service-root=\"" + base() + "data/service/\">");
+      }
       String instrumented =
           html.replaceFirst(
               "(?i)<body[^>]*>", "$0" + java.util.regex.Matcher.quoteReplacement(DIAGNOSTICS));
@@ -96,6 +101,38 @@ public final class FixtureServer {
       String path = exchange.getRequestURI().getPath();
       if (exchange.getRequestMethod().equals("OPTIONS")) {
         exchange.sendResponseHeaders(204, -1);
+        return;
+      }
+      if (path.endsWith("/service/contracts/payload/42")) {
+        String query = exchange.getRequestURI().getQuery();
+        if (!"search=tea time".equals(query)) {
+          respond(
+              exchange, 400, "text/plain", String.valueOf(query).getBytes(StandardCharsets.UTF_8));
+        } else {
+          respond(
+              exchange,
+              200,
+              "application/json",
+              "{\"name\":\"server\",\"count\":42,\"labels\":[\"remote\"],\"date\":\"2026-10-18\"}"
+                  .getBytes(StandardCharsets.UTF_8));
+        }
+        return;
+      }
+      if (path.endsWith("/service/contracts/payload")
+          && exchange.getRequestMethod().equals("POST")) {
+        if (!exchange.getRequestHeaders().getFirst("Content-Type").startsWith("application/json")) {
+          respond(exchange, 415, "text/plain", new byte[0]);
+        } else {
+          respond(exchange, 200, "application/json", exchange.getRequestBody().readNBytes(65536));
+        }
+        return;
+      }
+      if (path.endsWith("/service/contracts/missing")) {
+        respond(
+            exchange,
+            404,
+            "application/json",
+            "{\"error\":\"missing\"}".getBytes(StandardCharsets.UTF_8));
         return;
       }
       if (path.endsWith("/service/upload") && exchange.getRequestMethod().equals("POST")) {

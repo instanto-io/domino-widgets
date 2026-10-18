@@ -6,11 +6,24 @@ Java widgets on TeaVM. It preserves the upstream
 This repository provides the TeaVM adaptation; GWT users can use DominoKit's
 upstream distribution.
 
+The pinned widget sources and assets are based on **Domino UI 2.1.3**. See the
+[upgrade notes](docs/UPSTREAM-UPGRADE.md) for retained adaptations and the status
+of the other announced DominoKit releases.
+
+Independent TeaVM ports of **Domino History 1.0.6**, **Domino REST 2.0.2**,
+**Domino Jackson 1.0.6**, and **domino-md 1.0.0** are also included. They use the shared compatibility runtime without depending
+on the widget library. See [ecosystem usage](docs/ECOSYSTEM.md).
+
 The `io.instanto` Maven group distinguishes this independently maintained port
 from official DominoKit releases. See [widget coverage](docs/COMPATIBILITY.md)
 for its current support and limitations.
 
 **[Explore the TeaVM showcase](https://instanto-io.github.io/domino-widgets/teavm/).**
+
+Try the [Markdown playground](https://instanto-io.github.io/domino-widgets/teavm/?page=markdown)
+for live editing and four output formats, or the
+[logging playground](https://instanto-io.github.io/domino-widgets/teavm/?page=logging)
+for SLF4J levels, marker routing and scoped MDC.
 
 ## Start a page
 
@@ -111,3 +124,6 @@ Like DominoKit? Please [support the upstream project](https://www.patreon.com/Do
 Using the TeaVM build? Please [support TeaVM](https://github.com/sponsors/konsoletyper).
 
 Want to see this port and more TeaVM libraries maintained? Please [sponsor this port](https://github.com/sponsors/instanto-io).
+
+The standalone [SLF4J 2 logger port](docs/ECOSYSTEM.md#logger) provides Domino
+Logger 2.0.1 for TeaVM, including marker routing and scoped MDC.

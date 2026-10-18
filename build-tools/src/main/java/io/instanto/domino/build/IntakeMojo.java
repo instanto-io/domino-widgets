@@ -71,6 +71,45 @@ public final class IntakeMojo extends BuildMojo {
     require(!styles.isEmpty(), "No upstream component stylesheets");
     write(css.resolve("domino-ui.css"), String.join("\n", styles));
     json(out.resolve("inventory.json"), inventory);
+    prepareLibraries(root, out);
+  }
+
+  private static void prepareLibraries(Path root, Path out) throws Exception {
+    for (var item :
+        JsonParser.parseString(Files.readString(root.resolve("upstream/libraries-lock.json")))
+            .getAsJsonArray()) {
+      var library = item.getAsJsonObject();
+      Path archive = within(root.resolve("upstream"), library.get("archive").getAsString());
+      verifyHash(archive, library.get("sha256").getAsString());
+      Path destination = within(out, library.get("name").getAsString());
+      Map<String, String> prefixes = new LinkedHashMap<>();
+      for (var prefix : library.getAsJsonArray("sourcePrefixes"))
+        prefixes.put(prefix.getAsString(), "java");
+      prefixes.put(library.get("testPrefix").getAsString(), "tests");
+      prefixes.put(library.get("testResourcesPrefix").getAsString(), "test-resources");
+      try (var tar =
+          new TarArchiveInputStream(new GZIPInputStream(Files.newInputStream(archive)))) {
+        for (var entry = tar.getNextEntry(); entry != null; entry = tar.getNextEntry()) {
+          if (!entry.isFile()) continue;
+          String name = entry.getName();
+          Path file = null;
+          for (var prefix : prefixes.entrySet()) {
+            if (name.startsWith(prefix.getKey()))
+              file =
+                  within(
+                      destination.resolve(prefix.getValue()),
+                      name.substring(prefix.getKey().length()));
+          }
+          if (name.equals("LICENSE") || name.equals("NOTICE"))
+            file = destination.resolve("licenses").resolve(name);
+          if (file != null) {
+            require(!Files.exists(file), "Duplicate library input: " + file);
+            Files.createDirectories(file.getParent());
+            Files.write(file, tar.readAllBytes());
+          }
+        }
+      }
+    }
   }
 
   private static void verifySample(Path root, JsonObject sample) throws Exception {

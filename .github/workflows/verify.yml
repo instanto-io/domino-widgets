@@ -90,7 +90,7 @@ jobs:
           # memory from loading the complete showcase in repeated frames.
           mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryComponentsStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
           mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=GalleryAdvancedStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
-          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=LayoutStepsTest,NativeStepsTest,ReuseStepsTest,TableStepsTest,VisualReferenceStepsTest,WidgetStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
+          mvn -B -ntp -f browser-tests/teavm/pom.xml -Dtest=LayoutStepsTest,NativeStepsTest,ReuseStepsTest,TableStepsTest,VisualReferenceStepsTest,WidgetStepsTest,Release213StepsTest,EcosystemStepsTest,DataStepsTest,ShowcaseLibrariesStepsTest -Dbrowser.engine=firefox -Dteavm.junit.js.runner=browser-firefox test
       - name: Run the same scenarios through Java Playwright WebKit
         timeout-minutes: 20
         run: mvn -B -ntp -f browser-tests/webkit/pom.xml test

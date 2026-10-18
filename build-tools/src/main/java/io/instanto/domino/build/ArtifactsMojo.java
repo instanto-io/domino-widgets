@@ -32,6 +32,24 @@ public final class ArtifactsMojo extends BuildMojo {
     require(
         jars.size() == 4,
         "Expected widgets plus three resolved compatibility JARs; got " + jars.size());
+    for (String module :
+        List.of(
+            "domino-history-teavm",
+            "domino-md-teavm",
+            "domino-jackson-teavm",
+            "domino-rest-teavm",
+            "domino-slf4j-teavm")) {
+      List<Path> libraries =
+          files(root().resolve(module + "/target")).stream()
+              .filter(
+                  p ->
+                      p.getFileName().toString().matches(module + "-.*\\.jar")
+                          && !p.toString().endsWith("-sources.jar")
+                          && !p.toString().endsWith("-javadoc.jar"))
+              .toList();
+      require(libraries.size() == 1, "Expected one library JAR for " + module);
+      jars.addAll(libraries);
+    }
     int count = checkJars(jars);
     Path manifest = root().resolve("target/compat/sources.sha256");
     require(Files.isRegularFile(manifest), "Missing generated-source manifest");

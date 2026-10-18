@@ -54,7 +54,10 @@ public abstract class BrowserSteps {
     String selector =
         switch (route) {
           case "contracts" -> "#screen";
+          case "release-213" -> "#release-213";
           case "richtext" -> "#richtext-example";
+          case "markdown" -> "#markdown-example";
+          case "logging" -> "#logging-example";
           case "browser-apis" -> "#browser-apis";
           default -> "#gallery-examples";
         };

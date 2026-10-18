@@ -292,6 +292,8 @@ public class WidgetSteps extends BrowserSteps {
     check(() -> assertNotEquals("true", secondary.attr("dui-collapsed")));
     check(() -> assertNotEquals("0px", secondary.css("height")));
     secondary.finishAnimations();
+    // Upstream now ignores clicks until the expansion transition completes.
+    attribute(selected.first(":scope > a"), "aria-expanded", "true");
   }
 
   @Then("collapsing it again hides its children")
@@ -351,7 +353,8 @@ public class WidgetSteps extends BrowserSteps {
     check(
         () -> {
           String html = selected.attr("data-html");
-          assertTrue(html, html.matches("(?s).*Selected text</(?:" + tags.replace(',', '|') + ")>.*"));
+          assertTrue(
+              html, html.matches("(?s).*Selected text</(?:" + tags.replace(',', '|') + ")>.*"));
         });
   }
 

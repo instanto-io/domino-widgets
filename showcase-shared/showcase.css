@@ -165,3 +165,53 @@ body.dui[data-compiler] { overflow: auto; }
 }
 
 .invalid-section { outline: 2px solid var(--dui-clr-error, #c62828); outline-offset: 2px; }
+
+/* Interactive library playgrounds share the gallery's typography and spacing. */
+.library-demo { max-width: 1380px; margin: 28px auto 0; }
+.library-demo *, .library-demo *::before, .library-demo *::after { box-sizing: border-box; }
+.demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+.demo-panel { min-width: 0; padding: 26px; border: 1px solid #dce7e3; border-radius: 12px; background: white; }
+.demo-panel-title { margin: 0 0 6px; font-size: 21px; letter-spacing: -.4px; }
+.demo-hint, .demo-footnote { color: #5b716c; font-size: 13px; line-height: 1.7; }
+.demo-hint { margin: 0 0 20px; }
+.demo-footnote { margin: 22px 0; }
+.demo-toolbar, .demo-options { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.demo-toolbar { margin: 0 0 24px; }
+.demo-toolbar-label { font-size: 13px; font-weight: 700; margin-right: 6px; }
+.demo-options { margin-bottom: 18px; }
+.library-demo button { font-size: 12px; }
+.library-demo button[aria-pressed=true] { background: #dff3ec; color: #006658; box-shadow: inset 0 0 0 2px #007f78; }
+.library-demo button:focus-visible { outline: 3px solid #b76b20; outline-offset: 3px; }
+.library-demo [hidden] { display: none !important; }
+.library-demo textarea { font: 13px/1.75 ui-monospace, SFMono-Regular, Consolas, monospace; min-height: 380px; resize: vertical; }
+.demo-status { font-size: 13px; line-height: 1.6; color: #22695d; margin: 18px 0 0; min-height: 21px; }
+.demo-code { margin: 0; background: #f5f8f7; border: 1px solid #dfebe6; border-radius: 8px; padding: 20px; min-height: 380px; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.75 ui-monospace, SFMono-Regular, Consolas, monospace; color: #284b43; }
+.markdown-preview { min-height: 380px; line-height: 1.8; overflow-wrap: anywhere; }
+.markdown-preview h1 { font-size: 27px; line-height: 1.25; margin: 0 0 20px; }
+.markdown-preview h2 { font-size: 20px; margin: 24px 0 12px; }
+.markdown-preview p { margin: 12px 0; }
+.markdown-preview table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+.markdown-preview th, .markdown-preview td { padding: 10px 12px; border: 1px solid #dce8e2; text-align: left; }
+.markdown-preview th { background: #eaf5f0; }
+.markdown-preview blockquote { margin: 20px 0; border-left: 3px solid #007f78; padding: 0 18px; color: #4d7065; }
+.markdown-preview pre { background: #f0f5f3; border-radius: 8px; padding: 16px; overflow-x: auto; }
+.markdown-preview code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; }
+.markdown-preview a { color: #006f65; text-decoration: underline; }
+.markdown-preview ul, .markdown-preview ol { padding-left: 24px; }
+.markdown-preview input[type=checkbox] { accent-color: #007f78; }
+.demo-log-grid { grid-template-columns: minmax(280px, .8fr) minmax(0, 1.2fr); }
+.demo-field-title { font-size: 13px; margin: 22px 0 12px; }
+.demo-log-grid .demo-toolbar { margin: 26px 0 0; }
+.demo-events { display: grid; gap: 12px; margin-top: 20px; max-height: 650px; overflow-y: auto; }
+.demo-log-event { min-width: 0; background: #f5f8f7; border: 1px solid #e0eae5; border-left: 3px solid #007f78; border-radius: 6px; padding: 16px; }
+.demo-log-event[data-level=WARN] { border-left-color: #b3761b; }
+.demo-log-event[data-level=ERROR] { border-left-color: #bc4b4b; }
+.demo-log-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: #536d64; }
+.demo-level { font-weight: 750; letter-spacing: .5px; color: #00665e; }
+.demo-log-event[data-level=WARN] .demo-level { color: #83530d; }
+.demo-log-event[data-level=ERROR] .demo-level { color: #a02d2d; }
+.demo-log-sequence { margin-left: auto; }
+.demo-log-message { margin: 12px 0; font: 14px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.demo-log-context { font-size: 11px; color: #63766d; margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 1100px) { .demo-grid, .demo-log-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { .demo-panel { padding: 18px; } .demo-toolbar { gap: 10px; } .demo-toolbar-label { width: 100%; } }

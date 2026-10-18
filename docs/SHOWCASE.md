@@ -7,7 +7,7 @@ search for a widget, or start with the component, form, table and design section
 The landing page follows DominoKit’s showcase headline and section structure, with
 links and descriptions adapted to the examples available in this port.
 
-Each example page links to its version in the
+Each adapted widget page links to its version in the
 [DominoKit showcase](https://dominokit.com/domino-ui/demo/v2/home).
 Our examples come from the pinned `version-2` demo; the live upstream showcase
 has evolved since that snapshot and includes newer and optional Pro components.
@@ -19,6 +19,22 @@ parity with today's upstream release.
 Each entry describes what you can explore, with links to the TeaVM port and the
 matching upstream page. Rendering is checked across browsers; individual interaction
 coverage and known limitations are described in the [coverage guide](COMPATIBILITY.md).
+
+### DominoKit libraries
+
+These original playgrounds compose the newly ported libraries with Domino UI:
+
+| Example | What to explore | Try it |
+|---|---|---|
+| Markdown playground | Edit three samples with live DOM preview, then inspect HTML, plain text or regenerated Markdown. Includes tables, task lists, strikethrough and autolinks. | [TeaVM](https://instanto-io.github.io/domino-widgets/teavm/?page=markdown) |
+| Logging playground | Send real SLF4J events to Application or Audit adapters, compare levels, inspect request IDs and try nested MDC scopes. | [TeaVM](https://instanto-io.github.io/domino-widgets/teavm/?page=logging) |
+
+Markdown is rendered locally with raw HTML disabled in the preview and unsafe URL
+schemes filtered. Logging events stay in the page and browser console. The visible
+stream retains the latest 50 events. The backend threshold is INFO; the nested
+scope example always emits three INFO events.
+
+Both pages have links to their Java source and [library setup instructions](ECOSYSTEM.md).
 
 ### Components
 

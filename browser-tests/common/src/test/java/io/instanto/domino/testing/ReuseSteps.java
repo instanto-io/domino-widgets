@@ -11,9 +11,28 @@ public class ReuseSteps extends BrowserSteps {
     openApplication("reuse", "");
   }
 
-  @Then("the published logger works without widget dependencies")
+  @Then("the logger works without widget dependencies")
   public void logger() {
     attribute(root(), "data-reuse", "ready");
     check(() -> assertTrue(browser.console().contains("compat-reuse-success")));
+  }
+
+  @Given("the logger is configured at {string}")
+  public void configured(String level) {
+    openApplication("reuse", level);
+  }
+
+  @Then("the logger contract {string} passes")
+  public void contract(String name) {
+    attribute(root(), "data-logger-" + name, "ready");
+  }
+
+  @Then("the SLF4J fluent and formatted messages reach the console")
+  public void formatted() {
+    check(
+        () -> {
+          assertTrue(browser.console().contains("compat-fluent-success"));
+          assertTrue(browser.console().contains("array [1, 2] and value"));
+        });
   }
 }

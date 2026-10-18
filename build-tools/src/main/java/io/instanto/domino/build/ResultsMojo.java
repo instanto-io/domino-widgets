@@ -16,24 +16,23 @@ public final class ResultsMojo extends BuildMojo {
   @Parameter(property = "domino.mode", defaultValue = "development")
   private String mode;
 
+  @Parameter(defaultValue = "${teavm.version}", readonly = true, required = true)
+  private String teavmVersion;
+
   private static final Map<String, Integer> EXPECTED =
-      Map.of(
-          "GalleryComponentsStepsTest",
-          34,
-          "GalleryAdvancedStepsTest",
-          35,
-          "LayoutStepsTest",
-          5,
-          "TableStepsTest",
-          14,
-          "WidgetStepsTest",
-          24,
-          "NativeStepsTest",
-          1,
-          "ReuseStepsTest",
-          1,
-          "VisualReferenceStepsTest",
-          3);
+      Map.ofEntries(
+          Map.entry("GalleryComponentsStepsTest", 34),
+          Map.entry("GalleryAdvancedStepsTest", 35),
+          Map.entry("LayoutStepsTest", 5),
+          Map.entry("TableStepsTest", 14),
+          Map.entry("WidgetStepsTest", 24),
+          Map.entry("NativeStepsTest", 1),
+          Map.entry("ReuseStepsTest", 10),
+          Map.entry("VisualReferenceStepsTest", 3),
+          Map.entry("Release213StepsTest", 2),
+          Map.entry("EcosystemStepsTest", 3),
+          Map.entry("DataStepsTest", 2),
+          Map.entry("ShowcaseLibrariesStepsTest", 6));
 
   @Override
   protected void run() throws Exception {
@@ -123,8 +122,11 @@ public final class ResultsMojo extends BuildMojo {
     Map<String, Object> summary = new LinkedHashMap<>();
     summary.put("mode", mode);
     summary.put("source", object(root.resolve("upstream/source-lock.json")));
+    summary.put(
+        "libraries",
+        JsonParser.parseString(Files.readString(root.resolve("upstream/libraries-lock.json"))));
     summary.put("browser", stats);
-    summary.put("compilers", Map.of("teavm", "0.15.0", "jdk", "21", "javaRelease", 17));
+    summary.put("compilers", Map.of("teavm", teavmVersion, "jdk", "21", "javaRelease", 17));
     summary.put("unitTests", unitTests);
     summary.put(
         "bundleBytes",

@@ -18,12 +18,11 @@
     <dependency>
       <groupId>org.teavm</groupId>
       <artifactId>teavm-classlib</artifactId>
-      <version>0.15.0</version>
+      <version>0.16.0</version>
     </dependency>
     <dependency>
-      <groupId>org.teavm</groupId>
-      <artifactId>teavm-extras-slf4j</artifactId>
-      <version>0.15.0</version>
+      <groupId>io.instanto</groupId>
+      <artifactId>domino-slf4j-teavm</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -36,7 +35,7 @@
       <plugin>
         <groupId>org.teavm</groupId>
         <artifactId>teavm-maven-plugin</artifactId>
-        <version>0.15.0</version>
+        <version>0.16.0</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
@@ -54,9 +53,9 @@
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>org.teavm</groupId>
-            <artifactId>teavm-extras-slf4j</artifactId>
-            <version>0.15.0</version>
+            <groupId>io.instanto</groupId>
+            <artifactId>domino-slf4j-teavm</artifactId>
+            <version>${domino.version}</version>
           </dependency>
         </dependencies>
       </plugin>

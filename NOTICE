@@ -4,3 +4,15 @@ See upstream/source-lock.json for the exact source revision.
 
 Selected showcase examples are adapted from DominoKit/domino-ui-demo.
 See upstream/showcase-lock.json and docs/SHOWCASE.md for provenance.
+
+Additional library ports derive from Domino History (Copyright 2019 Dominokit)
+and domino-md (Copyright 2026 Dominokit), under Apache-2.0.
+See upstream/libraries-lock.json for their exact source revisions.
+
+The REST and Jackson ports also preserve DominoKit and Nicolas Morel copyright
+headers. Their Apache-2.0 sources and adapter provenance are pinned in
+upstream/libraries-lock.json.
+
+The logger port derives from Domino SLF4J Logger 2.0.1 (Copyright Dominokit),
+under Apache-2.0. The standard SLF4J API remains a separate dependency.
+See upstream/libraries-lock.json for the pinned source archive.
