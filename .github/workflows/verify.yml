@@ -13,7 +13,7 @@ jobs:
       MAVEN_OPTS: ${{ matrix.mode == 'development' && '-Xmx3g' || '-Xmx4g' }}
       FORGEJO_PACKAGE_USER: ${{ secrets.FORGEJO_PACKAGE_USER }}
       FORGEJO_PACKAGE_TOKEN: ${{ secrets.FORGEJO_PACKAGE_TOKEN }}
-      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/domino-playwright
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.build/playwright
     strategy:
       fail-fast: false
       max-parallel: 1
