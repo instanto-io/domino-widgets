@@ -137,6 +137,14 @@ public final class BrowserDriver implements Browser {
       return node.textContent();
     }
 
+    @Override
+    public Element text(String text, boolean last) {
+      // Resolve text when the action runs. Enumerating all descendants first leaves
+      // stale positional locators when animated menus remove temporary elements.
+      Locator matches = node.getByText(text, new Locator.GetByTextOptions().setExact(true));
+      return new Node(last ? matches.last() : matches.first());
+    }
+
     public String attr(String name) {
       return node.getAttribute(name);
     }
