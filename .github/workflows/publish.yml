@@ -32,6 +32,8 @@ jobs:
     with:
       name: Build the example from published snapshots
       goals: clean verify
+      # The main verification job owns the repository quality gate.
+      sonar: false
       maven-args: -f examples/pom.xml -Dmaven.repo.local=$RUNNER_TEMP/domino-consumer-m2
       timeout-minutes: 30
     secrets: inherit

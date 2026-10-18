@@ -21,6 +21,8 @@ jobs:
         mode: [development, production]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -108,6 +110,19 @@ jobs:
       - name: Index analyzer results
         if: always()
         run: mvn -B -ntp -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:analysis -Ddomino.analysis.indexOnly=true
+      - name: SonarQube Quality Gate
+        if: matrix.mode == 'development' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonar.instanto.io
+        run: |
+          set -euo pipefail
+          : "${SONAR_TOKEN:?SONAR_TOKEN is required for the main-branch quality gate}"
+          repo_name="${GITHUB_REPOSITORY#*/}"
+          mvn --batch-mode --no-transfer-progress sonar:sonar \
+            -Dsonar.projectKey="$repo_name" \
+            -Dsonar.projectName="$repo_name" \
+            -Dsonar.qualitygate.wait=true
       - name: Record verification metadata
         run: mvn -B -ntp -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:record-results -Ddomino.mode=${{ matrix.mode }}
       - uses: actions/upload-artifact@v4
