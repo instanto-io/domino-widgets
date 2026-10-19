@@ -40,6 +40,12 @@
       <type>jar</type>
     </dependency>
   </dependencies>
+  <properties>
+    <instanto.terser.phase>prepare-package</instanto.terser.phase>
+    <instanto.terser.directory>${project.build.directory}/site</instanto.terser.directory>
+    <instanto.terser.file>showcase.js</instanto.terser.file>
+  </properties>
+
   <build>
     <resources>
       <resource>
@@ -124,7 +130,7 @@
           <targetDirectory>${project.build.directory}/site</targetDirectory>
           <targetFileName>showcase.js</targetFileName>
           <optimizationLevel>${teavm.optimization}</optimizationLevel>
-          <minifying>${teavm.minify}</minifying>
+          <minifying>false</minifying>
           <debugInformationGenerated>true</debugInformationGenerated>
         </configuration>
         <dependencies>
@@ -134,6 +140,10 @@
             <version>${project.version}</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
