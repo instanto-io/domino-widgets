@@ -103,6 +103,12 @@ the gallery; each page links to its Java example. The
 For the adaptation's architecture see [port design](docs/DESIGN.md). Maintainer
 build instructions are in [development](docs/DEVELOPMENT.md).
 
+## Quality
+
+SpotBugs runs on every build. High-priority findings fail the build, and all findings are published to [code scanning](https://github.com/instanto-io/domino-widgets/security/code-scanning). SonarQube analysis runs on `main` against the organisation's private instance; maintainers see the gate, coverage and issue counts in the workflow summary. The Sonar quality gate is advisory, so a snapshot still publishes when only that gate fails.
+
+See [Actions](https://github.com/instanto-io/domino-widgets/actions) for the latest verification and quality summary.
+
 ## Upstream credits
 
 The widget implementations and Java API are the work of
