@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
   packages: read
+  security-events: write
 jobs:
   contracts:
     runs-on: [self-hosted, instanto-container]
@@ -123,6 +124,14 @@ jobs:
             -Dsonar.projectKey="$repo_name" \
             -Dsonar.projectName="$repo_name" \
             -Dsonar.qualitygate.wait=true
+      - name: Publish quality summary
+        # One matrix leg owns the analysis and the code-scanning category.
+        if: always() && matrix.mode == 'development'
+        continue-on-error: true
+        uses: instanto-io/instanto-poms/.github/actions/quality-summary@main
+        with:
+          sonar-project-key: domino-widgets
+          sonar-token: ${{ secrets.SONAR_READ_TOKEN || secrets.SONAR_TOKEN }}
       - name: Record verification metadata
         run: mvn -B -ntp -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:record-results -Ddomino.mode=${{ matrix.mode }}
       - uses: actions/upload-artifact@v4
