@@ -60,6 +60,7 @@
     </dependencies>
   </dependencyManagement>
   <properties>
+    <instanto.repository>domino-widgets</instanto.repository>
     <teavm-compat.version>0.1.0-SNAPSHOT</teavm-compat.version>
   </properties>
   <groupId>io.instanto</groupId>

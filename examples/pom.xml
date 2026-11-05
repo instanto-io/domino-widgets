@@ -8,6 +8,7 @@
     <module>teavm</module>
   </modules>
   <properties>
+    <instanto.repository>domino-widgets</instanto.repository>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <domino.version>0.1.0-SNAPSHOT</domino.version>
