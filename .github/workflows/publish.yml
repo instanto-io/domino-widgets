@@ -33,6 +33,6 @@ jobs:
       goals: clean verify
       downstream-checks: false
       sonar: false
-      maven-args: -f examples/pom.xml -Dmaven.repo.local=${{ runner.temp }}/domino-consumer-m2
+      maven-args: -f examples/pom.xml -Dmaven.repo.local=$RUNNER_TEMP/domino-consumer-m2
       timeout-minutes: 30
     secrets: inherit
