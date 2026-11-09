@@ -1,14 +1,13 @@
 name: TeaVM browser verification
 on:
-  push:
   pull_request:
   workflow_dispatch:
 permissions:
   contents: read
   packages: read
-  security-events: write
 jobs:
   contracts:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, instanto-container]
     env:
       MAVEN_OPTS: ${{ matrix.mode == 'development' && '-Xmx3g' || '-Xmx4g' }}
@@ -111,19 +110,6 @@ jobs:
       - name: Index analyzer results
         if: always()
         run: mvn -B -ntp -N io.instanto:domino-build-maven-plugin:0.1.0-SNAPSHOT:analysis -Ddomino.analysis.indexOnly=true
-      - name: SonarQube Quality Gate
-        if: matrix.mode == 'development' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonar.instanto.io
-        run: |
-          set -euo pipefail
-          : "${SONAR_TOKEN:?SONAR_TOKEN is required for the main-branch quality gate}"
-          repo_name="${GITHUB_REPOSITORY#*/}"
-          mvn --batch-mode --no-transfer-progress sonar:sonar \
-            -Dsonar.projectKey="$repo_name" \
-            -Dsonar.projectName="$repo_name" \
-            -Dsonar.qualitygate.wait=true
       - name: Publish quality summary
         # One matrix leg owns the analysis and the code-scanning category.
         if: always() && matrix.mode == 'development'

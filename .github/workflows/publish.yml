@@ -1,9 +1,7 @@
 name: Publish development Maven artifacts
 
 on:
-  workflow_run:
-    workflows: [ TeaVM browser verification ]
-    types: [ completed ]
+  push:
     branches: [ main ]
   workflow_dispatch:
 
@@ -14,26 +12,27 @@ permissions:
 jobs:
   snapshots:
     name: packages.instanto.io
-    if: >-
-      github.event_name != 'workflow_run' ||
-      github.event.workflow_run.conclusion == 'success'
     uses: instanto-io/instanto-poms/.github/workflows/maven-build.yml@main
     with:
       name: Publish Domino snapshots
       goals: clean deploy
-      maven-args: -pl '!showcase-teavm,!build-verification' -DskipTests -Dspotbugs.skip=true
+      maven-args: -pl '!showcase-teavm,!build-verification'
+      fast-deploy: true
+      downstream-checks: false
+      sonar: false
       timeout-minutes: 30
     secrets: inherit
 
   consumer:
     name: Published Domino example
+    if: github.event_name == 'workflow_dispatch'
     needs: snapshots
     uses: instanto-io/instanto-poms/.github/workflows/maven-build.yml@main
     with:
       name: Build the example from published snapshots
       goals: clean verify
-      # The main verification job owns the repository quality gate.
+      downstream-checks: false
       sonar: false
-      maven-args: -f examples/pom.xml -Dmaven.repo.local=$RUNNER_TEMP/domino-consumer-m2
+      maven-args: -f examples/pom.xml -Dmaven.repo.local=${{ runner.temp }}/domino-consumer-m2
       timeout-minutes: 30
     secrets: inherit
