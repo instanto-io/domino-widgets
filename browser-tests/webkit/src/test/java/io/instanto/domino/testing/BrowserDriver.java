@@ -10,21 +10,49 @@ import java.util.List;
 
 /** Runs the shared feature assertions with real WebKit input on the JVM. */
 public final class BrowserDriver implements Browser {
-  private Playwright playwright;
-  private com.microsoft.playwright.Browser browser;
+  /*
+   * One Playwright driver and one WebKit for the whole test JVM. Starting both for every
+   * scenario cost seconds each time and, on a loaded runner, pushed page loads past their
+   * timeout. Each scenario still gets a context of its own, so no cookies, storage, cache or
+   * open pages carry over from one scenario to the next.
+   */
+  private static Playwright playwright;
+  private static com.microsoft.playwright.Browser webkit;
+
+  private BrowserContext context;
   private Page page;
   private final List<String> failures = new ArrayList<>();
 
+  private static synchronized com.microsoft.playwright.Browser webkit() {
+    if (webkit == null || !webkit.isConnected()) {
+      if (playwright == null) {
+        playwright = Playwright.create();
+        Runtime.getRuntime()
+            .addShutdownHook(new Thread(BrowserDriver::closeWebKit, "close-webkit"));
+      }
+      webkit = playwright.webkit().launch();
+    }
+    return webkit;
+  }
+
+  private static synchronized void closeWebKit() {
+    if (playwright != null) {
+      playwright.close();
+      playwright = null;
+      webkit = null;
+    }
+  }
+
   public void open(String application, String route) {
     close();
-    playwright = Playwright.create();
-    browser = playwright.webkit().launch();
-    page =
-        browser.newPage(
-            new com.microsoft.playwright.Browser.NewPageOptions()
-                .setViewportSize(1280, 900)
-                .setLocale("en-US")
-                .setTimezoneId("UTC"));
+    context =
+        webkit()
+            .newContext(
+                new com.microsoft.playwright.Browser.NewContextOptions()
+                    .setViewportSize(1280, 900)
+                    .setLocale("en-US")
+                    .setTimezoneId("UTC"));
+    page = context.newPage();
     page.setDefaultTimeout(10000);
     failures.clear();
     page.onPageError(failures::add);
@@ -107,16 +135,20 @@ public final class BrowserDriver implements Browser {
   }
 
   public void close() {
-    if (playwright != null) {
-      if (Boolean.getBoolean("domino.capture") && page != null && !page.isClosed()) {
-        String name = page.url().replaceAll(".*page=", "").replaceAll("[^a-zA-Z0-9_-]", "_");
-        page.screenshot(
-            new Page.ScreenshotOptions()
-                .setPath(java.nio.file.Path.of("target/screenshots", name + ".png"))
-                .setFullPage(true));
+    if (context != null) {
+      try {
+        if (Boolean.getBoolean("domino.capture") && page != null && !page.isClosed()) {
+          String name = page.url().replaceAll(".*page=", "").replaceAll("[^a-zA-Z0-9_-]", "_");
+          page.screenshot(
+              new Page.ScreenshotOptions()
+                  .setPath(java.nio.file.Path.of("target/screenshots", name + ".png"))
+                  .setFullPage(true));
+        }
+      } finally {
+        context.close();
+        context = null;
+        page = null;
       }
-      playwright.close();
-      playwright = null;
     }
   }
 
