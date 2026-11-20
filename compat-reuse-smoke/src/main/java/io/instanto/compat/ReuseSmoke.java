@@ -10,6 +10,9 @@ import org.slf4j.event.Level;
 
 /** Exercises a second published library without any widget dependencies. */
 public final class ReuseSmoke {
+  private static final String AUDIT = "AUDIT";
+  private static final String REQUEST = "request";
+
   public static void main(String[] args) throws Exception {
     String query = DomGlobal.location.search;
     String level = query.startsWith("?page=") ? query.substring(6) : "INFO";
@@ -64,14 +67,14 @@ public final class ReuseSmoke {
 
   private static void checkRouting(Logger logger) {
     List<Event> events = new ArrayList<>();
-    Marker audit = MarkerFactory.getMarker("AUDIT");
+    Marker audit = MarkerFactory.getMarker(AUDIT);
     Marker child = MarkerFactory.getDetachedMarker("CHILD");
     child.add(audit);
-    LoggingRouter.register("AUDIT", capture(events));
+    LoggingRouter.register(AUDIT, capture(events));
     Throwable problem = new IllegalStateException("expected-cause");
     logger.info(audit, "order {}", 42);
     require(events.get(0).message.contains("order 42"), "placeholder formatting");
-    logger.warn(child, "failed {}", "request", problem);
+    logger.warn(child, "failed {}", REQUEST, problem);
     require(events.get(1).throwable == problem, "trailing throwable");
     require(events.get(1).marker == child, "hierarchical marker");
     logger.error(audit, "explicit cause", problem);
@@ -94,7 +97,7 @@ public final class ReuseSmoke {
     LoggingRouter.setDefaultAdapter(capture(fallback));
     logger.info(MarkerFactory.getMarker("OTHER"), "fallback");
     require(fallback.size() == 1, "default marker adapter");
-    LoggingRouter.unregister("AUDIT");
+    LoggingRouter.unregister(AUDIT);
     logger.info(audit, "unregistered");
     require(fallback.size() == 2, "unregister adapter");
     LoggingRouter.setDefaultAdapter(null);
@@ -103,32 +106,32 @@ public final class ReuseSmoke {
 
   private static void checkMdc(Logger logger) throws Exception {
     MDC.clear();
-    MDC.put("request", "original");
+    MDC.put(REQUEST, "original");
     Map<String, String> snapshot = MDC.getCopyOfContextMap();
-    snapshot.put("request", "changed");
-    require("original".equals(MDC.get("request")), "defensive MDC snapshot");
-    MDC.remove("request");
+    snapshot.put(REQUEST, "changed");
+    require("original".equals(MDC.get(REQUEST)), "defensive MDC snapshot");
+    MDC.remove(REQUEST);
     List<Event> events = new ArrayList<>();
     Marker marker = MarkerFactory.getMarker("MDC");
     LoggingRouter.register("MDC", capture(events));
-    try (var outer = MDCUtils.withMdc("request", "outer")) {
+    try (var outer = MDCUtils.withMdc(REQUEST, "outer")) {
       try {
-        try (var inner = MDCUtils.withMdc(Map.of("request", "inner", "user", "alice"))) {
+        try (var inner = MDCUtils.withMdc(Map.of(REQUEST, "inner", "user", "alice"))) {
           logger.info(marker, "scoped");
-          require(MDCUtils.getMdcStack("request").size() == 2, "nested MDC stack");
+          require(MDCUtils.getMdcStack(REQUEST).size() == 2, "nested MDC stack");
           throw new IllegalStateException("scope failure");
         }
       } catch (IllegalStateException expected) {
-        require("outer".equals(MDC.get("request")), "restore after exception");
+        require("outer".equals(MDC.get(REQUEST)), "restore after exception");
         require(MDC.get("user") == null, "remove scoped user");
       }
-      require("inner".equals(events.get(0).mdc.get("request")), "event snapshot survives scope");
+      require("inner".equals(events.get(0).mdc.get(REQUEST)), "event snapshot survives scope");
     }
     require(MDC.getCopyOfContextMap() == null, "outer scope cleared");
-    var scope = MDCUtils.withMdc("request", "once");
+    var scope = MDCUtils.withMdc(REQUEST, "once");
     scope.close();
     scope.close();
-    require(MDC.get("request") == null, "idempotent scope close");
+    require(MDC.get(REQUEST) == null, "idempotent scope close");
     MDC.setContextMap(Map.of("restored", "yes"));
     require("yes".equals(MDC.get("restored")), "set context");
     MDC.clear();
