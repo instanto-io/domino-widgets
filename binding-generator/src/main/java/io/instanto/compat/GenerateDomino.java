@@ -5,6 +5,8 @@ import java.util.*;
 
 /** Selects only Domino widget sources for the shared JsInterop transformer. */
 public final class GenerateDomino {
+  private static final String JAVA_FILE_SUFFIX = ".java";
+
   private static void write(Path path, String source) throws Exception {
     Files.createDirectories(path.getParent());
     Files.writeString(
@@ -78,7 +80,7 @@ public final class GenerateDomino {
           files
               .filter(
                   p ->
-                      p.toString().endsWith(".java")
+                      p.toString().endsWith(JAVA_FILE_SUFFIX)
                           && !sourceRoot.relativize(p).toString().startsWith("org/gwtproject/"))
               .sorted()
               .toList())
@@ -93,7 +95,8 @@ public final class GenerateDomino {
     for (String library : List.of("history", "md", "jackson", "logger")) {
       Path input = root.resolve("target/intake/" + library + "/java");
       try (var files = Files.walk(input)) {
-        for (Path p : files.filter(p -> p.toString().endsWith(".java")).sorted().toList()) {
+        for (Path p :
+            files.filter(p -> p.toString().endsWith(JAVA_FILE_SUFFIX)).sorted().toList()) {
           String source = Files.readString(p);
           if (library.equals("jackson")) {
             String name = p.getFileName().toString();
@@ -184,7 +187,7 @@ public final class GenerateDomino {
     StringBuilder manifest = new StringBuilder();
     var digest = java.security.MessageDigest.getInstance("SHA-256");
     try (var files = Files.walk(out)) {
-      for (Path p : files.filter(p -> p.toString().endsWith(".java")).sorted().toList()) {
+      for (Path p : files.filter(p -> p.toString().endsWith(JAVA_FILE_SUFFIX)).sorted().toList()) {
         manifest
             .append(java.util.HexFormat.of().formatHex(digest.digest(Files.readAllBytes(p))))
             .append("  ")
