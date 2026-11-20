@@ -9,6 +9,9 @@ import java.util.Map;
 
 /** Updates the pinned form sample's Domino 1 API calls to Domino 2. */
 final class FormSourceAdapter {
+  private static final String APPEND_CHILD = "appendChild";
+  private static final String CREATE = "create";
+
   static String adapt(String source) {
     if (!source.contains(".client.views.ui") || source.contains("class BanksComponent"))
       return source;
@@ -54,11 +57,11 @@ final class FormSourceAdapter {
             "value",
             "withValue",
             "addColumn",
-            "appendChild",
+            APPEND_CHILD,
             "createPrimary",
-            "create",
+            CREATE,
             "createDefault",
-            "create");
+            CREATE);
     // Style.get() used to return the owning widget. styler preserves that fluent return type.
     for (var get : cu.findAll(MethodCallExpr.class)) {
       if (!get.getNameAsString().equals("get") || get.getScope().isEmpty()) continue;
@@ -129,7 +132,7 @@ final class FormSourceAdapter {
               StaticJavaParser.parseExpression(
                   "field -> " + m.getArgument(0).toString().replace("::", ".") + "()"));
       }
-      if (name.equals("create")
+      if (name.equals(CREATE)
           && m.getScope().map(Object::toString).orElse("").equals("Popover")
           && m.getArguments().size() == 3) {
         m.replace(
@@ -145,7 +148,7 @@ final class FormSourceAdapter {
       if (names.containsKey(name)) m.setName(names.get(name));
       if (name.equals("withGap")) m.replace(m.getScope().orElseThrow().clone());
       if (name.equals("addLeftAddOn") || name.equals("addRightAddOn")) {
-        m.setName("appendChild");
+        m.setName(APPEND_CHILD);
         m.setArgument(
             0,
             new MethodCallExpr(
@@ -168,7 +171,7 @@ final class FormSourceAdapter {
         lambda.getParameters().addFirst(new Parameter(new UnknownType(), "oldValue"));
         lambda.setEnclosingParameters(true);
       }
-      if (name.equals("create")
+      if (name.equals(CREATE)
           && m.getScope().map(Object::toString).orElse("").equals("SelectOption")) {
         if (m.getArguments().size() == 2)
           m.getArguments()
@@ -194,7 +197,7 @@ final class FormSourceAdapter {
         m.setName("addChangeListener");
       }
       if (name.equals("add") && m.getScope().map(Object::toString).orElse("").startsWith("div()"))
-        m.setName("appendChild");
+        m.setName(APPEND_CHILD);
       if (name.equals("ifPresent")
           && m.getScope().map(Object::toString).orElse("").contains("getSelectedRadio()")) {
         m.setScope(
