@@ -12,6 +12,8 @@ import org.apache.maven.plugins.annotations.*;
 /** Verify pinned upstream inputs and prepare Java sources and matching assets. */
 @Mojo(name = "intake", defaultPhase = LifecyclePhase.INITIALIZE, threadSafe = true)
 public final class IntakeMojo extends BuildMojo {
+  private static final String SHA256 = "sha256";
+
   @Override
   protected void run() throws Exception {
     prepare(root());
@@ -21,7 +23,7 @@ public final class IntakeMojo extends BuildMojo {
   static void prepare(Path root) throws Exception {
     JsonObject lock = object(root.resolve("upstream/source-lock.json"));
     Path archive = within(root.resolve("upstream"), lock.get("archive").getAsString());
-    verifyHash(archive, lock.get("sha256").getAsString());
+    verifyHash(archive, lock.get(SHA256).getAsString());
     JsonObject showcase = object(root.resolve("upstream/showcase-lock.json"));
     for (String key : List.of("sources", "supporting", "assets")) {
       if (showcase.has(key))
@@ -39,7 +41,7 @@ public final class IntakeMojo extends BuildMojo {
         Map<String, Object> row = new LinkedHashMap<>();
         row.put("path", entry.getName());
         row.put("size", bytes.length);
-        row.put("sha256", hash(bytes));
+        row.put(SHA256, hash(bytes));
         inventory.add(row);
         String name = entry.getName();
         Path destination = null;
@@ -80,7 +82,7 @@ public final class IntakeMojo extends BuildMojo {
             .getAsJsonArray()) {
       var library = item.getAsJsonObject();
       Path archive = within(root.resolve("upstream"), library.get("archive").getAsString());
-      verifyHash(archive, library.get("sha256").getAsString());
+      verifyHash(archive, library.get(SHA256).getAsString());
       Path destination = within(out, library.get("name").getAsString());
       Map<String, String> prefixes = new LinkedHashMap<>();
       for (var prefix : library.getAsJsonArray("sourcePrefixes"))
@@ -115,6 +117,6 @@ public final class IntakeMojo extends BuildMojo {
   private static void verifySample(Path root, JsonObject sample) throws Exception {
     verifyHash(
         within(root.resolve("upstream/showcase"), sample.get("path").getAsString()),
-        sample.get("sha256").getAsString());
+        sample.get(SHA256).getAsString());
   }
 }
