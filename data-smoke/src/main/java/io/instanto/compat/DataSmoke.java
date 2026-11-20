@@ -7,6 +7,8 @@ import org.dominokit.rest.shared.Response;
 import org.dominokit.rest.shared.request.*;
 
 public final class DataSmoke {
+  private static final String DATA_ERROR = "data-error";
+
   public static final String JSON =
       "{\"name\":\"TeaVM \\\"record\\\"\",\"count\":42,\"labels\":[\"one\",\"two\"],\"date\":\"2026-10-18\"}";
 
@@ -46,7 +48,7 @@ public final class DataSmoke {
                 .onFailed(
                     failure ->
                         result.setAttribute(
-                            "data-error", failure.getStatusCode() + ":" + failure.getBody()))
+                            DATA_ERROR, failure.getStatusCode() + ":" + failure.getBody()))
                 .send());
     button(
         "data-post",
@@ -60,14 +62,14 @@ public final class DataSmoke {
                 .onFailed(
                     failure ->
                         result.setAttribute(
-                            "data-error", failure.getStatusCode() + ":" + failure.getBody()))
+                            DATA_ERROR, failure.getStatusCode() + ":" + failure.getBody()))
                 .send());
     button(
         "data-fail",
         () ->
             PayloadServiceFactory.INSTANCE
                 .missing()
-                .onSuccess(value -> result.setAttribute("data-error", "unexpected success"))
+                .onSuccess(value -> result.setAttribute(DATA_ERROR, "unexpected success"))
                 .onFailed(
                     failure ->
                         result.setAttribute(
