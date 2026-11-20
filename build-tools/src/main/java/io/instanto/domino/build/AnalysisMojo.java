@@ -11,6 +11,9 @@ import org.w3c.dom.Element;
 /** Index SpotBugs results and enforce the explicit high-priority triage manifest. */
 @Mojo(name = "analysis", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public final class AnalysisMojo extends BuildMojo {
+  private static final String STATUS = "status";
+  private static final String MODULE = "module";
+
   /** Skip analysis only when the build explicitly disables SpotBugs. */
   @Parameter(property = "spotbugs.skip", defaultValue = "false")
   private boolean skip;
@@ -47,7 +50,7 @@ public final class AnalysisMojo extends BuildMojo {
         if (files(module.resolve("target/classes")).stream()
             .anyMatch(p -> p.toString().endsWith(".class"))) {
           problems.add(name + ": missing report");
-          rows.add(Map.of("module", name, "status", "missing-report"));
+          rows.add(Map.of(MODULE, name, STATUS, "missing-report"));
         }
         continue;
       }
@@ -77,8 +80,8 @@ public final class AnalysisMojo extends BuildMojo {
           if (!allowed.contains(key)) problems.add(name + ": untriaged " + key);
         }
       Map<String, Object> row = new LinkedHashMap<>();
-      row.put("module", name);
-      row.put("status", "analyzed");
+      row.put(MODULE, name);
+      row.put(STATUS, "analyzed");
       row.put("findings", bugs.size());
       row.put("high", high);
       row.put("errors", errors);
@@ -96,9 +99,9 @@ public final class AnalysisMojo extends BuildMojo {
       html.append("<tr><td><a href=\"../../")
           .append(html(row.getOrDefault("report", "").toString()))
           .append("\">")
-          .append(html(row.get("module").toString()))
+          .append(html(row.get(MODULE).toString()))
           .append("</a></td><td>")
-          .append(row.get("status"))
+          .append(row.get(STATUS))
           .append("</td><td>")
           .append(row.getOrDefault("findings", ""))
           .append("</td><td>")
