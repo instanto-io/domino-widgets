@@ -12,6 +12,13 @@ import org.w3c.dom.Element;
 /** Record verification evidence only after every browser passed the same scenarios. */
 @Mojo(name = "record-results", threadSafe = true)
 public final class ResultsMojo extends BuildMojo {
+  private static final String TEAVM = "teavm";
+  private static final String WEBKIT = "webkit";
+  private static final String SKIPPED = "skipped";
+  private static final String ERRORS = "errors";
+  private static final String TESTS = "tests";
+  private static final String FAILURES = "failures";
+
   /** Build mode recorded in the report, matching the tested compilation. */
   @Parameter(property = "domino.mode", defaultValue = "development")
   private String mode;
@@ -41,8 +48,8 @@ public final class ResultsMojo extends BuildMojo {
     List<Map<String, Object>> projects = new ArrayList<>();
     Set<String> first = null;
     Map<Path, String> reports = new LinkedHashMap<>();
-    for (String engine : List.of("chrome", "firefox", "webkit")) {
-      String module = engine.equals("webkit") ? "webkit" : "teavm";
+    for (String engine : List.of("chrome", "firefox", WEBKIT)) {
+      String module = engine.equals(WEBKIT) ? WEBKIT : TEAVM;
       Path directory =
           root.resolve("browser-tests/" + module + "/target/surefire-reports-" + engine);
       List<Map<String, String>> suites = new ArrayList<>();
@@ -52,7 +59,7 @@ public final class ResultsMojo extends BuildMojo {
         Path report = directory.resolve("TEST-io.instanto.domino.testing." + name + ".xml");
         Element suite = xml(report);
         validateSuite(suite, EXPECTED.get(name), report.toString());
-        suites.add(attributes(suite, "name", "tests", "failures", "errors", "skipped", "time"));
+        suites.add(attributes(suite, "name", TESTS, FAILURES, ERRORS, SKIPPED, "time"));
         for (Element testcase : elements(suite, "testcase")) {
           String cls = testcase.getAttribute("classname"), test = testcase.getAttribute("name");
           require(names.add(cls + "#" + test), "Duplicate scenario in " + report + ": " + test);
@@ -99,7 +106,7 @@ public final class ResultsMojo extends BuildMojo {
             Objects.requireNonNull(first).size() * projects.size(),
             "unexpected",
             0,
-            "skipped",
+            SKIPPED,
             0,
             "flaky",
             0);
@@ -115,7 +122,7 @@ public final class ResultsMojo extends BuildMojo {
     for (Path module : modules(root)) {
       for (Path report : files(module.resolve("target/surefire-reports")))
         if (report.getFileName().toString().matches("TEST-.*\\.xml")) {
-          unitTests.add(attributes(xml(report), "name", "tests", "failures", "errors", "skipped"));
+          unitTests.add(attributes(xml(report), "name", TESTS, FAILURES, ERRORS, SKIPPED));
           reports.put(out.resolve(report.getFileName()), portableReport(report, root));
         }
     }
@@ -126,11 +133,11 @@ public final class ResultsMojo extends BuildMojo {
         "libraries",
         JsonParser.parseString(Files.readString(root.resolve("upstream/libraries-lock.json"))));
     summary.put("browser", stats);
-    summary.put("compilers", Map.of("teavm", teavmVersion, "jdk", "21", "javaRelease", 17));
+    summary.put("compilers", Map.of(TEAVM, teavmVersion, "jdk", "21", "javaRelease", 17));
     summary.put("unitTests", unitTests);
     summary.put(
         "bundleBytes",
-        Map.of("teavm", Files.size(root.resolve("showcase-teavm/target/site/showcase.js"))));
+        Map.of(TEAVM, Files.size(root.resolve("showcase-teavm/target/site/showcase.js"))));
     summary.put("showcase", Map.of("pages", routes.size(), "sampleMethods", methods));
     summary.put("browserProjects", projects.stream().map(p -> p.get("name")).toList());
     summary.put(
@@ -158,8 +165,8 @@ public final class ResultsMojo extends BuildMojo {
   }
 
   static void validateSuite(Element suite, int count, String report) throws Exception {
-    require(Integer.parseInt(suite.getAttribute("tests")) == count, "Incomplete suite: " + report);
-    for (String key : List.of("failures", "errors", "skipped"))
+    require(Integer.parseInt(suite.getAttribute(TESTS)) == count, "Incomplete suite: " + report);
+    for (String key : List.of(FAILURES, ERRORS, SKIPPED))
       require(
           Integer.parseInt(suite.getAttribute(key)) == 0, "Failing or skipped suite: " + report);
     require(
@@ -168,7 +175,7 @@ public final class ResultsMojo extends BuildMojo {
     require(
         elements(suite, "failure").isEmpty()
             && elements(suite, "error").isEmpty()
-            && elements(suite, "skipped").isEmpty(),
+            && elements(suite, SKIPPED).isEmpty(),
         "Failing testcase: " + report);
   }
 }
