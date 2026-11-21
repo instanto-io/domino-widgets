@@ -24,15 +24,28 @@ public final class IntakeMojo extends BuildMojo {
     JsonObject lock = object(root.resolve("upstream/source-lock.json"));
     Path archive = within(root.resolve("upstream"), lock.get("archive").getAsString());
     verifyHash(archive, lock.get(SHA256).getAsString());
-    JsonObject showcase = object(root.resolve("upstream/showcase-lock.json"));
-    for (String key : List.of("sources", "supporting", "assets")) {
-      if (showcase.has(key))
-        for (JsonElement item : showcase.getAsJsonArray(key))
-          verifySample(root, item.getAsJsonObject());
-    }
-    verifySample(root, showcase.getAsJsonObject("asset"));
+    verifyShowcaseSamples(root);
     Path out = root.resolve("target/intake");
     deleteTree(out);
+    List<Map<String, Object>> inventory = unpackSources(archive, out);
+    assembleStyles(out);
+    json(out.resolve("inventory.json"), inventory);
+    prepareLibraries(root, out);
+  }
+
+  private static void verifyShowcaseSamples(Path root) throws Exception {
+    JsonObject showcase = object(root.resolve("upstream/showcase-lock.json"));
+    for (String key : List.of("sources", "supporting", "assets")) {
+      if (showcase.has(key)) {
+        for (JsonElement item : showcase.getAsJsonArray(key)) {
+          verifySample(root, item.getAsJsonObject());
+        }
+      }
+    }
+    verifySample(root, showcase.getAsJsonObject("asset"));
+  }
+
+  private static List<Map<String, Object>> unpackSources(Path archive, Path out) throws Exception {
     List<Map<String, Object>> inventory = new ArrayList<>();
     try (var tar = new TarArchiveInputStream(new GZIPInputStream(Files.newInputStream(archive)))) {
       for (var entry = tar.getNextEntry(); entry != null; entry = tar.getNextEntry()) {
@@ -43,19 +56,7 @@ public final class IntakeMojo extends BuildMojo {
         row.put("size", bytes.length);
         row.put(SHA256, hash(bytes));
         inventory.add(row);
-        String name = entry.getName();
-        Path destination = null;
-        for (String prefix :
-            List.of("domino-ui/src/main/java/", "domino-ui-shared/src/main/java/")) {
-          if (name.startsWith(prefix))
-            destination = within(out.resolve("java"), name.substring(prefix.length()));
-        }
-        String assets = "domino-ui/src/main/resources/org/dominokit/domino/ui/public/";
-        if (name.startsWith(assets))
-          destination =
-              within(
-                  out.resolve("assets/META-INF/resources/domino-widgets"),
-                  name.substring(assets.length()));
+        Path destination = sourceDestination(out, entry.getName());
         if (destination != null) {
           require(!Files.exists(destination), "Duplicate source input: " + destination);
           Files.createDirectories(destination.getParent());
@@ -63,6 +64,24 @@ public final class IntakeMojo extends BuildMojo {
         }
       }
     }
+    return inventory;
+  }
+
+  private static Path sourceDestination(Path out, String name) throws Exception {
+    for (String prefix : List.of("domino-ui/src/main/java/", "domino-ui-shared/src/main/java/")) {
+      if (name.startsWith(prefix)) {
+        return within(out.resolve("java"), name.substring(prefix.length()));
+      }
+    }
+    String assets = "domino-ui/src/main/resources/org/dominokit/domino/ui/public/";
+    if (name.startsWith(assets)) {
+      return within(out.resolve("assets/META-INF/resources/domino-widgets"),
+          name.substring(assets.length()));
+    }
+    return null;
+  }
+
+  private static void assembleStyles(Path out) throws Exception {
     Path css = out.resolve("assets/META-INF/resources/domino-widgets/css/domino-ui");
     List<String> styles = new ArrayList<>();
     for (Path path : files(css.resolve("dui-components"))) {
@@ -72,8 +91,6 @@ public final class IntakeMojo extends BuildMojo {
     }
     require(!styles.isEmpty(), "No upstream component stylesheets");
     write(css.resolve("domino-ui.css"), String.join("\n", styles));
-    json(out.resolve("inventory.json"), inventory);
-    prepareLibraries(root, out);
   }
 
   private static void prepareLibraries(Path root, Path out) throws Exception {
