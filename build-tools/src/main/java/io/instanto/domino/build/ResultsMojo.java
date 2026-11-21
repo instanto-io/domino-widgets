@@ -49,38 +49,107 @@ public final class ResultsMojo extends BuildMojo {
     Set<String> first = null;
     Map<Path, String> reports = new LinkedHashMap<>();
     for (String engine : List.of("chrome", "firefox", WEBKIT)) {
-      String module = engine.equals(WEBKIT) ? WEBKIT : TEAVM;
-      Path directory =
-          root.resolve("browser-tests/" + module + "/target/surefire-reports-" + engine);
-      List<Map<String, String>> suites = new ArrayList<>();
-      List<Map<String, Object>> cases = new ArrayList<>();
-      Set<String> names = new TreeSet<>();
-      for (String name : new TreeSet<>(EXPECTED.keySet())) {
-        Path report = directory.resolve("TEST-io.instanto.domino.testing." + name + ".xml");
-        Element suite = xml(report);
-        validateSuite(suite, EXPECTED.get(name), report.toString());
-        suites.add(attributes(suite, "name", TESTS, FAILURES, ERRORS, SKIPPED, "time"));
-        for (Element testcase : elements(suite, "testcase")) {
-          String cls = testcase.getAttribute("classname"), test = testcase.getAttribute("name");
-          require(names.add(cls + "#" + test), "Duplicate scenario in " + report + ": " + test);
-          cases.add(
-              Map.of(
-                  "class",
-                  cls,
-                  "name",
-                  test,
-                  "seconds",
-                  Double.parseDouble(testcase.getAttribute("time"))));
-        }
-        reports.put(
-            out.resolve("junit/" + engine + "/" + report.getFileName()),
-            portableReport(report, root));
-      }
+      BrowserEvidence evidence = readBrowserEvidence(root, out, engine, reports);
+      Set<String> names = evidence.scenarioNames();
       if (first == null) first = names;
       else
         require(first.equals(names), "Browser engines did not execute the same Cucumber scenarios");
-      projects.add(Map.of("name", module + "-" + engine, "suites", suites, "scenarios", cases));
+      projects.add(evidence.project());
     }
+    GalleryEvidence gallery = readGalleryEvidence(root);
+    var stats =
+        Map.of(
+            "expected",
+            Objects.requireNonNull(first).size() * projects.size(),
+            "unexpected",
+            0,
+            SKIPPED,
+            0,
+            "flaky",
+            0);
+    Map<String, Object> browser =
+        Map.of(
+            "runner",
+            "Cucumber Tea / TeaVMTestRunner / Java Playwright WebKit",
+            "config",
+            Map.of("projects", projects),
+            "stats",
+            stats);
+    List<Map<String, String>> unitTests = collectUnitResults(root, out, reports);
+    Map<String, Object> summary = new LinkedHashMap<>();
+    summary.put("mode", mode);
+    summary.put("source", object(root.resolve("upstream/source-lock.json")));
+    summary.put(
+        "libraries",
+        JsonParser.parseString(Files.readString(root.resolve("upstream/libraries-lock.json"))));
+    summary.put("browser", stats);
+    summary.put("compilers", Map.of(TEAVM, teavmVersion, "jdk", "21", "javaRelease", 17));
+    summary.put("unitTests", unitTests);
+    summary.put(
+        "bundleBytes",
+        Map.of(TEAVM, Files.size(root.resolve("showcase-teavm/target/site/showcase.js"))));
+    summary.put("showcase", Map.of("pages", gallery.routes(), "sampleMethods", gallery.methods()));
+    summary.put("browserProjects", projects.stream().map(p -> p.get("name")).toList());
+    summary.put(
+        "spotbugs",
+        JsonParser.parseString(Files.readString(root.resolve("target/spotbugs/index.json"))));
+    Map<String, String> manifest = new TreeMap<>();
+    Path generated = root.resolve("target/compat");
+    for (Path path : files(generated))
+      if (path.toString().endsWith(".java"))
+        manifest.put(generated.relativize(path).toString(), hash(Files.readAllBytes(path)));
+    require(!manifest.isEmpty(), "Missing generated Java sources");
+    // Publish reports only after all validation has succeeded.
+    for (var report : reports.entrySet()) write(report.getKey(), report.getValue());
+    json(out.resolve("browser.json"), browser);
+    json(out.resolve("summary.json"), summary);
+    json(out.resolve("generated-sha256.json"), manifest);
+    getLog().info("Recorded " + mode + ": " + stats);
+  }
+
+  private record BrowserEvidence(Set<String> scenarioNames, Map<String, Object> project) {}
+
+  private record GalleryEvidence(int routes, int methods) {}
+
+  private static BrowserEvidence readBrowserEvidence(
+      Path root, Path out, String engine, Map<Path, String> reports) throws Exception {
+    String module = engine.equals(WEBKIT) ? WEBKIT : TEAVM;
+    Path directory =
+        root.resolve("browser-tests/" + module + "/target/surefire-reports-" + engine);
+    List<Map<String, String>> suites = new ArrayList<>();
+    List<Map<String, Object>> cases = new ArrayList<>();
+    Set<String> names = new TreeSet<>();
+    for (String name : new TreeSet<>(EXPECTED.keySet())) {
+      Path report = directory.resolve("TEST-io.instanto.domino.testing." + name + ".xml");
+      Element suite = xml(report);
+      validateSuite(suite, EXPECTED.get(name), report.toString());
+      suites.add(attributes(suite, "name", TESTS, FAILURES, ERRORS, SKIPPED, "time"));
+      recordScenarios(suite, report, names, cases);
+      reports.put(
+          out.resolve("junit/" + engine + "/" + report.getFileName()),
+          portableReport(report, root));
+    }
+    return new BrowserEvidence(names,
+        Map.of("name", module + "-" + engine, "suites", suites, "scenarios", cases));
+  }
+
+  private static void recordScenarios(
+      Element suite, Path report, Set<String> names, List<Map<String, Object>> cases) throws Exception {
+    for (Element testcase : elements(suite, "testcase")) {
+      String cls = testcase.getAttribute("classname"), test = testcase.getAttribute("name");
+      require(names.add(cls + "#" + test), "Duplicate scenario in " + report + ": " + test);
+      cases.add(
+          Map.of(
+              "class",
+              cls,
+              "name",
+              test,
+              "seconds",
+              Double.parseDouble(testcase.getAttribute("time"))));
+    }
+  }
+
+  private static GalleryEvidence readGalleryEvidence(Path root) throws Exception {
     JsonObject showcase = object(root.resolve("upstream/showcase-lock.json"));
     Set<String> routes = new TreeSet<>(), examples = new TreeSet<>();
     int methods = 0;
@@ -100,24 +169,11 @@ public final class ResultsMojo extends BuildMojo {
       }
     }
     require(routes.equals(examples), "Gallery feature routes differ from the pinned showcase");
-    var stats =
-        Map.of(
-            "expected",
-            Objects.requireNonNull(first).size() * projects.size(),
-            "unexpected",
-            0,
-            SKIPPED,
-            0,
-            "flaky",
-            0);
-    Map<String, Object> browser =
-        Map.of(
-            "runner",
-            "Cucumber Tea / TeaVMTestRunner / Java Playwright WebKit",
-            "config",
-            Map.of("projects", projects),
-            "stats",
-            stats);
+    return new GalleryEvidence(routes.size(), methods);
+  }
+
+  private static List<Map<String, String>> collectUnitResults(
+      Path root, Path out, Map<Path, String> reports) throws Exception {
     List<Map<String, String>> unitTests = new ArrayList<>();
     for (Path module : modules(root)) {
       for (Path report : files(module.resolve("target/surefire-reports")))
@@ -126,35 +182,7 @@ public final class ResultsMojo extends BuildMojo {
           reports.put(out.resolve(report.getFileName()), portableReport(report, root));
         }
     }
-    Map<String, Object> summary = new LinkedHashMap<>();
-    summary.put("mode", mode);
-    summary.put("source", object(root.resolve("upstream/source-lock.json")));
-    summary.put(
-        "libraries",
-        JsonParser.parseString(Files.readString(root.resolve("upstream/libraries-lock.json"))));
-    summary.put("browser", stats);
-    summary.put("compilers", Map.of(TEAVM, teavmVersion, "jdk", "21", "javaRelease", 17));
-    summary.put("unitTests", unitTests);
-    summary.put(
-        "bundleBytes",
-        Map.of(TEAVM, Files.size(root.resolve("showcase-teavm/target/site/showcase.js"))));
-    summary.put("showcase", Map.of("pages", routes.size(), "sampleMethods", methods));
-    summary.put("browserProjects", projects.stream().map(p -> p.get("name")).toList());
-    summary.put(
-        "spotbugs",
-        JsonParser.parseString(Files.readString(root.resolve("target/spotbugs/index.json"))));
-    Map<String, String> manifest = new TreeMap<>();
-    Path generated = root.resolve("target/compat");
-    for (Path path : files(generated))
-      if (path.toString().endsWith(".java"))
-        manifest.put(generated.relativize(path).toString(), hash(Files.readAllBytes(path)));
-    require(!manifest.isEmpty(), "Missing generated Java sources");
-    // Publish reports only after all validation has succeeded.
-    for (var report : reports.entrySet()) write(report.getKey(), report.getValue());
-    json(out.resolve("browser.json"), browser);
-    json(out.resolve("summary.json"), summary);
-    json(out.resolve("generated-sha256.json"), manifest);
-    getLog().info("Recorded " + mode + ": " + stats);
+    return unitTests;
   }
 
   private static String portableReport(Path report, Path root) throws IOException {
