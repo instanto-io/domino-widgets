@@ -39,83 +39,104 @@ public final class ShowcaseMojo extends BuildMojo {
     Map<Path, String> generated = new LinkedHashMap<>();
     var rows = lock.getAsJsonArray("sources");
     for (JsonElement row : rows) {
-      JsonObject item = row.getAsJsonObject();
-      String source = sample(root, item);
-      String imports =
-          String.join(
-              "\n",
-              source
-                  .lines()
-                  .filter(
-                      s ->
-                          s.startsWith("import ")
-                              && List.of(
-                                      "org.dominokit.domino.ui.",
-                                      "elemental2.",
-                                      "java.",
-                                      "jsinterop.",
-                                      "org.gwtproject.",
-                                      "org.slf4j.")
-                                  .stream()
-                                  .anyMatch(s::contains))
-                  .toList());
-      List<String> methods = new ArrayList<>();
-      if (item.has("imports"))
-        for (JsonElement extra : item.getAsJsonArray("imports"))
-          imports += "\nimport " + extra.getAsString() + ";";
-      for (String key : List.of("methods", "helpers")) {
-        if (item.has(key))
-          for (JsonElement name : item.getAsJsonArray(key))
-            methods.add(method(source, name.getAsString()));
-      }
-      Path destination = within(root, text(item, "adapter"));
-      String name = className(destination);
-      String calls = "";
-      for (JsonElement method : item.getAsJsonArray("methods"))
-        calls += method.getAsString() + "();\n";
-      String code =
-          "// Adapted from DominoKit/domino-ui-demo at "
-              + text(lock, "commit")
-              + "; see upstream/showcase-lock.json.\n"
-              + "package io.instanto.domino.client;\n"
-              + imports
-              + "\nimport elemental2.dom.HTMLDivElement;\nimport org.dominokit.domino.ui.elements.DivElement;\n"
-              + "import static org.dominokit.domino.ui.utils.Domino.*;\npublic final class "
-              + name
-              + " implements org.dominokit.domino.ui.style.DominoCss {\n private final DivElement element=div();\n"
-              + text(item, "fields")
-              + "\n public HTMLDivElement render(){\n"
-              + text(item, "before")
-              + calls
-              + text(item, "after")
-              + "return element.element();}\n"
-              + String.join("\n", methods)
-              + "\n}\n";
-      code =
-          replace(code, item)
-              .replace(
-                  "GWT.getModuleBaseURL() + \"/images/image-gallery/9.jpg\"",
-                  "\"showcase-image.jpg\"");
-      if (item.has("nativeElement") && item.get("nativeElement").getAsBoolean())
-        code =
-            code.replace(
-                    "private final DivElement element=div();",
-                    "private final HTMLDivElement element=div().element();")
-                .replace("return element.element();", "return element;");
-      if (item.has("omitStatementsContaining")) {
-        var parsed = com.github.javaparser.StaticJavaParser.parse(code);
-        for (JsonElement marker : item.getAsJsonArray("omitStatementsContaining")) {
-          var statements =
-              parsed.findAll(com.github.javaparser.ast.stmt.ExpressionStmt.class).stream()
-                  .filter(s -> s.toString().contains(marker.getAsString()))
-                  .toList();
-          require(statements.size() == 1, "Changed omitted showcase guidance: " + marker);
-          statements.get(0).remove();
-        }
-        code = parsed.toString();
-      }
-      generated.put(destination, format(code));
+      generateExample(root, lock, row.getAsJsonObject(), generated);
     }
+    generateGalleryCatalog(root, rows, generated);
+    generateSupportingSources(root, lock, generated);
+    if (lock.has("formSampleData"))
+      generated.put(
+          root.resolve(
+              "showcase-shared/src/main/java/io/instanto/domino/client/FormSampleData.java"),
+          format(
+              FormDataGenerator.generate(
+                  root, sample(root, lock.getAsJsonObject("formSampleData")))));
+    return generated;
+  }
+
+  private static void generateExample(
+      Path root, JsonObject lock, JsonObject item, Map<Path, String> generated) throws Exception {
+    String source = sample(root, item);
+    String imports =
+        String.join(
+            "\n",
+            source
+                .lines()
+                .filter(
+                    s ->
+                        s.startsWith("import ")
+                            && List.of(
+                                    "org.dominokit.domino.ui.",
+                                    "elemental2.",
+                                    "java.",
+                                    "jsinterop.",
+                                    "org.gwtproject.",
+                                    "org.slf4j.")
+                                .stream()
+                                .anyMatch(s::contains))
+                .toList());
+    List<String> methods = new ArrayList<>();
+    if (item.has("imports"))
+      for (JsonElement extra : item.getAsJsonArray("imports"))
+        imports += "\nimport " + extra.getAsString() + ";";
+    for (String key : List.of("methods", "helpers")) {
+      if (item.has(key))
+        for (JsonElement name : item.getAsJsonArray(key))
+          methods.add(method(source, name.getAsString()));
+    }
+    Path destination = within(root, text(item, "adapter"));
+    String name = className(destination);
+    String calls = "";
+    for (JsonElement method : item.getAsJsonArray("methods"))
+      calls += method.getAsString() + "();\n";
+    String code =
+        "// Adapted from DominoKit/domino-ui-demo at "
+            + text(lock, "commit")
+            + "; see upstream/showcase-lock.json.\n"
+            + "package io.instanto.domino.client;\n"
+            + imports
+            + "\nimport elemental2.dom.HTMLDivElement;\nimport org.dominokit.domino.ui.elements.DivElement;\n"
+            + "import static org.dominokit.domino.ui.utils.Domino.*;\npublic final class "
+            + name
+            + " implements org.dominokit.domino.ui.style.DominoCss {\n private final DivElement element=div();\n"
+            + text(item, "fields")
+            + "\n public HTMLDivElement render(){\n"
+            + text(item, "before")
+            + calls
+            + text(item, "after")
+            + "return element.element();}\n"
+            + String.join("\n", methods)
+            + "\n}\n";
+    code =
+        replace(code, item)
+            .replace(
+                "GWT.getModuleBaseURL() + \"/images/image-gallery/9.jpg\"",
+                "\"showcase-image.jpg\"");
+    if (item.has("nativeElement") && item.get("nativeElement").getAsBoolean())
+      code =
+          code.replace(
+                  "private final DivElement element=div();",
+                  "private final HTMLDivElement element=div().element();")
+              .replace("return element.element();", "return element;");
+    code = omitStatements(code, item);
+    generated.put(destination, format(code));
+  }
+
+  private static String omitStatements(String code, JsonObject item) throws Exception {
+    if (!item.has("omitStatementsContaining")) return code;
+    var parsed = com.github.javaparser.StaticJavaParser.parse(code);
+    for (JsonElement marker : item.getAsJsonArray("omitStatementsContaining")) {
+      var statements =
+          parsed.findAll(com.github.javaparser.ast.stmt.ExpressionStmt.class).stream()
+              .filter(s -> s.toString().contains(marker.getAsString()))
+              .toList();
+      require(statements.size() == 1, "Changed omitted showcase guidance: " + marker);
+      statements.get(0).remove();
+    }
+    return parsed.toString();
+  }
+
+  private static void generateGalleryCatalog(
+      Path root, JsonArray rows, Map<Path, String> generated) throws Exception {
     List<String> routes = new ArrayList<>();
     StringBuilder cases = new StringBuilder();
     for (JsonElement row : rows) {
@@ -138,6 +159,10 @@ public final class ShowcaseMojo extends BuildMojo {
                 + ");\npublic static HTMLElement render(String route){\n"
                 + cases
                 + "return null;\n}}\n"));
+  }
+
+  private static void generateSupportingSources(Path root, JsonObject lock, Map<Path, String> generated)
+      throws Exception {
     if (lock.has("supporting"))
       for (JsonElement row : lock.getAsJsonArray("supporting")) {
         JsonObject item = row.getAsJsonObject();
@@ -176,14 +201,6 @@ public final class ShowcaseMojo extends BuildMojo {
                         ? FormSourceAdapter.adapt(replace(code, item))
                         : replace(code, item))));
       }
-    if (lock.has("formSampleData"))
-      generated.put(
-          root.resolve(
-              "showcase-shared/src/main/java/io/instanto/domino/client/FormSampleData.java"),
-          format(
-              FormDataGenerator.generate(
-                  root, sample(root, lock.getAsJsonObject("formSampleData")))));
-    return generated;
   }
 
   static String method(String source, String name) throws Exception {
