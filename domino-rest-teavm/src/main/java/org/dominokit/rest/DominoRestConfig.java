@@ -42,40 +42,19 @@ public class DominoRestConfig implements RestConfig {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DominoRestConfig.class);
 
-  private static String defaultServiceRoot;
-  private static String defaultResourceRootPath = "service";
+  private static final SharedDefaults SHARED_DEFAULTS = new SharedDefaults();
+
   private static String defaultJsonDateFormat = null;
 
-  private static RequestRouter<ServerRequest> serverRouter =
-      new ServerRouter(
-          new DefaultRequestAsyncSender(new ServerEventFactory(), new RequestSender<>()));
   private static List<DynamicServiceRoot> dynamicServiceRoots = new ArrayList<>();
   private static final List<RequestInterceptor> requestInterceptors = new ArrayList<>();
   private static final List<ResponseInterceptor> responseInterceptors = new ArrayList<>();
-
-  private static Fail defaultFailHandler =
-      failedResponse -> {
-        if (nonNull(failedResponse.getThrowable())) {
-          LOGGER.debug("could not execute request on server: ", failedResponse.getThrowable());
-        } else {
-          LOGGER.debug(
-              "could not execute request on server: status ["
-                  + failedResponse.getStatusCode()
-                  + "], body ["
-                  + failedResponse.getBody()
-                  + "]");
-        }
-      };
-
-  private static DateParamFormatter dateParamFormatter =
-      (date, pattern) -> new SimpleDateFormat(pattern).format(date);
-
-  private static NullQueryParamStrategy nullQueryParamStrategy = NullQueryParamStrategy.EMPTY;
 
   private static final Map<String, String> globalPathParams = new HashMap<>();
   private static final Map<String, String> globalHeaderParams = new HashMap<>();
   private static final Map<String, List<String>> globalQueryParams = new HashMap<>();
 
+  private final SharedDefaults defaults = SHARED_DEFAULTS;
   private final JsRegexEngine jsRegexEngine = new JsRegexEngine();
   private RegexValidationMode regexValidationMode = RegexValidationMode.IGNORE;
 
@@ -91,7 +70,7 @@ public class DominoRestConfig implements RestConfig {
 
   @Override
   public DominoRestConfig setDefaultServiceRoot(String defaultServiceRoot) {
-    DominoRestConfig.defaultServiceRoot = defaultServiceRoot;
+    defaults.defaultServiceRoot = defaultServiceRoot;
     return this;
   }
 
@@ -144,22 +123,22 @@ public class DominoRestConfig implements RestConfig {
   @Override
   public DominoRestConfig setDefaultFailHandler(Fail fail) {
     if (nonNull(fail)) {
-      defaultFailHandler = fail;
+      defaults.defaultFailHandler = fail;
     }
     return this;
   }
 
   @Override
   public Fail getDefaultFailHandler() {
-    return defaultFailHandler;
+    return defaults.defaultFailHandler;
   }
 
   @Override
   public String getDefaultServiceRoot() {
-    if (isNull(defaultServiceRoot)) {
-      return DefaultServiceRoot.get() + defaultResourceRootPath + "/";
+    if (isNull(defaults.defaultServiceRoot)) {
+      return DefaultServiceRoot.get() + defaults.defaultResourceRootPath + "/";
     }
-    return defaultServiceRoot;
+    return defaults.defaultServiceRoot;
   }
 
   @Override
@@ -175,24 +154,25 @@ public class DominoRestConfig implements RestConfig {
   @Override
   public DominoRestConfig setDefaultResourceRootPath(String rootPath) {
     if (nonNull(rootPath)) {
-      defaultResourceRootPath = rootPath;
+      defaults.defaultResourceRootPath = rootPath;
     }
     return this;
   }
 
   public void setServerRouter(RequestRouter<ServerRequest> serverRouter) {
-    DominoRestConfig.serverRouter = serverRouter;
+    defaults.serverRouter = serverRouter;
   }
 
   @Override
   public RequestRouter<ServerRequest> getServerRouter() {
-    return serverRouter;
+    return defaults.serverRouter;
   }
 
   @Override
   public String getDefaultResourceRootPath() {
-    if (nonNull(defaultResourceRootPath) && !defaultResourceRootPath.trim().isEmpty()) {
-      return defaultResourceRootPath + "/";
+    if (nonNull(defaults.defaultResourceRootPath)
+        && !defaults.defaultResourceRootPath.trim().isEmpty()) {
+      return defaults.defaultResourceRootPath + "/";
     }
     return "";
   }
@@ -210,24 +190,24 @@ public class DominoRestConfig implements RestConfig {
 
   @Override
   public RestConfig setDateParamFormatter(DateParamFormatter formatter) {
-    dateParamFormatter = formatter;
+    defaults.dateParamFormatter = formatter;
     return this;
   }
 
   @Override
   public DateParamFormatter getDateParamFormatter() {
-    return dateParamFormatter;
+    return defaults.dateParamFormatter;
   }
 
   @Override
   public NullQueryParamStrategy getNullQueryParamStrategy() {
-    return nullQueryParamStrategy;
+    return defaults.nullQueryParamStrategy;
   }
 
   @Override
   public RestConfig setNullQueryParamStrategy(NullQueryParamStrategy strategy) {
     if (nonNull(strategy)) {
-      nullQueryParamStrategy = strategy;
+      defaults.nullQueryParamStrategy = strategy;
     }
     return this;
   }
@@ -313,5 +293,35 @@ public class DominoRestConfig implements RestConfig {
   @Override
   public RegexValidationMode getRegexValidationMode() {
     return regexValidationMode;
+  }
+
+  /** Defaults shared by all config instances, including callers of the public constructor. */
+  private static final class SharedDefaults {
+    private String defaultServiceRoot;
+
+    private String defaultResourceRootPath = "service";
+
+    private RequestRouter<ServerRequest> serverRouter =
+        new ServerRouter(
+            new DefaultRequestAsyncSender(new ServerEventFactory(), new RequestSender<>()));
+
+    private Fail defaultFailHandler =
+        failedResponse -> {
+          if (nonNull(failedResponse.getThrowable())) {
+            LOGGER.debug("could not execute request on server: ", failedResponse.getThrowable());
+          } else {
+            LOGGER.debug(
+                "could not execute request on server: status ["
+                    + failedResponse.getStatusCode()
+                    + "], body ["
+                    + failedResponse.getBody()
+                    + "]");
+          }
+        };
+
+    private DateParamFormatter dateParamFormatter =
+        (date, pattern) -> new SimpleDateFormat(pattern).format(date);
+
+    private NullQueryParamStrategy nullQueryParamStrategy = NullQueryParamStrategy.EMPTY;
   }
 }
