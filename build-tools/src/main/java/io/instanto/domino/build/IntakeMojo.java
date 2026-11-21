@@ -106,29 +106,36 @@ public final class IntakeMojo extends BuildMojo {
         prefixes.put(prefix.getAsString(), "java");
       prefixes.put(library.get("testPrefix").getAsString(), "tests");
       prefixes.put(library.get("testResourcesPrefix").getAsString(), "test-resources");
-      try (var tar =
-          new TarArchiveInputStream(new GZIPInputStream(Files.newInputStream(archive)))) {
-        for (var entry = tar.getNextEntry(); entry != null; entry = tar.getNextEntry()) {
-          if (!entry.isFile()) continue;
-          String name = entry.getName();
-          Path file = null;
-          for (var prefix : prefixes.entrySet()) {
-            if (name.startsWith(prefix.getKey()))
-              file =
-                  within(
-                      destination.resolve(prefix.getValue()),
-                      name.substring(prefix.getKey().length()));
-          }
-          if (name.equals("LICENSE") || name.equals("NOTICE"))
-            file = destination.resolve("licenses").resolve(name);
-          if (file != null) {
-            require(!Files.exists(file), "Duplicate library input: " + file);
-            Files.createDirectories(file.getParent());
-            Files.write(file, tar.readAllBytes());
-          }
-        }
+      unpackLibrary(archive, destination, prefixes);
+    }
+  }
+
+  private static void unpackLibrary(Path archive, Path destination, Map<String, String> prefixes)
+      throws Exception {
+    try (var tar = new TarArchiveInputStream(new GZIPInputStream(Files.newInputStream(archive)))) {
+      for (var entry = tar.getNextEntry(); entry != null; entry = tar.getNextEntry()) {
+        if (!entry.isFile()) continue;
+        Path file = libraryDestination(destination, prefixes, entry.getName());
+        if (file == null) continue;
+        require(!Files.exists(file), "Duplicate library input: " + file);
+        Files.createDirectories(file.getParent());
+        Files.write(file, tar.readAllBytes());
       }
     }
+  }
+
+  private static Path libraryDestination(Path destination, Map<String, String> prefixes, String name)
+      throws Exception {
+    if (name.equals("LICENSE") || name.equals("NOTICE")) {
+      return destination.resolve("licenses").resolve(name);
+    }
+    Path file = null;
+    for (var prefix : prefixes.entrySet()) {
+      if (name.startsWith(prefix.getKey())) {
+        file = within(destination.resolve(prefix.getValue()), name.substring(prefix.getKey().length()));
+      }
+    }
+    return file;
   }
 
   private static void verifySample(Path root, JsonObject sample) throws Exception {
