@@ -60,8 +60,12 @@ public final class AnalysisMojo extends BuildMojo {
   }
 
   private static void inspectModule(
-      Path root, Path module, Set<List<String>> allowed, List<Map<String, Object>> rows,
-      List<String> problems) throws Exception {
+      Path root,
+      Path module,
+      Set<List<String>> allowed,
+      List<Map<String, Object>> rows,
+      List<String> problems)
+      throws Exception {
     String name = module.getFileName().toString();
     Path report = module.resolve("target/spotbugs/" + name + "-spotbugs.xml");
     // The build plugin's artifactId differs from its directory name.

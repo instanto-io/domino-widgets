@@ -65,30 +65,34 @@ final class FormSourceAdapter {
     // Style.get() used to return the owning widget. styler preserves that fluent return type.
     for (var get : cu.findAll(MethodCallExpr.class)) {
       if (!get.getNameAsString().equals("get") || get.getScope().isEmpty()) continue;
-      Expression chain = get.getScope().get().clone(), cursor = chain;
-      while (cursor instanceof MethodCallExpr m) {
-        if (m.getNameAsString().equals("style")
-            && m.getArguments().isEmpty()
-            && m.getScope().isPresent()) {
-          Expression owner = m.getScope().get().clone();
-          m.replace(new NameExpr("sampleStyle"));
-          get.replace(
-              new MethodCallExpr(owner, "styler")
-                  .addArgument(StaticJavaParser.parseExpression("sampleStyle -> " + chain)));
-          break;
-        }
-        if (m.getNameAsString().equals("of")
-            && m.getScope().map(Object::toString).orElse("").equals("Style")) {
-          Expression owner = m.getArgument(0).clone();
-          m.replace(new NameExpr("sampleStyle"));
-          get.replace(
-              new MethodCallExpr(owner, "styler")
-                  .addArgument(StaticJavaParser.parseExpression("sampleStyle -> " + chain)));
-          break;
-        }
-        if (m.getScope().isEmpty()) break;
-        cursor = m.getScope().get();
+      adaptStyleGet(get);
+    }
+  }
+
+  private static void adaptStyleGet(MethodCallExpr get) {
+    Expression chain = get.getScope().get().clone(), cursor = chain;
+    while (cursor instanceof MethodCallExpr m) {
+      if (m.getNameAsString().equals("style")
+          && m.getArguments().isEmpty()
+          && m.getScope().isPresent()) {
+        Expression owner = m.getScope().get().clone();
+        m.replace(new NameExpr("sampleStyle"));
+        get.replace(
+            new MethodCallExpr(owner, "styler")
+                .addArgument(StaticJavaParser.parseExpression("sampleStyle -> " + chain)));
+        break;
       }
+      if (m.getNameAsString().equals("of")
+          && m.getScope().map(Object::toString).orElse("").equals("Style")) {
+        Expression owner = m.getArgument(0).clone();
+        m.replace(new NameExpr("sampleStyle"));
+        get.replace(
+            new MethodCallExpr(owner, "styler")
+                .addArgument(StaticJavaParser.parseExpression("sampleStyle -> " + chain)));
+        break;
+      }
+      if (m.getScope().isEmpty()) break;
+      cursor = m.getScope().get();
     }
   }
 
@@ -118,13 +122,9 @@ final class FormSourceAdapter {
     }
   }
 
-  private static void adaptCardAndStyleCall(MethodCallExpr m, String name, java.util.Set<String> cardNames) {
-    if ((name.equals("hide") || name.equals("show")) && m.getScope().isPresent()) {
-      String scope = m.getScope().get().toString();
-      if (cardNames.contains(scope) || scope.startsWith("Card.create(")) {
-        m.setName(name.equals("hide") ? "collapse" : "expand");
-      }
-    }
+  private static void adaptCardAndStyleCall(
+      MethodCallExpr m, String name, java.util.Set<String> cardNames) {
+    adaptVisibilityCall(m, name, cardNames);
     if (name.equals("linkify")) {
       m.setName("addCss");
       m.addArgument(
@@ -137,6 +137,16 @@ final class FormSourceAdapter {
         && m.getScope().map(Object::toString).orElse("").startsWith("Column.span"))
       m.replace(m.getScope().orElseThrow().clone());
     if (name.equals("getDisplayValue")) m.setName("getValue");
+  }
+
+  private static void adaptVisibilityCall(
+      MethodCallExpr m, String name, java.util.Set<String> cardNames) {
+    if ((name.equals("hide") || name.equals("show")) && m.getScope().isPresent()) {
+      String scope = m.getScope().get().toString();
+      if (cardNames.contains(scope) || scope.startsWith("Card.create(")) {
+        m.setName(name.equals("hide") ? "collapse" : "expand");
+      }
+    }
     if (name.equals("show")
         && m.getScope().map(Object::toString).orElse("").startsWith("Collapsible.create"))
       m.setName("expand");
@@ -152,8 +162,7 @@ final class FormSourceAdapter {
     if (name.equals("addValidator")) {
       if (m.getArgument(0).isLambdaExpr()) {
         var l = m.getArgument(0).asLambdaExpr();
-        if (l.getParameters().isEmpty())
-          l.addParameter(new Parameter(new UnknownType(), "field"));
+        if (l.getParameters().isEmpty()) l.addParameter(new Parameter(new UnknownType(), "field"));
       } else if (m.getArgument(0).isMethodReferenceExpr())
         m.setArgument(
             0,
@@ -183,8 +192,7 @@ final class FormSourceAdapter {
       m.setArgument(
           0,
           new MethodCallExpr(
-                  new NameExpr(name.equals("addLeftAddOn") ? "PrefixAddOn" : "PostfixAddOn"),
-                  "of")
+                  new NameExpr(name.equals("addLeftAddOn") ? "PrefixAddOn" : "PostfixAddOn"), "of")
               .addArgument(m.getArgument(0).clone()));
     }
     if (name.equals("css")

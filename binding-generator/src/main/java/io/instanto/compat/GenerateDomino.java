@@ -116,7 +116,8 @@ public final class GenerateDomino {
             source = adaptJackson(p.getFileName().toString(), source);
             if (source == null) continue;
           }
-          if (library.equals("logger") && p.getFileName().toString().equals("DominoLoggingAdapter.java")) {
+          if (library.equals("logger")
+              && p.getFileName().toString().equals("DominoLoggingAdapter.java")) {
             source = adaptLogger(source);
           }
           Path destination = out.resolve(library).resolve(input.relativize(p));
@@ -128,7 +129,7 @@ public final class GenerateDomino {
   }
 
   private static String adaptJackson(String name, String source) {
-      if (name.equals("DefaultDateFormat.java")) {
+    if (name.equals("DefaultDateFormat.java")) {
       source =
           source
               .replace(
@@ -146,9 +147,7 @@ public final class GenerateDomino {
               "new Date(Instant.from(ISO_8601_FORMAT.parse(keyValue)).toEpochMilli())");
     }
     if (Set.of(
-            "JsDateFormat.java",
-            "JsDateKeyParser.java",
-            "GwtJacksonJsonSerializerParameters.java")
+            "JsDateFormat.java", "JsDateKeyParser.java", "GwtJacksonJsonSerializerParameters.java")
         .contains(name)) return null;
     if (name.equals("JsJacksonContext.java")) {
       // TeaVM supports the upstream Java runtime; GWT-only timezone APIs are unnecessary.
@@ -163,8 +162,7 @@ public final class GenerateDomino {
               .replace("JsIntegerStack", "DefaultIntegerStack")
               .replace("JSON::stringify", "new ServerValueStringifier()")
               .replace(
-                  "GwtJacksonJsonSerializerParameters",
-                  "ServerJacksonJsonSerializerParameters")
+                  "GwtJacksonJsonSerializerParameters", "ServerJacksonJsonSerializerParameters")
               .replace(
                   "GwtJacksonJsonDeserializerParameters",
                   "ServerJacksonJsonDeserializerParameters");

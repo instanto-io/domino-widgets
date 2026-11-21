@@ -135,8 +135,8 @@ public final class ShowcaseMojo extends BuildMojo {
     return parsed.toString();
   }
 
-  private static void generateGalleryCatalog(
-      Path root, JsonArray rows, Map<Path, String> generated) throws Exception {
+  private static void generateGalleryCatalog(Path root, JsonArray rows, Map<Path, String> generated)
+      throws Exception {
     List<String> routes = new ArrayList<>();
     StringBuilder cases = new StringBuilder();
     for (JsonElement row : rows) {
@@ -161,8 +161,8 @@ public final class ShowcaseMojo extends BuildMojo {
                 + "return null;\n}}\n"));
   }
 
-  private static void generateSupportingSources(Path root, JsonObject lock, Map<Path, String> generated)
-      throws Exception {
+  private static void generateSupportingSources(
+      Path root, JsonObject lock, Map<Path, String> generated) throws Exception {
     if (lock.has("supporting"))
       for (JsonElement row : lock.getAsJsonArray("supporting")) {
         JsonObject item = row.getAsJsonObject();

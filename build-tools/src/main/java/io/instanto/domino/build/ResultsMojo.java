@@ -114,8 +114,7 @@ public final class ResultsMojo extends BuildMojo {
   private static BrowserEvidence readBrowserEvidence(
       Path root, Path out, String engine, Map<Path, String> reports) throws Exception {
     String module = engine.equals(WEBKIT) ? WEBKIT : TEAVM;
-    Path directory =
-        root.resolve("browser-tests/" + module + "/target/surefire-reports-" + engine);
+    Path directory = root.resolve("browser-tests/" + module + "/target/surefire-reports-" + engine);
     List<Map<String, String>> suites = new ArrayList<>();
     List<Map<String, Object>> cases = new ArrayList<>();
     Set<String> names = new TreeSet<>();
@@ -129,12 +128,13 @@ public final class ResultsMojo extends BuildMojo {
           out.resolve("junit/" + engine + "/" + report.getFileName()),
           portableReport(report, root));
     }
-    return new BrowserEvidence(names,
-        Map.of("name", module + "-" + engine, "suites", suites, "scenarios", cases));
+    return new BrowserEvidence(
+        names, Map.of("name", module + "-" + engine, "suites", suites, "scenarios", cases));
   }
 
   private static void recordScenarios(
-      Element suite, Path report, Set<String> names, List<Map<String, Object>> cases) throws Exception {
+      Element suite, Path report, Set<String> names, List<Map<String, Object>> cases)
+      throws Exception {
     for (Element testcase : elements(suite, "testcase")) {
       String cls = testcase.getAttribute("classname"), test = testcase.getAttribute("name");
       require(names.add(cls + "#" + test), "Duplicate scenario in " + report + ": " + test);
