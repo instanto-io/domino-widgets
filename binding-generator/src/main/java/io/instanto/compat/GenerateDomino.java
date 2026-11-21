@@ -70,10 +70,21 @@ public final class GenerateDomino {
   public static void main(String[] args) throws Exception {
     Path root = Path.of(args[0]);
     Path out = root.resolve("target/compat");
+    deletePreviousOutput(out);
+    copyWidgetSources(root, out);
+    copyLibraries(root, out);
+    writeManifest(out);
+    System.out.println("Generated TeaVM bindings and Domino sources in " + out);
+  }
+
+  private static void deletePreviousOutput(Path out) throws Exception {
     if (Files.exists(out))
       try (var files = Files.walk(out)) {
         for (Path p : files.sorted(Comparator.reverseOrder()).toList()) Files.delete(p);
       }
+  }
+
+  private static void copyWidgetSources(Path root, Path out) throws Exception {
     Path sourceRoot = root.resolve("target/intake/java");
     try (var files = Files.walk(sourceRoot)) {
       for (Path p :
@@ -92,6 +103,9 @@ public final class GenerateDomino {
                 .resolve(sourceRoot.relativize(p)),
             Files.readString(p));
     }
+  }
+
+  private static void copyLibraries(Path root, Path out) throws Exception {
     for (String library : List.of("history", "md", "jackson", "logger")) {
       Path input = root.resolve("target/intake/" + library + "/java");
       try (var files = Files.walk(input)) {
@@ -99,84 +113,11 @@ public final class GenerateDomino {
             files.filter(p -> p.toString().endsWith(JAVA_FILE_SUFFIX)).sorted().toList()) {
           String source = Files.readString(p);
           if (library.equals("jackson")) {
-            String name = p.getFileName().toString();
-            if (name.equals("DefaultDateFormat.java")) {
-              source =
-                  source
-                      .replace(
-                          "new Date(date.getTime()).toInstant()",
-                          "java.time.Instant.ofEpochMilli(date.getTime())")
-                      .replace("date.toInstant()", "java.time.Instant.ofEpochMilli(date.getTime())")
-                      .replace(
-                          "Date.from(Instant.from(format.parse(date)))",
-                          "new Date(Instant.from(format.parse(date)).toEpochMilli())");
-            }
-            if (name.equals("DefaultDateKeyParser.java")) {
-              source =
-                  source.replace(
-                      "Date.from(Instant.from(ISO_8601_FORMAT.parse(keyValue)))",
-                      "new Date(Instant.from(ISO_8601_FORMAT.parse(keyValue)).toEpochMilli())");
-            }
-            if (Set.of(
-                    "JsDateFormat.java",
-                    "JsDateKeyParser.java",
-                    "GwtJacksonJsonSerializerParameters.java")
-                .contains(name)) continue;
-            if (name.equals("JsJacksonContext.java")) {
-              // TeaVM supports the upstream Java runtime; GWT-only timezone APIs are unnecessary.
-              source =
-                  source
-                      .replace("JsDateFormat", "DefaultDateFormat")
-                      .replace("JsDoubleArrayReader", "DefaultDoubleArrayReader")
-                      .replace("JsIntegerArrayReader", "DefaultIntegerArrayReader")
-                      .replace("JsShortArrayReader", "DefaultShortArrayReader")
-                      .replace("JsStringArrayReader", "DefaultStringArrayReader")
-                      .replace("JsMapLike", "DefaultMapLike")
-                      .replace("JsIntegerStack", "DefaultIntegerStack")
-                      .replace("JSON::stringify", "new ServerValueStringifier()")
-                      .replace(
-                          "GwtJacksonJsonSerializerParameters",
-                          "ServerJacksonJsonSerializerParameters")
-                      .replace(
-                          "GwtJacksonJsonDeserializerParameters",
-                          "ServerJacksonJsonDeserializerParameters");
-            }
+            source = adaptJackson(p.getFileName().toString(), source);
+            if (source == null) continue;
           }
-          if (library.equals("logger")
-              && p.getFileName().toString().equals("DominoLoggingAdapter.java")) {
-            // GWT's string identity assumptions are invalid for ordinary Java/TeaVM strings.
-            for (String level : List.of("TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF")) {
-              source =
-                  source
-                      .replace("level != \"" + level + "\"", "!level.equals(\"" + level + "\")")
-                      .replace("level == \"" + level + "\"", "level.equals(\"" + level + "\")");
-            }
-            source =
-                source
-                    .replace(
-                        "INFO_ENABLED = level.equals(\"TRACE\") || level.equals(\"INFO\");",
-                        "INFO_ENABLED = level.equals(\"TRACE\") || level.equals(\"DEBUG\") || level.equals(\"INFO\");")
-                    .replace(
-                        "DEBUG_ENABLED = level.equals(\"TRACE\") || level.equals(\"INFO\") || level.equals(\"DEBUG\");",
-                        "DEBUG_ENABLED = level.equals(\"TRACE\") || level.equals(\"DEBUG\");");
-            var markerMethods =
-                java.util.regex.Pattern.compile(
-                    "public void (trace|debug|info|warn|error)\\(Marker marker, ([^)]*)\\) \\{");
-            source =
-                markerMethods
-                    .matcher(source)
-                    .replaceAll(
-                        match ->
-                            match.group()
-                                + " if (!isEnabledForLevel(Level."
-                                + match.group(1).toUpperCase(Locale.ROOT)
-                                + ")) return;");
-            source =
-                source.replace(
-                    "implements Logger {",
-                    "implements Logger, org.slf4j.spi.LoggingEventAware {\n"
-                        + "  @Override public void log(org.slf4j.event.LoggingEvent event) {\n"
-                        + "    io.instanto.domino.logging.TeaVmLogEvents.log(this, event);\n  }\n");
+          if (library.equals("logger") && p.getFileName().toString().equals("DominoLoggingAdapter.java")) {
+            source = adaptLogger(source);
           }
           Path destination = out.resolve(library).resolve(input.relativize(p));
           Files.createDirectories(destination.getParent());
@@ -184,6 +125,91 @@ public final class GenerateDomino {
         }
       }
     }
+  }
+
+  private static String adaptJackson(String name, String source) {
+      if (name.equals("DefaultDateFormat.java")) {
+      source =
+          source
+              .replace(
+                  "new Date(date.getTime()).toInstant()",
+                  "java.time.Instant.ofEpochMilli(date.getTime())")
+              .replace("date.toInstant()", "java.time.Instant.ofEpochMilli(date.getTime())")
+              .replace(
+                  "Date.from(Instant.from(format.parse(date)))",
+                  "new Date(Instant.from(format.parse(date)).toEpochMilli())");
+    }
+    if (name.equals("DefaultDateKeyParser.java")) {
+      source =
+          source.replace(
+              "Date.from(Instant.from(ISO_8601_FORMAT.parse(keyValue)))",
+              "new Date(Instant.from(ISO_8601_FORMAT.parse(keyValue)).toEpochMilli())");
+    }
+    if (Set.of(
+            "JsDateFormat.java",
+            "JsDateKeyParser.java",
+            "GwtJacksonJsonSerializerParameters.java")
+        .contains(name)) return null;
+    if (name.equals("JsJacksonContext.java")) {
+      // TeaVM supports the upstream Java runtime; GWT-only timezone APIs are unnecessary.
+      source =
+          source
+              .replace("JsDateFormat", "DefaultDateFormat")
+              .replace("JsDoubleArrayReader", "DefaultDoubleArrayReader")
+              .replace("JsIntegerArrayReader", "DefaultIntegerArrayReader")
+              .replace("JsShortArrayReader", "DefaultShortArrayReader")
+              .replace("JsStringArrayReader", "DefaultStringArrayReader")
+              .replace("JsMapLike", "DefaultMapLike")
+              .replace("JsIntegerStack", "DefaultIntegerStack")
+              .replace("JSON::stringify", "new ServerValueStringifier()")
+              .replace(
+                  "GwtJacksonJsonSerializerParameters",
+                  "ServerJacksonJsonSerializerParameters")
+              .replace(
+                  "GwtJacksonJsonDeserializerParameters",
+                  "ServerJacksonJsonDeserializerParameters");
+    }
+    return source;
+  }
+
+  private static String adaptLogger(String source) {
+    // GWT's string identity assumptions are invalid for ordinary Java/TeaVM strings.
+    for (String level : List.of("TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF")) {
+      source =
+          source
+              .replace("level != \"" + level + "\"", "!level.equals(\"" + level + "\")")
+              .replace("level == \"" + level + "\"", "level.equals(\"" + level + "\")");
+    }
+    source =
+        source
+            .replace(
+                "INFO_ENABLED = level.equals(\"TRACE\") || level.equals(\"INFO\");",
+                "INFO_ENABLED = level.equals(\"TRACE\") || level.equals(\"DEBUG\") || level.equals(\"INFO\");")
+            .replace(
+                "DEBUG_ENABLED = level.equals(\"TRACE\") || level.equals(\"INFO\") || level.equals(\"DEBUG\");",
+                "DEBUG_ENABLED = level.equals(\"TRACE\") || level.equals(\"DEBUG\");");
+    var markerMethods =
+        java.util.regex.Pattern.compile(
+            "public void (trace|debug|info|warn|error)\\(Marker marker, ([^)]*)\\) \\{");
+    source =
+        markerMethods
+            .matcher(source)
+            .replaceAll(
+                match ->
+                    match.group()
+                        + " if (!isEnabledForLevel(Level."
+                        + match.group(1).toUpperCase(Locale.ROOT)
+                        + ")) return;");
+    source =
+        source.replace(
+            "implements Logger {",
+            "implements Logger, org.slf4j.spi.LoggingEventAware {\n"
+                + "  @Override public void log(org.slf4j.event.LoggingEvent event) {\n"
+                + "    io.instanto.domino.logging.TeaVmLogEvents.log(this, event);\n  }\n");
+    return source;
+  }
+
+  private static void writeManifest(Path out) throws Exception {
     StringBuilder manifest = new StringBuilder();
     var digest = java.security.MessageDigest.getInstance("SHA-256");
     try (var files = Files.walk(out)) {
@@ -196,6 +222,5 @@ public final class GenerateDomino {
       }
     }
     Files.writeString(out.resolve("sources.sha256"), manifest);
-    System.out.println("Generated TeaVM bindings and Domino sources in " + out);
   }
 }
