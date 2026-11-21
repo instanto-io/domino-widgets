@@ -16,7 +16,7 @@ jobs:
     with:
       name: Publish Domino snapshots
       goals: clean deploy
-      maven-args: -pl '!showcase-teavm,!build-verification'
+      maven-args: "-pl !showcase-teavm,!build-verification"
       fast-deploy: true
       downstream-checks: false
       sonar: false
