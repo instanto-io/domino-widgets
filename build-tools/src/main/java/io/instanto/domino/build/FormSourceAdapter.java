@@ -1,6 +1,7 @@
 package io.instanto.domino.build;
 
 import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.*;
@@ -48,20 +49,19 @@ final class FormSourceAdapter {
     cu.addImport("org.dominokit.domino.ui.utils.PostfixAddOn");
     cu.addImport("org.dominokit.domino.ui.typography.BlockHeader");
     cu.addImport("org.dominokit.domino.ui.utils.Domino", true, true);
-    var cardNames = new java.util.HashSet<String>();
-    cu.findAll(com.github.javaparser.ast.body.VariableDeclarator.class).stream()
-        .filter(v -> v.getTypeAsString().equals("Card"))
-        .forEach(v -> cardNames.add(v.getNameAsString()));
-    Map<String, String> names =
-        Map.of(
-            "value",
-            "withValue",
-            "addColumn",
-            APPEND_CHILD,
-            "createPrimary",
-            CREATE,
-            "createDefault",
-            CREATE);
+    adaptStyleOwners(cu);
+    adaptCalls(cu);
+    adaptFormType(cu);
+    return cu.toString()
+        .replace(
+            ".position(new AccountDetailsPopupPosition",
+            ".setPosition(new AccountDetailsPopupPosition")
+        .replace("home_currency_usd()", "currency_usd()")
+        .replace("file_document_box()", "file_document()")
+        .replace("goodsDescriptionTextAreaBox", "goodsDescriptionTextArea");
+  }
+
+  private static void adaptStyleOwners(CompilationUnit cu) {
     // Style.get() used to return the owning widget. styler preserves that fluent return type.
     for (var get : cu.findAll(MethodCallExpr.class)) {
       if (!get.getNameAsString().equals("get") || get.getScope().isEmpty()) continue;
@@ -90,121 +90,157 @@ final class FormSourceAdapter {
         cursor = m.getScope().get();
       }
     }
+  }
+
+  private static void adaptCalls(CompilationUnit cu) {
+    var cardNames = new java.util.HashSet<String>();
+    cu.findAll(com.github.javaparser.ast.body.VariableDeclarator.class).stream()
+        .filter(v -> v.getTypeAsString().equals("Card"))
+        .forEach(v -> cardNames.add(v.getNameAsString()));
+    Map<String, String> names =
+        Map.of(
+            "value",
+            "withValue",
+            "addColumn",
+            APPEND_CHILD,
+            "createPrimary",
+            CREATE,
+            "createDefault",
+            CREATE);
     var calls = new java.util.ArrayList<>(cu.findAll(MethodCallExpr.class));
     java.util.Collections.reverse(calls);
     for (var m : calls) {
       String name = m.getNameAsString();
-      if ((name.equals("hide") || name.equals("show")) && m.getScope().isPresent()) {
-        String scope = m.getScope().get().toString();
-        if (cardNames.contains(scope) || scope.startsWith("Card.create(")) {
-          m.setName(name.equals("hide") ? "collapse" : "expand");
-        }
-      }
-      if (name.equals("linkify")) {
-        m.setName("addCss");
-        m.addArgument(
-            StaticJavaParser.parseExpression(
-                "org.dominokit.domino.ui.style.DominoCss.dui_transparent"));
-      }
-      if (name.equals("setContent") && m.getArgument(0).isStringLiteralExpr())
-        m.setName("setTextContent");
-      if (name.equals("copy")
-          && m.getScope().map(Object::toString).orElse("").startsWith("Column.span"))
-        m.replace(m.getScope().orElseThrow().clone());
-      if (name.equals("getDisplayValue")) m.setName("getValue");
-      if (name.equals("show")
-          && m.getScope().map(Object::toString).orElse("").startsWith("Collapsible.create"))
-        m.setName("expand");
-      if (name.equals("dropup"))
-        m.replace(
-            new MethodCallExpr(m.getScope().orElseThrow().clone(), "withOptionsMenu")
-                .addArgument(
-                    StaticJavaParser.parseExpression(
-                        "(select, menu) -> menu.setDropDirection(org.dominokit.domino.ui.menu.direction.DropDirection.TOP_LEFT)")));
-      if (name.equals("addValidator")) {
-        if (m.getArgument(0).isLambdaExpr()) {
-          var l = m.getArgument(0).asLambdaExpr();
-          if (l.getParameters().isEmpty())
-            l.addParameter(new Parameter(new UnknownType(), "field"));
-        } else if (m.getArgument(0).isMethodReferenceExpr())
-          m.setArgument(
-              0,
-              StaticJavaParser.parseExpression(
-                  "field -> " + m.getArgument(0).toString().replace("::", ".") + "()"));
-      }
-      if (name.equals(CREATE)
-          && m.getScope().map(Object::toString).orElse("").equals("Popover")
-          && m.getArguments().size() == 3) {
-        m.replace(
-            StaticJavaParser.parseExpression(
-                "Popover.create("
-                    + m.getArgument(0)
-                    + ").apply(p -> {p.getHeaderElement().setTextContent("
-                    + m.getArgument(1)
-                    + ");p.getBody().appendChild("
-                    + m.getArgument(2)
-                    + ");})"));
-      }
-      if (names.containsKey(name)) m.setName(names.get(name));
-      if (name.equals("withGap")) m.replace(m.getScope().orElseThrow().clone());
-      if (name.equals("addLeftAddOn") || name.equals("addRightAddOn")) {
-        m.setName(APPEND_CHILD);
-        m.setArgument(
-            0,
-            new MethodCallExpr(
-                    new NameExpr(name.equals("addLeftAddOn") ? "PrefixAddOn" : "PostfixAddOn"),
-                    "of")
-                .addArgument(m.getArgument(0).clone()));
-      }
-      if (name.equals("css")
-          && m.getArguments().stream().anyMatch(a -> a.toString().startsWith("dui_")))
-        m.setName("addCss");
-      if (name.equals("addSelectionHandler")) {
-        m.replace(
-            new MethodCallExpr(new NameExpr("FormExampleSupport"), "onSelect")
-                .addArgument(m.getScope().orElseThrow().clone())
-                .addArgument(m.getArgument(0).clone()));
-      }
-      if (name.equals("addChangeHandler")) {
-        m.setName("addChangeListener");
-        var lambda = m.getArgument(0).asLambdaExpr();
-        lambda.getParameters().addFirst(new Parameter(new UnknownType(), "oldValue"));
-        lambda.setEnclosingParameters(true);
-      }
-      if (name.equals(CREATE)
-          && m.getScope().map(Object::toString).orElse("").equals("SelectOption")) {
-        if (m.getArguments().size() == 2)
-          m.getArguments()
-              .addFirst(
-                  new MethodCallExpr(new NameExpr("String"), "valueOf")
-                      .addArgument(m.getArgument(1).clone()));
-        else if (m.getArguments().size() == 3) {
-          var value = m.getArgument(0).clone();
-          m.setArgument(0, m.getArgument(1).clone());
-          m.setArgument(1, value);
-        }
-      }
-      if (name.equals("setBodyPaddingTop")) {
-        m.replace(
-            new MethodCallExpr(m.getScope().orElseThrow().clone(), "withBody")
-                .addArgument(
-                    StaticJavaParser.parseExpression(
-                        "(card, body) -> body.setPaddingTop(" + m.getArgument(0) + ")")));
-      }
-      if (name.equals("addDateSelectionHandler")) {
-        var picker = m.getScope().orElseThrow().asMethodCallExpr();
-        m.setScope(picker.getScope().orElseThrow().clone());
-        m.setName("addChangeListener");
-      }
-      if (name.equals("add") && m.getScope().map(Object::toString).orElse("").startsWith("div()"))
-        m.setName(APPEND_CHILD);
-      if (name.equals("ifPresent")
-          && m.getScope().map(Object::toString).orElse("").contains("getSelectedRadio()")) {
-        m.setScope(
-            new MethodCallExpr(StaticJavaParser.parseExpression("java.util.Optional"), "ofNullable")
-                .addArgument(m.getScope().orElseThrow().clone()));
+      adaptCardAndStyleCall(m, name, cardNames);
+      adaptLegacyCall(m, name, names);
+      adaptSelectionCall(m, name);
+      adaptLayoutCall(m, name);
+    }
+  }
+
+  private static void adaptCardAndStyleCall(MethodCallExpr m, String name, java.util.Set<String> cardNames) {
+    if ((name.equals("hide") || name.equals("show")) && m.getScope().isPresent()) {
+      String scope = m.getScope().get().toString();
+      if (cardNames.contains(scope) || scope.startsWith("Card.create(")) {
+        m.setName(name.equals("hide") ? "collapse" : "expand");
       }
     }
+    if (name.equals("linkify")) {
+      m.setName("addCss");
+      m.addArgument(
+          StaticJavaParser.parseExpression(
+              "org.dominokit.domino.ui.style.DominoCss.dui_transparent"));
+    }
+    if (name.equals("setContent") && m.getArgument(0).isStringLiteralExpr())
+      m.setName("setTextContent");
+    if (name.equals("copy")
+        && m.getScope().map(Object::toString).orElse("").startsWith("Column.span"))
+      m.replace(m.getScope().orElseThrow().clone());
+    if (name.equals("getDisplayValue")) m.setName("getValue");
+    if (name.equals("show")
+        && m.getScope().map(Object::toString).orElse("").startsWith("Collapsible.create"))
+      m.setName("expand");
+  }
+
+  private static void adaptLegacyCall(MethodCallExpr m, String name, Map<String, String> names) {
+    if (name.equals("dropup"))
+      m.replace(
+          new MethodCallExpr(m.getScope().orElseThrow().clone(), "withOptionsMenu")
+              .addArgument(
+                  StaticJavaParser.parseExpression(
+                      "(select, menu) -> menu.setDropDirection(org.dominokit.domino.ui.menu.direction.DropDirection.TOP_LEFT)")));
+    if (name.equals("addValidator")) {
+      if (m.getArgument(0).isLambdaExpr()) {
+        var l = m.getArgument(0).asLambdaExpr();
+        if (l.getParameters().isEmpty())
+          l.addParameter(new Parameter(new UnknownType(), "field"));
+      } else if (m.getArgument(0).isMethodReferenceExpr())
+        m.setArgument(
+            0,
+            StaticJavaParser.parseExpression(
+                "field -> " + m.getArgument(0).toString().replace("::", ".") + "()"));
+    }
+    if (name.equals(CREATE)
+        && m.getScope().map(Object::toString).orElse("").equals("Popover")
+        && m.getArguments().size() == 3) {
+      m.replace(
+          StaticJavaParser.parseExpression(
+              "Popover.create("
+                  + m.getArgument(0)
+                  + ").apply(p -> {p.getHeaderElement().setTextContent("
+                  + m.getArgument(1)
+                  + ");p.getBody().appendChild("
+                  + m.getArgument(2)
+                  + ");})"));
+    }
+    if (names.containsKey(name)) m.setName(names.get(name));
+    if (name.equals("withGap")) m.replace(m.getScope().orElseThrow().clone());
+  }
+
+  private static void adaptSelectionCall(MethodCallExpr m, String name) {
+    if (name.equals("addLeftAddOn") || name.equals("addRightAddOn")) {
+      m.setName(APPEND_CHILD);
+      m.setArgument(
+          0,
+          new MethodCallExpr(
+                  new NameExpr(name.equals("addLeftAddOn") ? "PrefixAddOn" : "PostfixAddOn"),
+                  "of")
+              .addArgument(m.getArgument(0).clone()));
+    }
+    if (name.equals("css")
+        && m.getArguments().stream().anyMatch(a -> a.toString().startsWith("dui_")))
+      m.setName("addCss");
+    if (name.equals("addSelectionHandler")) {
+      m.replace(
+          new MethodCallExpr(new NameExpr("FormExampleSupport"), "onSelect")
+              .addArgument(m.getScope().orElseThrow().clone())
+              .addArgument(m.getArgument(0).clone()));
+    }
+    if (name.equals("addChangeHandler")) {
+      m.setName("addChangeListener");
+      var lambda = m.getArgument(0).asLambdaExpr();
+      lambda.getParameters().addFirst(new Parameter(new UnknownType(), "oldValue"));
+      lambda.setEnclosingParameters(true);
+    }
+    if (name.equals(CREATE)
+        && m.getScope().map(Object::toString).orElse("").equals("SelectOption")) {
+      if (m.getArguments().size() == 2)
+        m.getArguments()
+            .addFirst(
+                new MethodCallExpr(new NameExpr("String"), "valueOf")
+                    .addArgument(m.getArgument(1).clone()));
+      else if (m.getArguments().size() == 3) {
+        var value = m.getArgument(0).clone();
+        m.setArgument(0, m.getArgument(1).clone());
+        m.setArgument(1, value);
+      }
+    }
+  }
+
+  private static void adaptLayoutCall(MethodCallExpr m, String name) {
+    if (name.equals("setBodyPaddingTop")) {
+      m.replace(
+          new MethodCallExpr(m.getScope().orElseThrow().clone(), "withBody")
+              .addArgument(
+                  StaticJavaParser.parseExpression(
+                      "(card, body) -> body.setPaddingTop(" + m.getArgument(0) + ")")));
+    }
+    if (name.equals("addDateSelectionHandler")) {
+      var picker = m.getScope().orElseThrow().asMethodCallExpr();
+      m.setScope(picker.getScope().orElseThrow().clone());
+      m.setName("addChangeListener");
+    }
+    if (name.equals("add") && m.getScope().map(Object::toString).orElse("").startsWith("div()"))
+      m.setName(APPEND_CHILD);
+    if (name.equals("ifPresent")
+        && m.getScope().map(Object::toString).orElse("").contains("getSelectedRadio()")) {
+      m.setScope(
+          new MethodCallExpr(StaticJavaParser.parseExpression("java.util.Optional"), "ofNullable")
+              .addArgument(m.getScope().orElseThrow().clone()));
+    }
+  }
+
+  private static void adaptFormType(CompilationUnit cu) {
     var type = cu.getType(0).asClassOrInterfaceDeclaration();
     if (type.getNameAsString().equals("AddLCImportComponent")) {
       type.getConstructors()
@@ -245,12 +281,5 @@ final class FormSourceAdapter {
       position.getBody().orElseThrow().addStatement("return this;");
       type.getMethodsByName("getDirectionClass").get(0).remove();
     }
-    return cu.toString()
-        .replace(
-            ".position(new AccountDetailsPopupPosition",
-            ".setPosition(new AccountDetailsPopupPosition")
-        .replace("home_currency_usd()", "currency_usd()")
-        .replace("file_document_box()", "file_document()")
-        .replace("goodsDescriptionTextAreaBox", "goodsDescriptionTextArea");
   }
 }
