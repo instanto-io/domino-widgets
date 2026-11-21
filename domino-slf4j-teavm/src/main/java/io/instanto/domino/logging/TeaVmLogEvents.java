@@ -1,8 +1,10 @@
 package io.instanto.domino.logging;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.slf4j.event.KeyValuePair;
 import org.slf4j.event.LoggingEvent;
 import org.slf4j.helpers.MessageFormatter;
 
@@ -15,50 +17,49 @@ public final class TeaVmLogEvents {
     var formatted = MessageFormatter.arrayFormat(event.getMessage(), event.getArgumentArray());
     Throwable cause =
         event.getThrowable() != null ? event.getThrowable() : formatted.getThrowable();
-    String message = formatted.getMessage();
-    if (event.getKeyValuePairs() != null && !event.getKeyValuePairs().isEmpty()) {
-      var values = new StringBuilder();
-      for (var value : event.getKeyValuePairs()) {
-        values.append(value.key).append('=').append(value.value).append(' ');
+    String message = withKeyValuePairs(formatted.getMessage(), event.getKeyValuePairs());
+    Marker marker = mergeMarkers(event.getMarkers());
+    if (marker == null) {
+      switch (event.getLevel()) {
+        case TRACE -> logger.trace(message, cause);
+        case DEBUG -> logger.debug(message, cause);
+        case INFO -> logger.info(message, cause);
+        case WARN -> logger.warn(message, cause);
+        case ERROR -> logger.error(message, cause);
       }
-      message = values.append(message).toString();
-    }
-    Marker marker = null;
-    if (event.getMarkers() != null && !event.getMarkers().isEmpty()) {
-      marker = event.getMarkers().get(0);
-      if (event.getMarkers().size() > 1) {
-        // Keep the first marker's routing priority and include the remaining references,
-        // without modifying markers held by the application.
-        Marker first = marker;
-        marker = MarkerFactory.getDetachedMarker(first.getName());
-        // Copy its references rather than adding first itself: the router's cycle guard
-        // treats two markers with the same name as the same visited node.
-        for (var references = first.iterator(); references.hasNext(); )
-          marker.add(references.next());
-        for (int i = 1; i < event.getMarkers().size(); i++) marker.add(event.getMarkers().get(i));
+    } else {
+      switch (event.getLevel()) {
+        case TRACE -> logger.trace(marker, message, cause);
+        case DEBUG -> logger.debug(marker, message, cause);
+        case INFO -> logger.info(marker, message, cause);
+        case WARN -> logger.warn(marker, message, cause);
+        case ERROR -> logger.error(marker, message, cause);
       }
     }
-    switch (event.getLevel()) {
-      case TRACE -> {
-        if (marker == null) logger.trace(message, cause);
-        else logger.trace(marker, message, cause);
-      }
-      case DEBUG -> {
-        if (marker == null) logger.debug(message, cause);
-        else logger.debug(marker, message, cause);
-      }
-      case INFO -> {
-        if (marker == null) logger.info(message, cause);
-        else logger.info(marker, message, cause);
-      }
-      case WARN -> {
-        if (marker == null) logger.warn(message, cause);
-        else logger.warn(marker, message, cause);
-      }
-      case ERROR -> {
-        if (marker == null) logger.error(message, cause);
-        else logger.error(marker, message, cause);
-      }
+  }
+
+  private static String withKeyValuePairs(String message, List<KeyValuePair> pairs) {
+    if (pairs == null || pairs.isEmpty()) return message;
+    var values = new StringBuilder();
+    for (var pair : pairs) {
+      values.append(pair.key).append('=').append(pair.value).append(' ');
     }
+    return values.append(message).toString();
+  }
+
+  private static Marker mergeMarkers(List<Marker> markers) {
+    if (markers == null || markers.isEmpty()) return null;
+    Marker first = markers.get(0);
+    if (markers.size() == 1) return first;
+    // Keep the first marker's routing priority without modifying an application marker.
+    Marker merged = MarkerFactory.getDetachedMarker(first.getName());
+    // A marker with the same name would hit the router's cycle guard.
+    for (var references = first.iterator(); references.hasNext(); ) {
+      merged.add(references.next());
+    }
+    for (int i = 1; i < markers.size(); i++) {
+      merged.add(markers.get(i));
+    }
+    return merged;
   }
 }
