@@ -75,8 +75,8 @@ public final class IntakeMojo extends BuildMojo {
     }
     String assets = "domino-ui/src/main/resources/org/dominokit/domino/ui/public/";
     if (name.startsWith(assets)) {
-      return within(out.resolve("assets/META-INF/resources/domino-widgets"),
-          name.substring(assets.length()));
+      return within(
+          out.resolve("assets/META-INF/resources/domino-widgets"), name.substring(assets.length()));
     }
     return null;
   }
@@ -124,15 +124,17 @@ public final class IntakeMojo extends BuildMojo {
     }
   }
 
-  private static Path libraryDestination(Path destination, Map<String, String> prefixes, String name)
-      throws Exception {
+  private static Path libraryDestination(
+      Path destination, Map<String, String> prefixes, String name) throws Exception {
     if (name.equals("LICENSE") || name.equals("NOTICE")) {
       return destination.resolve("licenses").resolve(name);
     }
     Path file = null;
     for (var prefix : prefixes.entrySet()) {
       if (name.startsWith(prefix.getKey())) {
-        file = within(destination.resolve(prefix.getValue()), name.substring(prefix.getKey().length()));
+        file =
+            within(
+                destination.resolve(prefix.getValue()), name.substring(prefix.getKey().length()));
       }
     }
     return file;
