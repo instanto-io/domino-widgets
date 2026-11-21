@@ -30,9 +30,25 @@ public final class AnalysisMojo extends BuildMojo {
     }
     List<Map<String, Object>> rows = new ArrayList<>();
     List<String> problems = new ArrayList<>();
+    Path root = root();
+    Set<List<String>> allowed = allowedFindings(root);
+    for (Path module : modules(root)) {
+      inspectModule(root, module, allowed, rows, problems);
+    }
+    writeIndex(root, rows);
+    if (!indexOnly) require(problems.isEmpty(), String.join("\n", problems));
+    getLog()
+        .info(
+            "Indexed "
+                + rows.size()
+                + " analyzer reports"
+                + (indexOnly ? " (diagnostics only)" : "; analysis gate passed"));
+  }
+
+  private static Set<List<String>> allowedFindings(Path root) throws Exception {
     Set<List<String>> allowed = new HashSet<>();
     for (var item :
-        JsonParser.parseString(Files.readString(root().resolve("docs/spotbugs-triage.json")))
+        JsonParser.parseString(Files.readString(root.resolve("docs/spotbugs-triage.json")))
             .getAsJsonArray()) {
       var obj = item.getAsJsonObject();
       List<String> key = new ArrayList<>();
@@ -40,58 +56,76 @@ public final class AnalysisMojo extends BuildMojo {
         key.add(obj.get(name).isJsonNull() ? null : obj.get(name).getAsString());
       allowed.add(key);
     }
-    for (Path module : modules(root())) {
-      String name = module.getFileName().toString();
-      Path report = module.resolve("target/spotbugs/" + name + "-spotbugs.xml");
-      // The build plugin's artifactId differs from its directory name.
-      if (name.equals("build-tools"))
-        report = module.resolve("target/spotbugs/domino-build-maven-plugin-spotbugs.xml");
-      if (!Files.exists(report)) {
-        if (files(module.resolve("target/classes")).stream()
-            .anyMatch(p -> p.toString().endsWith(".class"))) {
-          problems.add(name + ": missing report");
-          rows.add(Map.of(MODULE, name, STATUS, "missing-report"));
-        }
-        continue;
+    return allowed;
+  }
+
+  private static void inspectModule(
+      Path root, Path module, Set<List<String>> allowed, List<Map<String, Object>> rows,
+      List<String> problems) throws Exception {
+    String name = module.getFileName().toString();
+    Path report = module.resolve("target/spotbugs/" + name + "-spotbugs.xml");
+    // The build plugin's artifactId differs from its directory name.
+    if (name.equals("build-tools"))
+      report = module.resolve("target/spotbugs/domino-build-maven-plugin-spotbugs.xml");
+    if (!Files.exists(report)) {
+      if (files(module.resolve("target/classes")).stream()
+          .anyMatch(p -> p.toString().endsWith(".class"))) {
+        problems.add(name + ": missing report");
+        rows.add(Map.of(MODULE, name, STATUS, "missing-report"));
       }
-      Element xml = xml(report);
-      List<Element> bugs = elements(xml, "BugInstance");
-      Map<String, String> errors = new LinkedHashMap<>();
-      if (!elements(xml, "Errors").isEmpty()) {
-        Element error = elements(xml, "Errors").get(0);
-        for (int i = 0; i < error.getAttributes().getLength(); i++) {
-          var attr = error.getAttributes().item(i);
-          errors.put(attr.getNodeName(), attr.getNodeValue());
-        }
-        if (Integer.parseInt(errors.getOrDefault("errors", "0")) != 0
-            || Integer.parseInt(errors.getOrDefault("missingClasses", "0")) != 0)
-          problems.add(name + ": analyzer errors/missing classes " + errors);
-      }
-      int high = 0;
-      for (Element bug : bugs)
-        if (bug.getAttribute("priority").equals("1")) {
-          high++;
-          var key =
-              Arrays.asList(
-                  bug.getAttribute("type"),
-                  childAttribute(bug, "Class", "classname"),
-                  childAttribute(bug, "Field", "name"),
-                  childAttribute(bug, "Method", "name"));
-          if (!allowed.contains(key)) problems.add(name + ": untriaged " + key);
-        }
-      Map<String, Object> row = new LinkedHashMap<>();
-      row.put(MODULE, name);
-      row.put(STATUS, "analyzed");
-      row.put("findings", bugs.size());
-      row.put("high", high);
-      row.put("errors", errors);
-      row.put(
-          "missingClasses",
-          elements(xml, "MissingClass").stream().map(Element::getTextContent).toList());
-      row.put("report", root().relativize(report).toString().replace(".xml", ".html"));
-      rows.add(row);
+      return;
     }
-    json(root().resolve("target/spotbugs/index.json"), rows);
+    Element xml = xml(report);
+    List<Element> bugs = elements(xml, "BugInstance");
+    Map<String, String> errors = recordErrors(xml, name, problems);
+    int high = countHighPriority(bugs, name, allowed, problems);
+    Map<String, Object> row = new LinkedHashMap<>();
+    row.put(MODULE, name);
+    row.put(STATUS, "analyzed");
+    row.put("findings", bugs.size());
+    row.put("high", high);
+    row.put("errors", errors);
+    row.put(
+        "missingClasses",
+        elements(xml, "MissingClass").stream().map(Element::getTextContent).toList());
+    row.put("report", root.relativize(report).toString().replace(".xml", ".html"));
+    rows.add(row);
+  }
+
+  private static Map<String, String> recordErrors(Element xml, String name, List<String> problems) {
+    Map<String, String> errors = new LinkedHashMap<>();
+    if (!elements(xml, "Errors").isEmpty()) {
+      Element error = elements(xml, "Errors").get(0);
+      for (int i = 0; i < error.getAttributes().getLength(); i++) {
+        var attr = error.getAttributes().item(i);
+        errors.put(attr.getNodeName(), attr.getNodeValue());
+      }
+      if (Integer.parseInt(errors.getOrDefault("errors", "0")) != 0
+          || Integer.parseInt(errors.getOrDefault("missingClasses", "0")) != 0)
+        problems.add(name + ": analyzer errors/missing classes " + errors);
+    }
+    return errors;
+  }
+
+  private static int countHighPriority(
+      List<Element> bugs, String name, Set<List<String>> allowed, List<String> problems) {
+    int high = 0;
+    for (Element bug : bugs)
+      if (bug.getAttribute("priority").equals("1")) {
+        high++;
+        var key =
+            Arrays.asList(
+                bug.getAttribute("type"),
+                childAttribute(bug, "Class", "classname"),
+                childAttribute(bug, "Field", "name"),
+                childAttribute(bug, "Method", "name"));
+        if (!allowed.contains(key)) problems.add(name + ": untriaged " + key);
+      }
+    return high;
+  }
+
+  private static void writeIndex(Path root, List<Map<String, Object>> rows) throws Exception {
+    json(root.resolve("target/spotbugs/index.json"), rows);
     StringBuilder html =
         new StringBuilder(
             "<!doctype html><title>Domino Widgets SpotBugs</title><h1>Reactor SpotBugs reports</h1><table><tr><th>Module</th><th>Status</th><th>Findings</th><th>High</th></tr>");
@@ -107,14 +141,7 @@ public final class AnalysisMojo extends BuildMojo {
           .append("</td><td>")
           .append(row.getOrDefault("high", ""))
           .append("</td></tr>");
-    write(root().resolve("target/spotbugs/index.html"), html + "</table>");
-    if (!indexOnly) require(problems.isEmpty(), String.join("\n", problems));
-    getLog()
-        .info(
-            "Indexed "
-                + rows.size()
-                + " analyzer reports"
-                + (indexOnly ? " (diagnostics only)" : "; analysis gate passed"));
+    write(root.resolve("target/spotbugs/index.html"), html + "</table>");
   }
 
   private static String childAttribute(Element parent, String tag, String attr) {
